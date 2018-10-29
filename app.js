@@ -45,7 +45,7 @@ app.get('/house/:houseId', (req, res) => {
         }
         console.log("events info:", events_info);
         // Render house page
-        //res.render('house.html', { events: events_info, houses: house_info });
+        //res.render('house.html', { events: events_info, house: house_info });
       });
   });
 });

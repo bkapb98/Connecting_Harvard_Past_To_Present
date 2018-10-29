@@ -10,11 +10,14 @@
 </head>
 <body>
     <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
+    <h1> {{house.name}} </h1>
+    <h2> {{house.description}}
     <ul>
-        <li v-for="house in houses"> 
-            {{house.name}}
+        <li v-for="event in events"> 
+            {{event.eventName}}
         </li>
     </ul>
+
     <script>
     
     </script>
