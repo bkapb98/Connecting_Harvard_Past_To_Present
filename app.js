@@ -1,6 +1,6 @@
 const express = require('express');
 // const expressVue = require('express-vue');
-// const path = require('path');
+const path = require('path');
 // require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 
@@ -9,13 +9,15 @@ const port = 3000;
 
 // Initialize Express
 const app = express();
-app.use(express.static('static'));
-
+// app.use(express.static('static'));
+//app.set('view engine', 'html');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.staticProvider(__dirname + '/public'));
 // Create database
 let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
 
-// List galleries
+// List houses
 app.get('/', (req, res) => {
     db.all('SELECT * FROM Houses', (err, rows) => {
         if(err) {
@@ -27,7 +29,6 @@ app.get('/', (req, res) => {
       });
 });
 
-//
 
 // House Page
 app.get('/house/:houseId', (req, res) => {
@@ -44,7 +45,7 @@ app.get('/house/:houseId', (req, res) => {
         }
         console.log("events info:", events_info);
         // Render house page
-        res.render('house.html', { events: events_info, houses: house_info });
+        //res.render('house.html', { events: events_info, houses: house_info });
       });
   });
 });
@@ -58,7 +59,7 @@ app.get('/room/:roomId', (req, res) => {
       }
       console.log("room info:", room_info);
       // Render room page
-      res.render('room.html', { room: room_info });
+      //res.render('room.html', { room: room_info });
     });
   });
 
