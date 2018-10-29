@@ -12,7 +12,7 @@ const app = express();
 // app.use(express.static('static'));
 //app.set('view engine', 'html');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.staticProvider(__dirname + '/public'));
+// app.use(express.staticProvider(__dirname + '/public'));
 // Create database
 let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
