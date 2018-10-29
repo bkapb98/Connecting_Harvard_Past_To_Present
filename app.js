@@ -27,7 +27,6 @@ app.get('/', (req, res) => {
       });
 });
 
-//
 
 // House Page
 app.get('/house/:houseId', (req, res) => {
