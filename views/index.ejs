@@ -49,23 +49,17 @@
             </div>
             </div>
     <br> <br>
+    <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
+
     <div class="container-fluid">
     <div class="row">
-        <div class="col-md-4" style="background-color: cadetblue">
-            House1
+        <% houses.forEach(house => { %>
+        <div class="col-md-4" style="background-color: blue">
+            <a href="/house/<%- house.houseId %>"> <%- house.name %> </a>
             <br>
-            Image / info
+            <%- house.description %>
         </div>
-        <div class="col-md-4" style="background-color: yellowgreen">
-            House2
-            <br>
-            Image / info
-        </div>
-        <div class="col-md-4" style="background-color: orange">
-            House3
-            <br>
-            Image / info
-        </div>
+        <% }); %>
     </div>
     </div>
 
