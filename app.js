@@ -33,6 +33,7 @@ app.get('/', (req, res) => {
 // House Page
 app.get('/house/:houseId', (req, res) => {
   const house_id = req.params.houseId;
+  //implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
   db.get(`SELECT * FROM Houses WHERE houseId = ${house_id}`, (err, house_info) => {
     if(err) {
       return console.error(err.message); 

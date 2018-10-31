@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>House Name</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="../styles/stylesIndex.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="main.js"></script>
+
+ <style type="text/css" media="screen">
+.timeline {
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+ 
+.timeline ol {
+  font-size: 0;
+  width: 100vw;
+  padding: 250px 0;
+  transition: all 1s;
+}
+ 
+.timeline ol li {
+  position: relative;
+  display: inline-block;
+  list-style-type: none;
+  width: 160px;
+  height: 3px;
+  background: #fff;
+}
+ 
+.timeline ol li:last-child {
+  width: 280px;
+}
+ 
+.timeline ol li:not(:first-child) {
+  margin-left: 14px;
+}
+ 
+.timeline ol li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 1px);
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: #F45B69;
+}
+</style>
+
+
+  </head>
+
+<body>
+
+
+<div class="jumbotron text-center">
+  <h1>{{House Name}}</h1>
+  <p></p> 
+
+
+</div>
+
+<section class="timeline">
+  <ol>
+    <li>
+      <div>
+        <time>1934</time>
+        Some content here
+      </div>
+    </li>
+      
+    <!-- more list items here -->
+     
+    <li></li>
+  </ol>
+   
+  <div class="arrows">
+    <button class="arrow arrow__prev disabled" disabled>
+      <img src="arrow_prev.svg" alt="prev timeline arrow">
+    </button>
+    <button class="arrow arrow__next">
+      <img src="arrow_next.svg" alt="next timeline arrow">
+    </button>
+  </div>
+</section>
+
+
+<p> {{House}} Description: </p>
+  <p style="margin-left: 2.5em;padding: 0 7em 2em 0;border-width: 2px; border-color: black; border-style:solid;"> Lorem </p>
+
+
+
+<big> Comments about {{ }} House!</big>
+
+
+
+
+ <p style="margin-left: 2.5em;padding: 0 7em 2em 0;border-width: 2px; border-color: black; border-style:solid;">{{Existing Comments}}</p>
+
+
+    <p>Comment here:</p>
+<form method="post">
+   <input type="text" name="comment" />
+   <button type="button">Submit</button>
+</form>
+
+
+
+</body>
