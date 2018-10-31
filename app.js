@@ -34,17 +34,17 @@ app.get('/', (req, res) => {
 app.get('/house/:houseId', (req, res) => {
   const house_id = req.params.houseId;
   //implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
-  db.get(`SELECT * FROM Houses WHERE houseId = ${house_id}`, (err, house_info) => {
+  db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
     if(err) {
       return console.error(err.message); 
     }
     //console.log("house info:", house_info);
     // Render home page
-    db.all(`SELECT * FROM Houses WHERE houseId = ${house_id}`, (err, events_info) => {
+    db.all(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, events_info) => {
       if(err) {
         return console.error(err.message); 
       }
-      db.all(`SELECT * FROM Rooms WHERE houseId = ${house_id}`, (err, rooms_info) => {
+      db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
         if(err) {
           return console.error(err.message); 
         }
@@ -59,7 +59,7 @@ app.get('/house/:houseId', (req, res) => {
 // Room Page
 app.get('/room/:roomId', (req, res) => {
     const room_id = req.params.roomId;
-    db.get(`SELECT * FROM Rooms WHERE roomId = ${room_id}`, (err, room_info) => {
+    db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
       if(err) {
         return console.error(err.message); 
       }
