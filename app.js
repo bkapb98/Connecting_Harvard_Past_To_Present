@@ -69,6 +69,15 @@ app.get('/room/:roomId', (req, res) => {
     });
   });
 
+  app.get('/login', (req, res) => {
+    res.render('login.ejs');
+  });
+
+  app.post('/login', (req, res) => {
+    // to do authenticate account and redirect
+    console.log('To do')
+  })
+
 
 // // Comment on object
 // app.get('/objects/:object_id/comment', (req, res) => {
