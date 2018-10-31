@@ -20,8 +20,8 @@ app.get('/', (req, res) => {
     db.all('SELECT * FROM Houses', (err, rows) => {
         if(err) {
           return console.error(err.message); 
+          res.status(500).send(err)
         }
-        console.log("house info:", rows);
         // Render home page
         res.render('index.html', { houses: rows });
       });
