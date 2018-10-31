@@ -78,6 +78,15 @@ app.get('/room/:roomId', (req, res) => {
     console.log('To do')
   })
 
+  app.get('/register', (req, res) => {
+    res.render('register.ejs');
+  });
+
+  app.post('/register', (req, res) => {
+    // to add / authenticate accounts
+    console.log('To do')
+  })
+
 
 // // Comment on object
 // app.get('/objects/:object_id/comment', (req, res) => {
