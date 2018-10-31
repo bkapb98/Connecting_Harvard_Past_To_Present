@@ -23,7 +23,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
 
         return text;
       }
-    for(var i = 0; i<2400; i++)
+    for(var i = 0; i<50; i++)
       {
         var name = roomName();
         var description = roomDescription();
