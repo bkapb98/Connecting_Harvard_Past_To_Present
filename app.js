@@ -70,6 +70,10 @@ app.get('/room/:roomId', (req, res) => {
   });
 
   app.get('/login', (req, res) => {
+    // db.get(`SELECT * FROM Users WHERE houseId = ${house_id}`, (err, house_info) => {
+    //   if(err) {
+    //     return console.error(err.message); 
+    //   }
     res.render('login.ejs');
   });
 
