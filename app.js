@@ -1,5 +1,5 @@
 const express = require('express');
-const expressVue = require('express-vue');
+//const expressVue = require('express-vue');
 const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
@@ -16,8 +16,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 //importing and registering Vue component
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
-app.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
+//import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
+//app.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
 
 // Create database
 let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
