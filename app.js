@@ -13,15 +13,26 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 // app.use(express.staticProvider(__dirname + '/public'));
+
+//resource for autocomplete search: https://www.npmjs.com/package/vue-bootstrap-typeahead
+//for the autocomplete search bar
+import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+Vue.use(BootstrapVue);
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
+
 // Create database
 let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
+
+// Globally registering the typeahead vue component
+Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
 
 
 // List houses
 app.get('/', (req, res) => {
     db.all('SELECT * FROM Houses', (err, rows) => {
         if(err) {
-          return console.error(err.message); 
+          return console.error(err.message);
         }
         console.log("house info:", rows);
         // Render home page
@@ -36,17 +47,17 @@ app.get('/house/:houseId', (req, res) => {
   //implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
   db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
     if(err) {
-      return console.error(err.message); 
+      return console.error(err.message);
     }
     //console.log("house info:", house_info);
     // Render home page
     db.all(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, events_info) => {
       if(err) {
-        return console.error(err.message); 
+        return console.error(err.message);
       }
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
         if(err) {
-          return console.error(err.message); 
+          return console.error(err.message);
         }
         // Render house page
         console.log(rooms_info)
@@ -61,7 +72,7 @@ app.get('/room/:roomId', (req, res) => {
     const room_id = req.params.roomId;
     db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
       if(err) {
-        return console.error(err.message); 
+        return console.error(err.message);
       }
       console.log("room info:", room_info);
       // Render room page
@@ -84,8 +95,8 @@ app.get('/room/:roomId', (req, res) => {
 //   const objectId = req.params.object_id;
 //   const newComment = req.query.comments;
 //   // Inserts comment into db associating it with the object, then redirects to object page
-//   db.run(`INSERT INTO comment_table 
-//   (comment_text, object_number) VALUES ("${newComment}", "${objectId}");`); 
+//   db.run(`INSERT INTO comment_table
+//   (comment_text, object_number) VALUES ("${newComment}", "${objectId}");`);
 //   res.redirect(`/objects/${objectId}`);
 
 // });
