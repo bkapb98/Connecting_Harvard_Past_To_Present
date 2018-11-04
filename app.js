@@ -1,5 +1,5 @@
 const express = require('express');
-// const expressVue = require('express-vue');
+const expressVue = require('express-vue');
 const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
@@ -14,19 +14,13 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 // app.use(express.staticProvider(__dirname + '/public'));
 
-//resource for autocomplete search: https://www.npmjs.com/package/vue-bootstrap-typeahead
-//for the autocomplete search bar
-import Vue from 'vue'
-import BootstrapVue from 'bootstrap-vue'
-Vue.use(BootstrapVue);
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
+
+//importing and registering Vue component
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
+app.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
 
 // Create database
 let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
-
-// Globally registering the typeahead vue component
-Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
-
 
 // List houses
 app.get('/', (req, res) => {
