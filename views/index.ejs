@@ -54,35 +54,16 @@
 
     <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
     <div class="container-fluid">
-    <div class="row">
-        <% houses.forEach(house => { %>
-        <div class="col-md-4" style="background-color: blue">
-            <a href="/house/<%- house.houseId %>"> <%- house.name %> </a>
-            <br>
-            <%- house.description %>
+        <div class="row">
+            <% houses.forEach(house => { %>
+            <div class="col-md-4" style="background-color: blue">
+                <a href="/house/<%- house.houseId %>"> <%- house.name %> </a>
+                <br>
+                <%- house.description %>
+            </div>
+            <% }); %>
         </div>
-        <% }); %>
     </div>
-    </div>
-    <section>
-    <label for="input">Rooms:</label>
-    <input id="input" class="form-control" type="text" placeholder="Type to search a room or a house">
-    <typeahead v-model="model", target="#input", :data= "roomNames.data", item-key="name"><typeahead/>
-  </section>
-    <script>
-      import {Typeahead} from 'uiv'
-      export default {
-        components: {Typeahead},
-        data () {
-          return {
-            model: '',
-            roomNames: roomNames.data
-          }
-        }
-      }
-    </script>
-    <!-- typeahead-example.vue -->
-    <!-- https://stackoverflow.com/questions/40266688/typeahead-with-vue-js-2-0 -->
 
 
 </body>

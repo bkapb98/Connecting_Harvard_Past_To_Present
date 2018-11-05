@@ -5,7 +5,6 @@ require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 const async = require('async');
 
-
 const hostname = '127.0.0.1';
 const port = 3000;
 
@@ -22,22 +21,27 @@ app.set('views', path.join(__dirname, 'views'));
 //app.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
 
 // Create database
-let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
+let db = new sqlite3.Database('/Users/elizascharfstein/Documents/Junior/CS100/finalProject/connecting/PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
 // List houses
+room_numbers = [] 
 app.get('/', (req, res) => {
   db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
     if(err) {
       return console.error(err.message);
     }
-    console.log("room info:", rooms_info);
-    db.all('SELECT * FROM Houses', (err, rows) => {
+    for(room in rooms_info)
+    { 
+      room_numbers.push(room)
+    }
+    console.log("room info:", room_numbers);
+    db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
           return console.error(err.message);
         }
-        console.log("house info:", rows);
+        console.log("house info:", house_info);
         // Render home page
-        res.render('index', { houses: rows, roomNames: rooms_info });
+        res.render('index', { houses: house_info, rooms: room_numbers });
       });
     });
 });
@@ -90,11 +94,15 @@ app.get('/room/:roomId', (req, res) => {
       if(err) {
         return console.error(err.message);
       }
-      console.log("room info:", room_info);
-      // Render room page
-      res.render('room_featured', { room: room_info });
+      db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
+        if(err) {
+          return console.error(err.message);
+        }
+        // Render room page
+        res.render('room_featured', { room: room_info, comments: comments_info});
     });
   });
+}); 
 
   app.get('/login', (req, res) => {
     res.render('login.ejs');
