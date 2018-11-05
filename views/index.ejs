@@ -64,24 +64,25 @@
         <% }); %>
     </div>
     </div>
+    <section>
     <label for="input">Rooms:</label>
     <input id="input" class="form-control" type="text" placeholder="Type to search a room or a house">
-    <typeahead v-model="model" target="#input" :data="rooms" item-key="name"/>
-<script>
-  let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
-  import {Typeahead} from 'uiv'
-
-  export default {
-    components: {Typeahead},
-    data () {
-      return {
-        model: '',
-        rooms: roomNames
+    <typeahead v-model="model", target="#input", :data= "roomNames.data", item-key="name"><typeahead/>
+  </section>
+    <script>
+      import {Typeahead} from 'uiv'
+      export default {
+        components: {Typeahead},
+        data () {
+          return {
+            model: '',
+            roomNames: roomNames.data
+          }
+        }
       }
-    }
-  }
-</script>
-<!-- typeahead-example.vue -->
+    </script>
+    <!-- typeahead-example.vue -->
+    <!-- https://stackoverflow.com/questions/40266688/typeahead-with-vue-js-2-0 -->
 
 
 </body>
