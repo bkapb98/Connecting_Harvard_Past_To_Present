@@ -65,29 +65,8 @@ app.get('/house/:houseId', (req, res) => {
   },
   // optional callback
   function(err, results) {
-    console.log("HELLO", results.events_info)
     res.render('house', { house: results.house_info, rooms: results.rooms_info, events: results.events_info });
   });
-  // db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
-  //   if(err) {
-  //     return console.error(err.message); 
-  //   }
-  //   //console.log("house info:", house_info);
-  //   // Render home page
-  //   db.all(`SELECT * FROM Events WHERE houseId = ?`, house_id, (err, events_info) => {
-  //     if(err) {
-  //       return console.error(err.message); 
-  //     }
-  //     db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
-  //       if(err) {
-  //         return console.error(err.message); 
-  //       }
-  //       // Render house page
-  //       console.log(rooms_info)
-  //       res.render('house', { events: events_info, house: house_info, rooms: rooms_info });
-  //     });
-  //   });
-  // });
 });
 
 // Room Page
