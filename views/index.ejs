@@ -50,8 +50,9 @@
             </div>
             </div>
     <br> <br>
-    <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
 
+
+    <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
     <div class="container-fluid">
     <div class="row">
         <% houses.forEach(house => { %>
@@ -63,16 +64,35 @@
         <% }); %>
     </div>
     </div>
+    <label for="input">Rooms:</label>
+    <input id="input" class="form-control" type="text" placeholder="Type to search a room or a house">
+    <typeahead v-model="model" target="#input" :data="rooms" item-key="name"/>
+<script>
+  let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
+  import {Typeahead} from 'uiv'
 
-    <div>
-    <link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
-    <script src="https://unpkg.com/vue-bootstrap-typeahead"></script>
-    <script> Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead) </script>
-    <vue-bootstrap-typeahead
-      v-model="query"
-      :data="['Canada', 'USA', 'Mexico']"
-    />
-  </div>
+  export default {
+    components: {Typeahead},
+    data () {
+      return {
+        model: '',
+        rooms: [450, 281, 345, 901]
+      }
+    }
+  }
+</script>
+<!-- typeahead-example.vue -->
+<script>
+db.all('SELECT name FROM Rooms', (err, rows) => {
+    if(err) {
+      return console.error(err.message);
+    }
+    for each (var row in rows){
+      rooms.push(row.name);
+    }
+    console.log(rooms);
+  });
+</script>
 
 
 </body>
