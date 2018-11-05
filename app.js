@@ -52,7 +52,7 @@ app.get('/house/:houseId', (req, res) => {
     events_info: function(callback) {
       db.all(`SELECT * FROM Events WHERE houseId = ?`, house_id, (err, events_info) => {
         if(err) {
-          return console.error(err.message); 
+          return console.error(err.message);
         }
       setTimeout(function() {
           callback(null, events_info);
@@ -61,7 +61,7 @@ app.get('/house/:houseId', (req, res) => {
     house_info: function(callback) {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
-          return console.error(err.message); 
+          return console.error(err.message);
         }
       setTimeout(function() {
           callback(null, house_info);
