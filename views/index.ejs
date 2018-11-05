@@ -76,23 +76,12 @@
     data () {
       return {
         model: '',
-        rooms: [450, 281, 345, 901]
+        rooms: roomNames
       }
     }
   }
 </script>
 <!-- typeahead-example.vue -->
-<script>
-db.all('SELECT name FROM Rooms', (err, rows) => {
-    if(err) {
-      return console.error(err.message);
-    }
-    for each (var row in rows){
-      rooms.push(row.name);
-    }
-    console.log(rooms);
-  });
-</script>
 
 
 </body>

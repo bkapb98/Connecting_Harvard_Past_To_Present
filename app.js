@@ -24,14 +24,20 @@ let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
 // List houses
 app.get('/', (req, res) => {
+  db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
+    if(err) {
+      return console.error(err.message);
+    }
+    console.log("room info:", rooms_info);
     db.all('SELECT * FROM Houses', (err, rows) => {
         if(err) {
           return console.error(err.message);
         }
         console.log("house info:", rows);
         // Render home page
-        res.render('index', { houses: rows });
+        res.render('index', { houses: rows, roomNames: rooms_info });
       });
+    });
 });
 
 
