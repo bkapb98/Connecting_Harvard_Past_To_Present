@@ -15,7 +15,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
           text += possible.charAt(Math.floor(Math.random() * possible.length));
         return text;
       }
-    for(let i = 0; i<200; i++)
+    for(let i = 0; i < 200; i++)
       {
         let first = makeid(7);
         let last = makeid(10);
