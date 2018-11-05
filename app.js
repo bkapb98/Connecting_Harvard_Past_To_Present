@@ -1,8 +1,8 @@
 const express = require('express');
-// const expressVue = require('express-vue');
 const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
+
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -12,7 +12,6 @@ const app = express();
 // app.use(express.static('static'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-// app.use(express.staticProvider(__dirname + '/public'));
 // Create database
 let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
@@ -77,18 +76,6 @@ app.get('/room/:roomId', (req, res) => {
     // to do authenticate account and redirect
     console.log('To do')
   })
-
-
-// // Comment on object
-// app.get('/objects/:object_id/comment', (req, res) => {
-//   const objectId = req.params.object_id;
-//   const newComment = req.query.comments;
-//   // Inserts comment into db associating it with the object, then redirects to object page
-//   db.run(`INSERT INTO comment_table 
-//   (comment_text, object_number) VALUES ("${newComment}", "${objectId}");`); 
-//   res.redirect(`/objects/${objectId}`);
-
-// });
 
 // Listen on socket
 app.listen(port, hostname, () => {
