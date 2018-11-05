@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
+const async = require('async');
 
 
 const hostname = '127.0.0.1';
@@ -33,26 +34,60 @@ app.get('/', (req, res) => {
 app.get('/house/:houseId', (req, res) => {
   const house_id = req.params.houseId;
   //implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
-  db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
-    if(err) {
-      return console.error(err.message); 
-    }
-    //console.log("house info:", house_info);
-    // Render home page
-    db.all(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, events_info) => {
-      if(err) {
-        return console.error(err.message); 
-      }
+  async.parallel({
+    events_info: function(callback) {
+      db.all(`SELECT * FROM Events WHERE houseId = ?`, house_id, (err, events_info) => {
+        if(err) {
+          return console.error(err.message); 
+        }
+      setTimeout(function() {
+          callback(null, events_info);
+      }, 300);
+    })},
+    house_info: function(callback) {
+      db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
+        if(err) {
+          return console.error(err.message); 
+        }
+      setTimeout(function() {
+          callback(null, house_info);
+      }, 300);
+    })},
+    rooms_info: function(callback) {
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
         if(err) {
           return console.error(err.message); 
         }
-        // Render house page
-        console.log(rooms_info)
-        res.render('house', { events: events_info, house: house_info, rooms: rooms_info });
-      });
-    });
+      setTimeout(function() {
+          callback(null, rooms_info);
+      }, 300);
+    })}
+  },
+  // optional callback
+  function(err, results) {
+    console.log("HELLO", results.events_info)
+    res.render('house', { house: results.house_info, rooms: results.rooms_info, events: results.events_info });
   });
+  // db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
+  //   if(err) {
+  //     return console.error(err.message); 
+  //   }
+  //   //console.log("house info:", house_info);
+  //   // Render home page
+  //   db.all(`SELECT * FROM Events WHERE houseId = ?`, house_id, (err, events_info) => {
+  //     if(err) {
+  //       return console.error(err.message); 
+  //     }
+  //     db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
+  //       if(err) {
+  //         return console.error(err.message); 
+  //       }
+  //       // Render house page
+  //       console.log(rooms_info)
+  //       res.render('house', { events: events_info, house: house_info, rooms: rooms_info });
+  //     });
+  //   });
+  // });
 });
 
 // Room Page
