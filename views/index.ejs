@@ -25,15 +25,13 @@
 
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
+                <% houses.forEach(house => { %>
+                    <div class="item">
+                            <img src="<%-house.imgurl%>" >
+                    </div>
+                <% }); %>
+
                 <div class="item active">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Kirkland_House_Courtyard.jpg/1200px-Kirkland_House_Courtyard.jpg">
-                </div>
-
-                <div class="item">
-                    <img src="https://alumni.harvard.edu/sites/default/files/story/content-images/Dunster2_480x300.png">
-                </div>
-
-                <div class="item">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Winthrop_House_aerial_extract.jpg/1200px-Winthrop_House_aerial_extract.jpg">
                 </div>
                 </div>
@@ -54,15 +52,15 @@
 
     <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
     <div class="container-fluid">
-    <div class="row">
-        <% houses.forEach(house => { %>
-        <div class="col-md-4" style="background-color: blue">
-            <a href="/house/<%- house.houseId %>"> <%- house.name %> </a>
-            <br>
-            <%- house.description %>
+        <div class="row">
+            <% houses.forEach(house => { %>
+            <div class="col-md-4" style="background-color: blue">
+                <a href="/house/<%- house.houseId %>"> <%- house.name %> </a>
+                <br>
+                <%- house.description %>
+            </div>
+            <% }); %>
         </div>
-        <% }); %>
-    </div>
     </div>
     <section>
     <label for="input">Rooms:</label>
