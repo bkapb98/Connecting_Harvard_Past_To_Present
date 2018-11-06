@@ -3,11 +3,10 @@ const express = require('express');
 const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
-
-let bodyParser = require('body-parser')
-
 const async = require('async');
 
+
+const bodyParser = require('body-parser');
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -17,7 +16,10 @@ const app = express();
 // app.use(express.static('static'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 // app.use(express.staticProvider(__dirname + '/public'));
+
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -26,7 +28,9 @@ app.use(bodyParser.json());
 // Create database
 let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
+
 // List houses
+
 room_numbers = [] 
 app.get('/', (req, res) => {
   db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
@@ -59,7 +63,7 @@ app.get('/house/:houseId', (req, res) => {
     events_info: function(callback) {
       db.all(`SELECT * FROM Events WHERE houseId = ?`, house_id, (err, events_info) => {
         if(err) {
-          return console.error(err.message); 
+          return console.error(err.message);
         }
       setTimeout(function() {
           callback(null, events_info);
@@ -68,7 +72,7 @@ app.get('/house/:houseId', (req, res) => {
     house_info: function(callback) {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
-          return console.error(err.message); 
+          return console.error(err.message);
         }
       setTimeout(function() {
           callback(null, house_info);
@@ -160,6 +164,19 @@ app.get('/room/:roomId', (req, res) => {
     console.log('added user')
     res.redirect('/')
   })
+
+app.post('/roomhandler', function(req, res){
+  // let address = '/room/';
+  // let id = 0;
+  let name = req.body.inputs;
+  db.get('SELECT roomId FROM Rooms WHERE Name = ?', name, (err, room) => {
+    if(err){
+      return console.error(err.message);
+    }
+    res.redirect(`/room/${room.roomId}`);
+  });
+
+})
 
 
 // Listen on socket
