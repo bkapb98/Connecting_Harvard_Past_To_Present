@@ -25,15 +25,13 @@
 
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
+                <% houses.forEach(house => { %>
+                    <div class="item">
+                            <img src="<%-house.imgurl%>" >
+                    </div>
+                <% }); %>
+
                 <div class="item active">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Kirkland_House_Courtyard.jpg/1200px-Kirkland_House_Courtyard.jpg">
-                </div>
-
-                <div class="item">
-                    <img src="https://alumni.harvard.edu/sites/default/files/story/content-images/Dunster2_480x300.png">
-                </div>
-
-                <div class="item">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Winthrop_House_aerial_extract.jpg/1200px-Winthrop_House_aerial_extract.jpg">
                 </div>
                 </div>
