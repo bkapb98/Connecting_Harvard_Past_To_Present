@@ -12,6 +12,7 @@ const async = require('async');
 const hostname = '127.0.0.1';
 const port = 3000;
 
+
 // Initialize Express
 const app = express();
 // app.use(express.static('static'));
@@ -23,30 +24,45 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
 
+
 // Create database
 let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
 // List houses
 room_numbers = [] 
 app.get('/', (req, res) => {
-  db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
-    if(err) {
-      return console.error(err.message);
-    }
-    for(room in rooms_info)
-    { 
-      room_numbers.push(room)
-    }
-    console.log("room info:", room_numbers);
-    db.all('SELECT * FROM Houses', (err, house_info) => {
+  async.parallel({
+    rooms_info: function(callback) {
+      db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
         if(err) {
-          return console.error(err.message);
+          res.render('404');
         }
-        console.log("house info:", house_info);
-        // Render home page
-        res.render('index', { houses: house_info, rooms: room_numbers });
-      });
-    });
+        for(room in rooms_info)
+        { 
+          room_numbers.push(room)
+        } 
+        setTimeout(function() {
+          callback(null, room_numbers);
+        }, 100);
+        // console.log("room info:", room_numbers);
+    })},
+    house_info: function(callback) {
+      db.all('SELECT * FROM Houses', (err, house_info) => {
+        if(err) {
+          res.render('404');
+        }
+        setTimeout(function() {
+          callback(null, house_info);
+        }, 200);
+      })}
+        // console.log("house info:", house_info);
+  
+      },
+      //  callback
+  // Render home page
+  function(err, results) {
+    res.render('index', { houses: results.house_info, rooms: room_numbers });
+  });
 });
 
 
@@ -59,7 +75,7 @@ app.get('/house/:houseId', (req, res) => {
     events_info: function(callback) {
       db.all(`SELECT * FROM Events WHERE houseId = ?`, house_id, (err, events_info) => {
         if(err) {
-          return console.error(err.message); 
+          res.render('404'); 
         }
       setTimeout(function() {
           callback(null, events_info);
@@ -68,7 +84,7 @@ app.get('/house/:houseId', (req, res) => {
     house_info: function(callback) {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
-          return console.error(err.message); 
+          res.render('404'); 
         }
       setTimeout(function() {
           callback(null, house_info);
@@ -77,7 +93,7 @@ app.get('/house/:houseId', (req, res) => {
     rooms_info: function(callback) {
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
         if(err) {
-          return console.error(err.message);
+          res.render('404');
         }
       setTimeout(function() {
           callback(null, rooms_info);
@@ -97,7 +113,7 @@ app.get('/room/:roomId', (req, res) => {
     room_info: function(callback) {
       db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
         if(err) {
-          return console.error(err.message);
+          res.render('404');
         }
         setTimeout(function() {
           callback(null, room_info);
@@ -106,7 +122,7 @@ app.get('/room/:roomId', (req, res) => {
     comments: function(callback) {
       db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
         if(err) {
-          return console.error(err.message);
+          res.render('404');
         }
         setTimeout(function() {
           callback(null, comments_info);
