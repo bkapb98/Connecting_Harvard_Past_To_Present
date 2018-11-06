@@ -77,7 +77,8 @@ app.get('/house/:houseId', (req, res) => {
 
   async.parallel({
     events_info: function(callback) {
-      db.all(`SELECT * FROM Events WHERE houseId = ?`, house_id, (err, events_info) => {
+      // sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
+      db.all(`SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC`, house_id, (err, events_info) => {
         if(err) {
           res.render('404'); 
         }
