@@ -4,8 +4,7 @@ const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 const async = require('async');
-
-
+const bodyParser = require('body-parser');
 const hostname = '127.0.0.1';
 const port = 3000;
 
@@ -14,6 +13,8 @@ const app = express();
 // app.use(express.static('static'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 // app.use(express.staticProvider(__dirname + '/public'));
 
 
@@ -109,6 +110,19 @@ app.get('/room/:roomId', (req, res) => {
     // to do authenticate account and redirect
     console.log('To do')
   })
+
+app.post('/roomhandler', function(req, res){
+  // let address = '/room/';
+  // let id = 0;
+  let name = req.body.inputs;
+  db.get('SELECT roomId FROM Rooms WHERE Name = ?', name, (err, room) => {
+    if(err){
+      return console.error(err.message);
+    }
+    res.redirect(`/room/${room.roomId}`);
+  });
+
+})
 
 
 // Listen on socket
