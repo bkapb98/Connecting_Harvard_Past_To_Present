@@ -3,7 +3,11 @@ const express = require('express');
 const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
+
+let bodyParser = require('body-parser')
+
 const async = require('async');
+
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -15,13 +19,12 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 // app.use(express.staticProvider(__dirname + '/public'));
 
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 
-//importing and registering Vue component
-//import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
-//app.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
 
 // Create database
-let db = new sqlite3.Database('/Users/elizascharfstein/Documents/Junior/CS100/finalProject/connecting/PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
+let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
 // List houses
 room_numbers = [] 
@@ -121,8 +124,41 @@ app.get('/room/:roomId', (req, res) => {
   });
 
   app.post('/login', (req, res) => {
-    // to do authenticate account and redirect
-    console.log('To do')
+    const username = req.body.username;
+    const password = req.body.password;
+      db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
+      if (err) {
+        throw err
+      }
+      console.log(result)
+      console.log('username', result.userName);
+      if (!result) {
+        console.log("login combo doesn't exist")
+      }
+      if (result.userName === username && result.password == password){
+        console.log("person logged in")
+        // to do - figure out how to show authenticated probably in header
+        res.redirect('/');
+      }
+      else {
+        res.redirect('/login')
+      }
+  });
+  });
+
+  app.get('/register', (req, res) => {
+    res.render('register.ejs');
+  });
+
+  app.post('/register', (req, res) => {
+    // need to get info from form using dom
+    const first = req.body.firstname;
+    const last = req.body.lastname;
+    const userName = req.body.username;
+    const password = req.body.password;
+    db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
+    console.log('added user')
+    res.redirect('/')
   })
 
 
