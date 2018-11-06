@@ -10,6 +10,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="main.js"></script>
+    <link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue-bootstrap-typeahead"></script>
 
  <style type="text/css" media="screen">
 
@@ -17,14 +19,14 @@
   white-space: nowrap;
   overflow-x: hidden;
 }
- 
+
 .timeline ol {
   font-size: 0;
   width: 100vw;
   padding: 250px 0;
   transition: all 1s;
 }
- 
+
 .timeline ol li {
   position: relative;
   display: inline-block;
@@ -33,15 +35,15 @@
   height: 3px;
   background: #fff;
 }
- 
+
 .timeline ol li:last-child {
   width: 280px;
 }
- 
+
 .timeline ol li:not(:first-child) {
   margin-left: 14px;
 }
- 
+
 .timeline ol li:not(:last-child)::after {
   content: '';
   position: absolute;
@@ -65,7 +67,7 @@
 
 <div class="jumbotron text-center">
   <h1>{{House Name}}</h1>
-  <p></p> 
+  <p></p>
 
 
 </div>
@@ -78,12 +80,12 @@
         Some content here
       </div>
     </li>
-      
+
     <!-- more list items here -->
-     
+
     <li></li>
   </ol>
-   
+
   <div class="arrows">
     <button class="arrow arrow__prev disabled" disabled>
       <img src="arrow_prev.svg" alt="prev timeline arrow">
@@ -118,4 +120,3 @@
 
 
 </body>
-
