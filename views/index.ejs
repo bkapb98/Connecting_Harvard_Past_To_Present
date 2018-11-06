@@ -10,6 +10,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue-bootstrap-typeahead"></script>
     <script src="main.js"></script>
 </head>
 <body>
@@ -64,22 +66,30 @@
         <% }); %>
     </div>
     </div>
-    <section>
-    <label for="input">Rooms:</label>
-    <input id="input" class="form-control" type="text" placeholder="Type to search a room or a house">
-    <typeahead v-model="model", target="#input", :data= "roomNames.data", item-key="name"><typeahead/>
+    <div>
+    <label for="inputs">Rooms First:</label>
+  <input id="inputs" class="form-control" type="text" placeholder="Type to search a room or house.">
+  <vue-bootstrap-typeahead v-model="query" target="#inputs" :data="rooms"><vue-bootstrap-typeahead/>
+</div>
+
+     <section>
+    <label for="input">Rooms Second:</label>
+    <input id="input" autocomplete="off" class="form-control" type="text" placeholder="Type to search a room or a house">
+    <typeahead v-model="model", target="#input", :items="rooms", :data= "['d', 'a', 'b']", item-key="name"><typeahead/>
   </section>
     <script>
       import {Typeahead} from 'uiv'
+      import rooms from '../app.js'
       export default {
         components: {Typeahead},
         data () {
           return {
             model: '',
-            roomNames: roomNames.data
+            rooms: rooms
           }
         }
       }
+}
     </script>
     <!-- typeahead-example.vue -->
     <!-- https://stackoverflow.com/questions/40266688/typeahead-with-vue-js-2-0 -->

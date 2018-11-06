@@ -25,21 +25,26 @@ app.set('views', path.join(__dirname, 'views'));
 let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
 // List houses
+room_numbers = []
 app.get('/', (req, res) => {
-  db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
-    if(err) {
-      return console.error(err.message);
-    }
-    console.log("room info:", rooms_info);
-    db.all('SELECT * FROM Houses', (err, rows) => {
-        if(err) {
-          return console.error(err.message);
-        }
-        console.log("house info:", rows);
-        // Render home page
-        res.render('index', { houses: rows, roomNames: rooms_info });
-      });
-    });
+  db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
+    if(err) {
+      return console.error(err.message);
+    }
+    for(room in rooms_info)
+    {
+      room_numbers.push(room)
+    }
+    console.log("room info:", room_numbers);
+    db.all('SELECT * FROM Houses', (err, house_info) => {
+        if(err) {
+          return console.error(err.message);
+        }
+        console.log("house info:", house_info);
+        // Render home page
+        res.render('index', { houses: house_info, rooms: room_numbers });
+      });
+    });
 });
 
 
