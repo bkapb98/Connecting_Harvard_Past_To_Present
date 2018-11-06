@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 
 // Create database
-let db = new sqlite3.Database('/Users/elizascharfstein/Documents/Junior/CS100/finalProject/connecting/PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
+let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
 // List houses
 room_numbers = [] 
