@@ -5,7 +5,7 @@ require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 const async = require('async');
 
-const async = require('async');
+
 const bodyParser = require('body-parser');
 
 const hostname = '127.0.0.1';
@@ -30,7 +30,7 @@ let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.O
 
 
 // List houses
-<<<<<<< HEAD
+
 room_numbers = [] 
 app.get('/', (req, res) => {
   db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
