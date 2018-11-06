@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
-
+let bodyParser = require('body-parser')
 const hostname = '127.0.0.1';
 const port = 3000;
 
@@ -13,6 +13,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 // app.use(express.staticProvider(__dirname + '/public'));
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 // Create database
 let db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
@@ -70,25 +72,45 @@ app.get('/room/:roomId', (req, res) => {
   });
 
   app.get('/login', (req, res) => {
-    // db.get(`SELECT * FROM Users WHERE houseId = ${house_id}`, (err, house_info) => {
-    //   if(err) {
-    //     return console.error(err.message); 
-    //   }
     res.render('login.ejs');
   });
 
   app.post('/login', (req, res) => {
-    // to do authenticate account and redirect
-    console.log('To do')
-  })
+    const username = req.body.username;
+    const password = req.body.password;
+      db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
+      if (err) {
+        throw err
+      }
+      console.log(result)
+      console.log('username', result.userName);
+      if (!result) {
+        console.log("login combo doesn't exist")
+      }
+      if (result.userName === username && result.password == password){
+        console.log("person logged in")
+        // to do - figure out how to show authenticated probably in header
+        res.redirect('/');
+      }
+      else {
+        res.redirect('/login')
+      }
+  });
+  });
 
   app.get('/register', (req, res) => {
     res.render('register.ejs');
   });
 
   app.post('/register', (req, res) => {
-    // to add / authenticate accounts
-    console.log('To do')
+    // need to get info from form using dom
+    const first = req.body.firstname;
+    const last = req.body.lastname;
+    const userName = req.body.username;
+    const password = req.body.password;
+    db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
+    console.log('added user')
+    res.redirect('/')
   })
 
 
