@@ -60,7 +60,7 @@ app.get('/house/:houseId', (req, res) => {
         }
       setTimeout(function() {
           callback(null, events_info);
-      }, 300);
+      }, 100);
     })},
     house_info: function(callback) {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
@@ -69,7 +69,7 @@ app.get('/house/:houseId', (req, res) => {
         }
       setTimeout(function() {
           callback(null, house_info);
-      }, 300);
+      }, 200);
     })},
     rooms_info: function(callback) {
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
@@ -81,7 +81,7 @@ app.get('/house/:houseId', (req, res) => {
       }, 300);
     })}
   },
-  // optional callback
+  //  callback
   function(err, results) {
     res.render('house', { house: results.house_info, rooms: results.rooms_info, events: results.events_info });
   });
@@ -89,20 +89,32 @@ app.get('/house/:houseId', (req, res) => {
 
 // Room Page
 app.get('/room/:roomId', (req, res) => {
-    const room_id = req.params.roomId;
-    db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
-      if(err) {
-        return console.error(err.message);
-      }
+  const room_id = req.params.roomId;
+  async.parallel({
+    room_info: function(callback) {
+      db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
+        if(err) {
+          return console.error(err.message);
+        }
+        setTimeout(function() {
+          callback(null, room_info);
+        }, 100);
+      })},
+    comments: function(callback) {
       db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
         if(err) {
           return console.error(err.message);
         }
-        // Render room page
-        res.render('room_featured', { room: room_info, comments: comments_info});
+        setTimeout(function() {
+          callback(null, comments_info);
+        }, 200);
+      })}
+    },
+    // Render room page
+    function(err, results) {
+      res.render('room_featured', { room: results.room_info, comments: results.comments});
     });
   });
-}); 
 
   app.get('/login', (req, res) => {
     res.render('login.ejs');
