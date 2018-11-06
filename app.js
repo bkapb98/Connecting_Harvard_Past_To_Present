@@ -33,7 +33,7 @@ let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.O
 
 // List houses
 
-room_numbers = [] 
+room_numbers = []
 app.get('/', (req, res) => {
   async.parallel({
     rooms_info: function(callback) {
@@ -42,9 +42,9 @@ app.get('/', (req, res) => {
           res.render('404');
         }
         for(room in rooms_info)
-        { 
+        {
           room_numbers.push(room)
-        } 
+        }
         setTimeout(function() {
           callback(null, room_numbers);
         }, 100);
@@ -60,7 +60,7 @@ app.get('/', (req, res) => {
         }, 200);
       })}
         // console.log("house info:", house_info);
-  
+
       },
       //  callback
   // Render home page
@@ -80,7 +80,7 @@ app.get('/house/:houseId', (req, res) => {
       // sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
       db.all(`SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC`, house_id, (err, events_info) => {
         if(err) {
-          res.render('404'); 
+          res.render('404');
         }
       setTimeout(function() {
           callback(null, events_info);
@@ -89,7 +89,7 @@ app.get('/house/:houseId', (req, res) => {
     house_info: function(callback) {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
-          res.render('404'); 
+          res.render('404');
         }
       setTimeout(function() {
           callback(null, house_info);
@@ -182,18 +182,27 @@ app.get('/room/:roomId', (req, res) => {
     res.redirect('/')
   })
 
-app.post('/roomhandler', function(req, res){
-  // let address = '/room/';
-  // let id = 0;
-  let name = req.body.inputs;
-  db.get('SELECT roomId FROM Rooms WHERE Name = ?', name, (err, room) => {
-    if(err){
-      return console.error(err.message);
-    }
-    res.redirect(`/room/${room.roomId}`);
-  });
-
-})
+  app.post('/roomhandler', function(req, res){
+    // let address = '/room/';
+    // let id = 0;
+    let name = req.body.inputs;
+    if (name.length <5)
+    {
+    db.get('SELECT roomId FROM Rooms WHERE Name = ?', name, (err, room) => {
+      if(err){
+        return console.error(err.message);
+      }
+      res.redirect(`/room/${room.roomId}`);
+    });
+  }
+  else{
+    db.get('SELECT houseId FROM Houses WHERE name = ?', name, (err, house) => {
+      if(err){
+        return console.error(err.message);
+      }
+      res.redirect(`/house/${house.houseId}`);
+    });
+  }})
 
 
 // Listen on socket
