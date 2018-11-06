@@ -31,22 +31,31 @@ app.get('/', (req, res) => {
 
 
 // House Page
+app.use(express.static(__dirname + '/styles'));
 app.get('/house/:houseId', (req, res) => {
   const house_id = req.params.houseId;
   //implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
   db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
     if(err) {
-      return console.error(err.message); 
+            function errorHandler (err, req, res, next) {
+        if (res.headersSent) {
+          return next(err)
+        }
+        res.status(500)
+        res.render(error.html)
+      }
     }
     //console.log("house info:", house_info);
     // Render home page
     db.all(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, events_info) => {
       if(err) {
-        return console.error(err.message); 
+        return console.error(err.message);
+        res.status(500).send(err) 
       }
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
         if(err) {
           return console.error(err.message); 
+          res.status(500).send(err)
         }
         // Render house page
         console.log(rooms_info)
@@ -61,7 +70,9 @@ app.get('/room/:roomId', (req, res) => {
     const room_id = req.params.roomId;
     db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
       if(err) {
-        return console.error(err.message); 
+        return console.error(err.message);
+        res.status(500).send(err) 
+        res.render(error.html)
       }
       console.log("room info:", room_info);
       // Render room page

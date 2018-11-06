@@ -6,56 +6,11 @@
     <title>House Name</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="../styles/stylesIndex.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="main.js"></script>
-
- <style type="text/css" media="screen">
-
-.timeline {
-  white-space: nowrap;
-  overflow-x: hidden;
-}
- 
-.timeline ol {
-  font-size: 0;
-  width: 100vw;
-  padding: 250px 0;
-  transition: all 1s;
-}
- 
-.timeline ol li {
-  position: relative;
-  display: inline-block;
-  list-style-type: none;
-  width: 160px;
-  height: 3px;
-  background: #fff;
-}
- 
-.timeline ol li:last-child {
-  width: 280px;
-}
- 
-.timeline ol li:not(:first-child) {
-  margin-left: 14px;
-}
- 
-.timeline ol li:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: calc(100% + 1px);
-  bottom: 0;
-  width: 12px;
-  height: 12px;
-  transform: translateY(-50%);
-  border-radius: 50%;
-  background: #F45B69;
-}
-
-</style>
 
 
   </head>
@@ -70,29 +25,91 @@
 
 </div>
 
+<section class="section intro">
+  <div class="container">
+    <h1>Horizontal Timeline &rarr;</h1>
+  </div>
+</section>
+
 <section class="timeline">
   <ol>
     <li>
       <div>
-        <time>1934</time>
-        Some content here
+        <time>1934</time> <script> 
+</script>
       </div>
     </li>
-      
-    <!-- more list items here -->
+    <li>
+      <div>
+        <time>1937</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>1940</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>1943</time>
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>1946</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>1956</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>1957</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>1967</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>1977</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>1985</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>2000</time> 
+      </div>
+    </li>
+    <li>
+      <div>
+        <time>2005</time> 
+      </div>
+    </li>
+    <li></li>
+  </ol>
+  
+  <div class="arrows">
+    <button class="arrow arrow__prev disabled" disabled>
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/arrow_prev.svg" alt="prev timeline arrow">
+    </button>
+    <button class="arrow arrow__next">
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/arrow_next.svg" alt="next timeline arrow">
+    </button>
+  </div>
+</section>
      
     <li></li>
   </ol>
    
-  <div class="arrows">
-    <button class="arrow arrow__prev disabled" disabled>
-      <img src="arrow_prev.svg" alt="prev timeline arrow">
-    </button>
-    <button class="arrow arrow__next">
-      <img src="arrow_next.svg" alt="next timeline arrow">
-    </button>
-  </div>
-</section>
 
 
 <p> {{House}} Description: </p>
