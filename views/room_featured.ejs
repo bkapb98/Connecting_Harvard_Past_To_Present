@@ -14,7 +14,7 @@
     </div> -->
 
     <h1>
-        Welcome to Room <%-room.name %>! 
+        Welcome to Room <%-room.name %>!
     </h1>
     <br>
     <br>
@@ -32,18 +32,18 @@
         <h2> Comments </h2>
         <ul>
             <% comments.forEach(comment => { %>
-            <li> 
+            <li>
                 <%- comment.text %>
             </li>
             <% }); %>
-            
+
         </ul>
     </div>
     <div>
-        Comment: <input type="text-area" class="form-control" name="comments">
-        <br>
-        <input type="submit" value="Add Comment" class="btn btn-primary">
-        <br>
+        Comment:   <form action = "/commenthandler/<%- room.roomId %>", method = "post">
+      <input name = "comment", type="text"></input>
+      <input type = "submit"></input>
+  </form>
     </div>
 </body>
 </html>
