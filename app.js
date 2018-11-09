@@ -204,6 +204,20 @@ app.get('/room/:roomId', (req, res) => {
     });
   }})
 
+app.post('/commenthandler/:roomId', function(req, res){
+  let text = req.body.comment;
+  //waiting until we can keep track of the logged-in user's ID
+  let userId = 20;
+  let roomId = req.params.roomId;
+  let time = Date.now();
+  //adds the comment and its object ID to the overall list of comments
+  db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time]);
+  //creates and concatenates a string for the redirect URL to go back to object page
+  let address = '/room/';
+  address+= req.params.roomId;
+  //redirects to page for the individual object after adding comment for it
+  res.redirect(address);
+})
 
 // Listen on socket
 app.listen(port, hostname, () => {
