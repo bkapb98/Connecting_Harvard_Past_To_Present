@@ -1,7 +1,6 @@
 const express = require('express');
-//const expressVue = require('express-vue');
 const path = require('path');
-require('cross-fetch/polyfill');
+const polyfill = require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 const async = require('async');
 const session = require('cookie-session')
@@ -12,7 +11,7 @@ const bodyParser = require('body-parser');
 const hostname = '127.0.0.1';
 const port = 3000;
 
-// authorizer route
+// Authorizer route
 function authChecker(req, res, next) {
   if (req.session.auth) {
       next();
@@ -23,12 +22,11 @@ function authChecker(req, res, next) {
 
 // Initialize Express
 const app = express();
-// app.use(express.static('static'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-// app.use(express.staticProvider(__dirname + '/public'));
+
 
 
 app.use(bodyParser.urlencoded({extended:true}));
@@ -39,39 +37,35 @@ app.use(bodyParser.json());
 // Create database
 let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
-
 // List houses
-
+// Implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
 room_numbers = []
 app.get('/', (req, res) => {
   async.parallel({
+    // Get room numbers
     rooms_info: function(callback) {
       db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
         if(err) {
-          res.render('404');
+          return res.status(404)
+            .render('404');
         }
         for(room in rooms_info)
         {
           room_numbers.push(room)
         }
-        setTimeout(function() {
-          callback(null, room_numbers);
-        }, 100);
-        // console.log("room info:", room_numbers);
+        callback(null, room_numbers)
     })},
+    // Get house information
     house_info: function(callback) {
       db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
-          res.render('404');
+          return res.status(404)
+            .render('404');
         }
-        setTimeout(function() {
-          callback(null, house_info);
-        }, 200);
-      })}
-        // console.log("house info:", house_info);
-
-      },
-      //  callback
+        callback(null, house_info)
+      }
+    )}
+  },
   // Render home page
   function(err, results) {
     res.render('index', { houses: results.house_info, rooms: room_numbers });
@@ -82,39 +76,39 @@ app.get('/', (req, res) => {
 // House Page
 app.get('/house/:houseId', (req, res) => {
   const house_id = req.params.houseId;
-  //implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
-
   async.parallel({
+    // Get event information
     events_info: function(callback) {
-      // sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
+      // Sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
       db.all(`SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC`, house_id, (err, events_info) => {
         if(err) {
-          res.render('404');
+          return res.status(404)
+            .render('404');
         }
-      setTimeout(function() {
-          callback(null, events_info);
-      }, 100);
-    })},
+        callback(null, events_info);
+      })
+    },
+    // Get house information 
     house_info: function(callback) {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
-          res.render('404');
+          return res.status(404)
+            .render('404');
         }
-      setTimeout(function() {
-          callback(null, house_info);
-      }, 200);
-    })},
+        callback(null, house_info);
+      })
+    },
+    // Get room information
     rooms_info: function(callback) {
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
         if(err) {
-          res.render('404');
+          return res.status(404)
+            .render('404');
         }
-      setTimeout(function() {
-          callback(null, rooms_info);
-      }, 300);
-    })}
+        callback(null, rooms_info);
+      })
+    }
   },
-  //  callback
   function(err, results) {
     res.render('house', { house: results.house_info, rooms: results.rooms_info, events: results.events_info });
   });
@@ -124,23 +118,23 @@ app.get('/house/:houseId', (req, res) => {
 app.get('/room/:roomId', (req, res) => {
   const room_id = req.params.roomId;
   async.parallel({
+    // Get room info 
     room_info: function(callback) {
       db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
         if(err) {
-          res.render('404');
+          return res.status(404)
+            .render('404');
         }
-        setTimeout(function() {
-          callback(null, room_info);
-        }, 100);
+        callback(null, room_info);
       })},
+    // Get comments
     comments: function(callback) {
       db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
         if(err) {
-          res.render('404');
+          return res.status(404)
+            .render('404');
         }
-        setTimeout(function() {
-          callback(null, comments_info);
-        }, 200);
+        callback(null, comments_info);
       })}
     },
     // Render room page
@@ -158,7 +152,8 @@ app.get('/room/:roomId', (req, res) => {
     const password = req.body.password;
       db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
       if (err) {
-        throw err
+        return res.status(404)
+            .render('404');
       }
       console.log(result)
       console.log('username', result.userName);
@@ -192,8 +187,6 @@ app.get('/room/:roomId', (req, res) => {
   })
 
   app.post('/roomhandler', function(req, res){
-    // let address = '/room/';
-    // let id = 0;
     let name = req.body.inputs;
     if (name.length <5)
     {
