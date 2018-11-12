@@ -4,6 +4,7 @@ const path = require('path');
 require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 const async = require('async');
+const session = require('cookie-session')
 
 
 const bodyParser = require('body-parser');
@@ -11,6 +12,14 @@ const bodyParser = require('body-parser');
 const hostname = '127.0.0.1';
 const port = 3000;
 
+// authorizer route
+function authChecker(req, res, next) {
+  if (req.session.auth) {
+      next();
+  } else {
+     res.redirect("/auth");
+  }
+}
 
 // Initialize Express
 const app = express();
