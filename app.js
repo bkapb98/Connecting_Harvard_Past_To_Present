@@ -162,7 +162,6 @@ app.get('/room/:roomId', (req, res) => {
       }
       if (result.userName === username && result.password == password){
         console.log("person logged in")
-        // to do - figure out how to show authenticated probably in header
         res.redirect('/');
       }
       else {
@@ -176,7 +175,6 @@ app.get('/room/:roomId', (req, res) => {
   });
 
   app.post('/register', (req, res) => {
-    // need to get info from form using dom
     const first = req.body.firstname;
     const last = req.body.lastname;
     const userName = req.body.username;
@@ -215,16 +213,15 @@ app.get('/room/:roomId', (req, res) => {
 
 app.post('/commenthandler/:roomId', function(req, res){
   let text = req.body.comment;
-  //waiting until we can keep track of the logged-in user's ID
   let userId = 20;
   let roomId = req.params.roomId;
   let time = Date.now();
-  //adds the comment and its object ID to the overall list of comments
+  // Adds the comment and its object ID to the overall list of comments
   db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time]);
-  //creates and concatenates a string for the redirect URL to go back to object page
+  // Creates and concatenates a string for the redirect URL to go back to object page
   let address = '/room/';
   address+= req.params.roomId;
-  //redirects to page for the individual object after adding comment for it
+  // Redirects to page for the individual object after adding comment for it
   res.redirect(address);
 })
 
