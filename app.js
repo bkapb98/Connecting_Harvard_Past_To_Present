@@ -44,16 +44,12 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info: function(callback) {
-      db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
+      db.all(`SELECT * FROM Rooms`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
             .render('404');
         }
-        for(room in rooms_info)
-        {
-          room_numbers.push(room)
-        }
-        callback(null, room_numbers)
+        callback(null, rooms_info)
     })},
     // Get house information
     house_info: function(callback) {
@@ -68,7 +64,7 @@ app.get('/', (req, res) => {
   },
   // Render home page
   function(err, results) {
-    res.render('index', { houses: results.house_info, rooms: room_numbers });
+    res.render('index', { houses: results.house_info, rooms: results.rooms_info });
   });
 });
 
@@ -88,7 +84,7 @@ app.get('/house/:houseId', (req, res) => {
         callback(null, events_info);
       })
     },
-    // Get house information 
+    // Get house information
     house_info: function(callback) {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
@@ -118,7 +114,7 @@ app.get('/house/:houseId', (req, res) => {
 app.get('/room/:roomId', (req, res) => {
   const room_id = req.params.roomId;
   async.parallel({
-    // Get room info 
+    // Get room info
     room_info: function(callback) {
       db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
         if(err) {
@@ -187,22 +183,29 @@ app.get('/room/:roomId', (req, res) => {
   app.post('/roomhandler', function(req, res){
     let name = req.body.inputs;
     if (name.length <5)
-    {
-    db.get('SELECT roomId FROM Rooms WHERE Name = ?', name, (err, room) => {
-      if(err){
-        return console.error(err.message);
-      }
-      res.redirect(`/room/${room.roomId}`);
-    });
-  }
+      {
+        db.get('SELECT roomId FROM Rooms WHERE name = ?', name, (err, room) => {
+          if(room){
+            res.redirect(`/room/${room.roomId}`);
+          }
+          else {
+              return res.status(404)
+                  .render('404');
+          }
+        });
+}
   else{
-    db.get('SELECT houseId FROM Houses WHERE name = ?', name, (err, house) => {
-      if(err){
-        return console.error(err.message);
-      }
-      res.redirect(`/house/${house.houseId}`);
-    });
-  }})
+      db.get('SELECT houseId FROM Houses WHERE name = ?', name, (err, house) => {
+        if(house){
+          res.redirect(`/house/${house.houseId}`);
+        }
+        else {
+            return res.status(404)
+                .render('404');
+        }
+      });
+    }
+  })
 
 app.post('/commenthandler/:roomId', function(req, res){
   let text = req.body.comment;
