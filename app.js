@@ -44,16 +44,12 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info: function(callback) {
-      db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
+      db.all(`SELECT * FROM Rooms`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
             .render('404');
         }
-        for(room in rooms_info)
-        {
-          room_numbers.push(room)
-        }
-        callback(null, room_numbers)
+        callback(null, rooms_info)
     })},
     // Get house information
     house_info: function(callback) {
@@ -68,7 +64,7 @@ app.get('/', (req, res) => {
   },
   // Render home page
   function(err, results) {
-    res.render('index', { houses: results.house_info, rooms: room_numbers });
+    res.render('index', { houses: results.house_info, rooms: results.rooms_info });
   });
 });
 
