@@ -145,29 +145,28 @@ app.get('/room/:roomId', (req, res) => {
     res.render('login.ejs');
   });
 
-  app.post('/login', (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-      db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
-      if (err) {
-        return res.status(404)
-            .render('404');
-      }
-      console.log(result)
-      console.log('username', result.userName);
-      if (!result) {
-        console.log("login combo doesn't exist")
-      }
-      if (result.userName == username && result.password == password){
-        sess = req.session;
-        sess.user = username;
-        res.redirect('/');
-      }
-      else {
-        res.redirect('/login')
-      }
+app.post('/login', (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+    db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
+    if (err) {
+      return res.status(404)
+          .render('404');
+    }
+    if (!result) {
+      return res.status(404)
+          .render('404');
+    }
+    if (result.userName == username && result.password == password){
+      sess = req.session;
+      sess.user = username;
+      res.redirect('/');
+    }
+    else {
+      res.redirect('/login')
+    }
   });
-  });
+});
 
   app.get('/register', (req, res) => {
     res.render('register.ejs');
