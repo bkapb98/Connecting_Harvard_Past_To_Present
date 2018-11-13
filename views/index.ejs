@@ -17,7 +17,7 @@
       <style type="text/css">
           img.resize{
             width: 100%;
-            max-width: 60px ; 
+            max-width: 60px ;
             max-height: 500px ;
           }
             .buttoncontainer {
@@ -79,7 +79,7 @@
           <div class="row">
               <% houses.forEach(house => { %>
               <div class="col-md-4" style="background-color: azure">
-                  <a href="/house/<%- house.houseId %>"> <%- house.name %> </a>
+                  <a href="/house/<%- house.houseId %>"> <%- house.houseName %> </a>
                   <br>
                   <%- house.description %>
               </div>
@@ -94,10 +94,10 @@
       <input name = "inputs" class="awesomplete" autocomplete = "off" class = "form-control" type= "text" list="rooms" placeholder="Type to search a room or house."/>
       <datalist id="rooms">
         <% rooms.forEach(room => { %>
-      	<option><%-room.name %></option>
+      	<option value ="<%-room.houseName + " " + room.name%>" ><%-room.name%> </option>
         <% }); %>
         <% houses.forEach(house => { %>
-      	<option><%-house.name %></option>
+      	<option><%-house.houseName %></option>
         <% }); %>
       </datalist>
     </form>
