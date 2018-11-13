@@ -28,7 +28,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 
-app.use(session({secret: 'ssshhhhh'}));
+app.use(session({
+  secret: 'ssshhhhh',
+  resave: false,
+  saveUninitialized: true,
+}));
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -46,13 +50,21 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info: function(callback) {
-      db.all(`SELECT * FROM Rooms`, (err, rooms_info) => {
+      db.all(`SELECT Rooms.name, Rooms.roomId, Houses.houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.houseId`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
             .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, rooms_info)
     })},
+    // rooms_info: function(callback) {
+    //   db.all(`SELECT * FROM Rooms`, (err, rooms_info) => {
+    //     if(err) {
+    //       return res.status(404)
+    //         .render('404');
+    //     }
+    //     callback(null, rooms_info)
+    // })},
     // Get house information
     house_info: function(callback) {
       db.all('SELECT * FROM Houses', (err, house_info) => {
@@ -66,6 +78,7 @@ app.get('/', (req, res) => {
   },
   // Render home page
   function(err, results) {
+    console.log('TODO', results.rooms_info)
     res.render('index', { houses: results.house_info, rooms: results.rooms_info });
   });
 });
@@ -148,6 +161,10 @@ app.get('/room/:roomId', (req, res) => {
 app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+  if (!username || !password) {
+    return res.status(404)
+    .render('404');
+  }
     db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
     if (err) {
       return res.status(404)
@@ -177,16 +194,42 @@ app.post('/login', (req, res) => {
     const last = req.body.lastname;
     const userName = req.body.username;
     const password = req.body.password;
-    db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-    sess = req.session;
-    sess.user = userName;
-    res.redirect('/')
+    if (!first || !last || !userName || !password) {
+      return res.status(404)
+        .render('404', {err_message: "Sorry, you have reached an error" });
+    }
+    db.get(`SELECT * FROM Users WHERE userName = '${userName}'`, (err, result) => {
+      if (err) {
+        return res.status(404)
+            .render('404', {err_message: "Sorry, you have reached an error" });
+      }
+      if (result) {
+        return res.status(404)
+            .render('404', {err_message: "Sorry, this username already exists." });
+      }
+      db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
+      sess = req.session;
+      sess.user = userName;
+      res.redirect('/')
+    });
   })
+
+  const CHAR_0 = '0'.charCodeAt(0);
+  const CHAR_9 = '9'.charCodeAt(0);
+
+  function containsDigit (s) {
+    return [...s].some(x => {
+      let c = x.charCodeAt(0);
+      return c >= CHAR_0 && c <= CHAR_9;
+    });
+  }
 
   app.post('/roomhandler', function(req, res){
     let name = req.body.inputs;
-    if (name.length <5)
+    console.log(containsDigit(name));
+    if (containsDigit(name))
       {
+        name = name.slice(-3);
         db.get('SELECT roomId FROM Rooms WHERE name = ?', name, (err, room) => {
           if(room){
             res.redirect(`/room/${room.roomId}`);
