@@ -8,8 +8,9 @@
     <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
     <!-- <img src= alt="Italian Trulli">  -->
     <h1> <%- house.name %> </h1>
-    <h2> <%- house.description %> <h2>
-    </h3> Events </h3>
+    <h2> <%- house.description %> </h2>
+    <h3> <img src="<%-house.imgurl%>" class="resize"> </h3>
+    </h4> Events </h4>
     <div class="timeline">
         <% events.forEach(event => { %>
             <div class="container left">
