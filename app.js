@@ -28,7 +28,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 
-app.use(session({secret: 'ssshhhhh'}));
+app.use(session({
+  secret: 'ssshhhhh',
+  resave: false,
+  saveUninitialized: true,
+}));
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -148,6 +152,10 @@ app.get('/room/:roomId', (req, res) => {
 app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+  if (!username || !password) {
+    return res.status(404)
+    .render('404');
+  }
     db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
     if (err) {
       return res.status(404)
@@ -177,10 +185,24 @@ app.post('/login', (req, res) => {
     const last = req.body.lastname;
     const userName = req.body.username;
     const password = req.body.password;
-    db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-    sess = req.session;
-    sess.user = userName;
-    res.redirect('/')
+    if (!first || !last || !userName || !password) {
+      return res.status(404)
+        .render('404');
+    }
+    db.get(`SELECT * FROM Users WHERE userName = '${userName}'`, (err, result) => {
+      if (err) {
+        return res.status(404)
+            .render('404');
+      }
+      if (result) {
+        return res.status(404)
+            .render('404');
+      }
+      db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
+      sess = req.session;
+      sess.user = userName;
+      res.redirect('/')
+    });
   })
 
   app.post('/roomhandler', function(req, res){
