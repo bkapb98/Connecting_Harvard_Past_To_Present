@@ -53,7 +53,7 @@ app.get('/', (req, res) => {
       db.all(`SELECT Rooms.name, Rooms.roomId, Houses.houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.houseId`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, rooms_info)
     })},
@@ -70,7 +70,7 @@ app.get('/', (req, res) => {
       db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, house_info)
       }
@@ -94,7 +94,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       db.all(`SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC`, house_id, (err, events_info) => {
         if(err) {
           return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, events_info);
       })
@@ -104,7 +104,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, house_info);
       })
@@ -114,7 +114,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
         if(err) {
           return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, rooms_info);
       })
@@ -134,7 +134,7 @@ app.get('/room/:roomId', (req, res) => {
       db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
         if(err) {
           return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, room_info);
       })},
@@ -143,7 +143,7 @@ app.get('/room/:roomId', (req, res) => {
       db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
         if(err) {
           return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, comments_info);
       })}
@@ -168,11 +168,11 @@ app.post('/login', (req, res) => {
     db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
     if (err) {
       return res.status(404)
-          .render('404');
+          .render('404', {err_message: "Sorry, you have reached an error" });
     }
     if (!result) {
       return res.status(404)
-          .render('404');
+          .render('404', {err_message: "It looks like you have no registered account per those credentials." });
     }
     if (result.userName == username && result.password == password){
       sess = req.session;
@@ -196,16 +196,16 @@ app.post('/login', (req, res) => {
     const password = req.body.password;
     if (!first || !last || !userName || !password) {
       return res.status(404)
-        .render('404');
+        .render('404', {err_message: "Sorry, you have reached an error" });
     }
     db.get(`SELECT * FROM Users WHERE userName = '${userName}'`, (err, result) => {
       if (err) {
         return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, you have reached an error" });
       }
       if (result) {
         return res.status(404)
-            .render('404');
+            .render('404', {err_message: "Sorry, this username already exists." });
       }
       db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
       sess = req.session;
@@ -236,7 +236,7 @@ app.post('/login', (req, res) => {
           }
           else {
               return res.status(404)
-                  .render('404');
+                  .render('404', {err_message: "Sorry, no matching results." });
           }
         });
 }
@@ -247,7 +247,7 @@ app.post('/login', (req, res) => {
         }
         else {
             return res.status(404)
-                .render('404');
+                .render('404',{err_message: "Sorry, no matching results." });
         }
       });
     }
