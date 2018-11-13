@@ -3,20 +3,20 @@ const path = require('path');
 const polyfill = require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 const async = require('async');
-const session = require('cookie-session')
-
+const session = require('express-session');
 
 const bodyParser = require('body-parser');
 
 const hostname = '127.0.0.1';
 const port = 3000;
 
-// Authorizer route
-function authChecker(req, res, next) {
-  if (req.session.auth) {
-      next();
+// authorizer middleware
+authChecker = (req, res, next) => {
+  sess = req.session;
+  if (!req.session.user) {
+    res.redirect("/login");
   } else {
-     res.redirect("/auth");
+      next();
   }
 }
 
@@ -28,32 +28,30 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 
+app.use(session({secret: 'ssshhhhh'}));
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-
-
 // Create database
 let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
+// session variable
+let sess;
 // List houses
 // Implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
 room_numbers = []
+
 app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info: function(callback) {
-      db.all(`SELECT Name FROM Rooms`, (err, rooms_info) => {
+      db.all(`SELECT * FROM Rooms`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
             .render('404');
         }
-        for(room in rooms_info)
-        {
-          room_numbers.push(room)
-        }
-        callback(null, room_numbers)
+        callback(null, rooms_info)
     })},
     // Get house information
     house_info: function(callback) {
@@ -68,13 +66,13 @@ app.get('/', (req, res) => {
   },
   // Render home page
   function(err, results) {
-    res.render('index', { houses: results.house_info, rooms: room_numbers });
+    res.render('index', { houses: results.house_info, rooms: results.rooms_info });
   });
 });
 
 
 // House Page
-app.get('/house/:houseId', (req, res) => {
+app.get('/house/:houseId', authChecker, (req, res) => {
   const house_id = req.params.houseId;
   async.parallel({
     // Get event information
@@ -88,7 +86,7 @@ app.get('/house/:houseId', (req, res) => {
         callback(null, events_info);
       })
     },
-    // Get house information 
+    // Get house information
     house_info: function(callback) {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
@@ -118,7 +116,7 @@ app.get('/house/:houseId', (req, res) => {
 app.get('/room/:roomId', (req, res) => {
   const room_id = req.params.roomId;
   async.parallel({
-    // Get room info 
+    // Get room info
     room_info: function(callback) {
       db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
         if(err) {
@@ -160,9 +158,9 @@ app.get('/room/:roomId', (req, res) => {
       if (!result) {
         console.log("login combo doesn't exist")
       }
-      if (result.userName === username && result.password == password){
-        console.log("person logged in")
-        // to do - figure out how to show authenticated probably in header
+      if (result.userName == username && result.password == password){
+        sess = req.session;
+        sess.user = username;
         res.redirect('/');
       }
       else {
@@ -176,48 +174,54 @@ app.get('/room/:roomId', (req, res) => {
   });
 
   app.post('/register', (req, res) => {
-    // need to get info from form using dom
     const first = req.body.firstname;
     const last = req.body.lastname;
     const userName = req.body.username;
     const password = req.body.password;
     db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-    console.log('added user')
+    sess = req.session;
+    sess.user = userName;
     res.redirect('/')
   })
 
   app.post('/roomhandler', function(req, res){
     let name = req.body.inputs;
     if (name.length <5)
-    {
-    db.get('SELECT roomId FROM Rooms WHERE Name = ?', name, (err, room) => {
-      if(err){
-        return console.error(err.message);
-      }
-      res.redirect(`/room/${room.roomId}`);
-    });
-  }
+      {
+        db.get('SELECT roomId FROM Rooms WHERE name = ?', name, (err, room) => {
+          if(room){
+            res.redirect(`/room/${room.roomId}`);
+          }
+          else {
+              return res.status(404)
+                  .render('404');
+          }
+        });
+}
   else{
-    db.get('SELECT houseId FROM Houses WHERE name = ?', name, (err, house) => {
-      if(err){
-        return console.error(err.message);
-      }
-      res.redirect(`/house/${house.houseId}`);
-    });
-  }})
+      db.get('SELECT houseId FROM Houses WHERE name = ?', name, (err, house) => {
+        if(house){
+          res.redirect(`/house/${house.houseId}`);
+        }
+        else {
+            return res.status(404)
+                .render('404');
+        }
+      });
+    }
+  })
 
 app.post('/commenthandler/:roomId', function(req, res){
   let text = req.body.comment;
-  //waiting until we can keep track of the logged-in user's ID
   let userId = 20;
   let roomId = req.params.roomId;
   let time = Date.now();
-  //adds the comment and its object ID to the overall list of comments
+  // Adds the comment and its object ID to the overall list of comments
   db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time]);
-  //creates and concatenates a string for the redirect URL to go back to object page
+  // Creates and concatenates a string for the redirect URL to go back to object page
   let address = '/room/';
   address+= req.params.roomId;
-  //redirects to page for the individual object after adding comment for it
+  // Redirects to page for the individual object after adding comment for it
   res.redirect(address);
 })
 

@@ -12,17 +12,19 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
       <link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
       <script src="https://unpkg.com/vue-bootstrap-typeahead"></script>
+      <link rel="stylesheet" href="awesomplete.css" />
+      <script src="awesomplete.js" async></script>
       <style type="text/css">
-                img.resize{
-                  width: 100%;
-                  max-width: 60px ; 
-                  max-height: 500px ;
-                }
-                  .buttoncontainer {
-                    display: inline-block;
-                    position: inherit;
-                    float: right;
-                }
+          img.resize{
+            width: 100%;
+            max-width: 60px ; 
+            max-height: 500px ;
+          }
+            .buttoncontainer {
+              display: inline-block;
+              position: inherit;
+              float: right;
+          }
       </style>
   </head>
 
@@ -85,14 +87,21 @@
           </div>
       </div>
 
+
       <div>
-        <vue-bootstrap-typeahead v-model="query" target="#inputs" :data="rooms">
-          <form action = "/roomhandler", method = "post">
-            <label for="inputs">Search a Room or House:</label>
-            <input name="inputs" autocomplete="off" class="form-control" type="text" placeholder="Type to search a room or house.">
-          </form>
-        <vue-bootstrap-typeahead/>
-      </div>
+      <form action = "/roomhandler", method = "post">
+      <label for="inputs">Search a Room or House:</label>
+      <input name = "inputs" class="awesomplete" autocomplete = "off" class = "form-control" type= "text" list="rooms" placeholder="Type to search a room or house."/>
+      <datalist id="rooms">
+        <% rooms.forEach(room => { %>
+      	<option><%-room.name %></option>
+        <% }); %>
+        <% houses.forEach(house => { %>
+      	<option><%-house.name %></option>
+        <% }); %>
+      </datalist>
+    </form>
+    </div>
 
       <script>
         import {Typeahead} from 'uiv'
