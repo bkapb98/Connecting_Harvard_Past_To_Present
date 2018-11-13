@@ -3,20 +3,20 @@ const path = require('path');
 const polyfill = require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 const async = require('async');
-const session = require('cookie-session')
-
+const session = require('express-session');
 
 const bodyParser = require('body-parser');
 
 const hostname = '127.0.0.1';
 const port = 3000;
 
-// Authorizer route
-function authChecker(req, res, next) {
-  if (req.session.auth) {
-      next();
+// authorizer middleware
+authChecker = (req, res, next) => {
+  sess = req.session;
+  if (!req.session.user) {
+    res.redirect("/login");
   } else {
-     res.redirect("/auth");
+      next();
   }
 }
 
@@ -28,18 +28,20 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 
+app.use(session({secret: 'ssshhhhh'}));
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-
-
 // Create database
 let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
+// session variable
+let sess;
 // List houses
 // Implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
 room_numbers = []
+
 app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
@@ -70,7 +72,7 @@ app.get('/', (req, res) => {
 
 
 // House Page
-app.get('/house/:houseId', (req, res) => {
+app.get('/house/:houseId', authChecker, (req, res) => {
   const house_id = req.params.houseId;
   async.parallel({
     // Get event information
@@ -156,8 +158,9 @@ app.get('/room/:roomId', (req, res) => {
       if (!result) {
         console.log("login combo doesn't exist")
       }
-      if (result.userName === username && result.password == password){
-        console.log("person logged in")
+      if (result.userName == username && result.password == password){
+        sess = req.session;
+        sess.user = username;
         res.redirect('/');
       }
       else {
@@ -176,7 +179,8 @@ app.get('/room/:roomId', (req, res) => {
     const userName = req.body.username;
     const password = req.body.password;
     db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-    console.log('added user')
+    sess = req.session;
+    sess.user = userName;
     res.redirect('/')
   })
 
