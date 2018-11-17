@@ -92,22 +92,13 @@ dict = [
     "source": "Special to THE NEW,YORK TIMES. (1932, Nov 16). YALE JUNIORS DEFEAT WINTHROP HOUSE, 7-0. New York Times (1923-Current File) Retrieved from http://search.proquest.com.ezp-prod1.hul.harvard.edu/docview/99777544?accountid=11311"
   }
 ]
-  for(let key in dict)
-  {
-    db.get('SELECT houseId FROM Houses WHERE houseName = ?', dict[key].house, (err, house) => {
-      console.log(house)
-      if(err)
-      {
-        throw err;
-      }
-      console.log(house.houseId)
-      console.log(dict[key].name)
-      console.log(dict[key].date)
-      console.log(dict[key].description)
-      console.log(dict[key].name)
-      console.log(dict[key].description)
-      console.log(dict[key].source)
-      db.run('INSERT INTO Events(houseId, date, eventName, description, source) VALUES(?, ?, ?, ?, ?)', [house.houseId, dict[key].date, dict[key].name, dict[key].description, dict[key].source]);
-  })
+for(let key in dict){
+  //gets the houseId using its name since the two tables are linked by houseId
+  db.get('SELECT houseId FROM Houses WHERE houseName = ?', dict[key].house, (err, house) => {
+    if(err){
+      throw err;
+    }
+    db.run('INSERT INTO Events(houseId, date, eventName, description, source) VALUES(?, ?, ?, ?, ?)', [house.houseId, dict[key].date, dict[key].name, dict[key].description, dict[key].source]);
+})
 }
 })
