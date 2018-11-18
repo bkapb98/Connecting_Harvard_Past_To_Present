@@ -134,7 +134,7 @@ app.get('/room/:roomId', (req, res) => {
       db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404', {err_message: "Sorry, you have reached an error"});
         }
         callback(null, room_info);
       })},
@@ -143,7 +143,7 @@ app.get('/room/:roomId', (req, res) => {
       db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404', {err_message: "Sorry, you have reached an error"});
         }
         callback(null, comments_info);
       })}
