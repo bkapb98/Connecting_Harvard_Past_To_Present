@@ -12,7 +12,6 @@ const port = 3000;
 
 // authorizer middleware
 authChecker = (req, res, next) => {
-  sess = req.session;
   if (!req.session.user) {
     res.redirect("/login");
   } else {
@@ -31,17 +30,15 @@ app.use(bodyParser.json());
 app.use(session({
   secret: 'ssshhhhh',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false
 }));
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
 // Create database
-let db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
+const db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
-// session variable
-let sess;
 // List houses
 // Implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
 room_numbers = []
@@ -50,10 +47,10 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info: function(callback) {
-      db.all(`SELECT Rooms.name, Rooms.roomId, Houses.houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.houseId`, (err, rooms_info) => {
+      db.all(`SELECT Rooms.name, Rooms.roomId, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.houseId`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404', {err_message: "Sorry, you have reached an error" } );
         }
         callback(null, rooms_info)
     })},
@@ -70,7 +67,7 @@ app.get('/', (req, res) => {
       db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404', {err_message: "Sorry, you have reached an error" } );
         }
         callback(null, house_info)
       }
@@ -104,7 +101,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404', , {err_message: "Sorry, you have reached an error" });
         }
         callback(null, house_info);
       })
@@ -161,10 +158,6 @@ app.get('/room/:roomId', (req, res) => {
 app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  if (!username || !password) {
-    return res.status(404)
-    .render('404');
-  }
     db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
     console.log(result, err)
       if (err) {
@@ -175,9 +168,8 @@ app.post('/login', (req, res) => {
       return res.status(404)
           .render('404', {err_message: "It looks like you have no registered account per those credentials." });
     }
-    if (result.userName == username && result.password == password){
-      sess = req.session;
-      sess.user = username;
+    if (result.userName === username && result.password === password){
+      req.session.user = {username};
       res.redirect('/');
     }
     else {
@@ -195,24 +187,10 @@ app.post('/login', (req, res) => {
     const last = req.body.lastname;
     const userName = req.body.username;
     const password = req.body.password;
-    if (!first || !last || !userName || !password) {
-      return res.status(404)
-        .render('404', {err_message: "Sorry, you have reached an error" });
-    }
-    db.get(`SELECT * FROM Users WHERE userName = '${userName}'`, (err, result) => {
-      if (err) {
-        return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
-      }
-      if (result) {
-        return res.status(404)
-            .render('404', {err_message: "Sorry, this username already exists." });
-      }
-      db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-      sess = req.session;
-      sess.user = userName;
-      res.redirect('/')
-    });
+    db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
+    sess = req.session;
+    sess.user = userName;
+    res.redirect('/')
   })
 
   const CHAR_0 = '0'.charCodeAt(0);
@@ -220,13 +198,13 @@ app.post('/login', (req, res) => {
 
   function containsDigit (s) {
     return [...s].some(x => {
-      let c = x.charCodeAt(0);
+      const c = x.charCodeAt(0);
       return c >= CHAR_0 && c <= CHAR_9;
     });
   }
 
   app.post('/roomhandler', function(req, res){
-    let name = req.body.inputs;
+    const name = req.body.inputs;
     console.log(containsDigit(name));
     if (containsDigit(name))
       {
@@ -242,7 +220,7 @@ app.post('/login', (req, res) => {
         });
 }
   else{
-      db.get('SELECT houseId FROM Houses WHERE houseName = ?', name, (err, house) => {
+      db.get('SELECT houseId FROM Houses WHERE name = ?', name, (err, house) => {
         if(house){
           res.redirect(`/house/${house.houseId}`);
         }
@@ -255,18 +233,23 @@ app.post('/login', (req, res) => {
   })
 
 app.post('/commenthandler/:roomId', function(req, res){
-  let text = req.body.comment;
-  let userId = 20;
-  let roomId = req.params.roomId;
-  let time = Date.now();
+  //change to CONSTS
+  const text = req.body.comment;
+  const userId = 20;
+  const roomId = req.params.roomId;
+  const created = Date.now();
   // Adds the comment and its object ID to the overall list of comments
-  db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time]);
+  db.run('INSERT INTO Comments(text, userId, roomId, created) VALUES(?, ?, ?, ?)', [text, userId, roomId, created]);
   // Creates and concatenates a string for the redirect URL to go back to object page
-  let address = '/room/';
-  address+= req.params.roomId;
+  //Callback function will be necessary to add and checking for errors
   // Redirects to page for the individual object after adding comment for it
-  res.redirect(address);
+  res.redirect(`/room/${roomId}`);
 })
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+  })
 
 // Listen on socket
 app.listen(port, hostname, () => {
