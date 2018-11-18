@@ -36,6 +36,9 @@
       <form action="/register" method="get">
           <button class="btn btn-primary" type="submit">Register</button>
       </form>
+      <form action="/logout" method="get">
+          <button class="btn btn-primary" type="submit">Logout</button>
+      </form>
 
     </div>
       <div class="container">
@@ -93,12 +96,13 @@
       <label for="inputs">Search a Room or House:</label>
       <input name = "inputs" class="awesomplete" autocomplete = "off" class = "form-control" type= "text" list="rooms" placeholder="Type to search a room or house."/>
       <datalist id="rooms">
-        <% rooms.forEach(room => { %>
-      	<option value ="<%-room.houseName + " " + room.name%>" ><%-room.name%> </option>
-        <% }); %>
         <% houses.forEach(house => { %>
-      	<option><%-house.houseName %></option>
+        <option><%=house.houseName %></option>
         <% }); %>
+        <% rooms.forEach(room => { %>
+      	<option value ="<%= room.houseName + " " + room.name%>" ><%=room.name%> </option>
+        <% }); %>
+
       </datalist>
     </form>
     </div>
