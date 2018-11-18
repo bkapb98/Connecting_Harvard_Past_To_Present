@@ -12,7 +12,6 @@ const port = 3000;
 
 // authorizer middleware
 authChecker = (req, res, next) => {
-  sess = req.session;
   if (!req.session.user) {
     res.redirect("/login");
   } else {
@@ -31,7 +30,7 @@ app.use(bodyParser.json());
 app.use(session({
   secret: 'ssshhhhh',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false
 }));
 
 app.use(bodyParser.urlencoded({extended:true}));
@@ -53,7 +52,7 @@ app.get('/', (req, res) => {
       db.all(`SELECT Rooms.name, Rooms.roomId, Houses.houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.houseId`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404');
         }
         callback(null, rooms_info)
     })},
@@ -70,7 +69,7 @@ app.get('/', (req, res) => {
       db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404');
         }
         callback(null, house_info)
       }
@@ -94,7 +93,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       db.all(`SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC`, house_id, (err, events_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404');
         }
         callback(null, events_info);
       })
@@ -104,7 +103,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404');
         }
         callback(null, house_info);
       })
@@ -114,7 +113,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404');
         }
         callback(null, rooms_info);
       })
@@ -134,7 +133,7 @@ app.get('/room/:roomId', (req, res) => {
       db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404');
         }
         callback(null, room_info);
       })},
@@ -143,7 +142,7 @@ app.get('/room/:roomId', (req, res) => {
       db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
+            .render('404');
         }
         callback(null, comments_info);
       })}
@@ -161,10 +160,6 @@ app.get('/room/:roomId', (req, res) => {
 app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  if (!username || !password) {
-    return res.status(404)
-    .render('404');
-  }
     db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
     console.log(result, err)
       if (err) {
@@ -173,11 +168,10 @@ app.post('/login', (req, res) => {
     }
     if (!result) {
       return res.status(404)
-          .render('404', {err_message: "It looks like you have no registered account per those credentials." });
+          .render('404');
     }
-    if (result.userName == username && result.password == password){
-      sess = req.session;
-      sess.user = username;
+    if (result.userName === username && result.password === password){
+      req.session.user = {username};
       res.redirect('/');
     }
     else {
@@ -195,24 +189,10 @@ app.post('/login', (req, res) => {
     const last = req.body.lastname;
     const userName = req.body.username;
     const password = req.body.password;
-    if (!first || !last || !userName || !password) {
-      return res.status(404)
-        .render('404', {err_message: "Sorry, you have reached an error" });
-    }
-    db.get(`SELECT * FROM Users WHERE userName = '${userName}'`, (err, result) => {
-      if (err) {
-        return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
-      }
-      if (result) {
-        return res.status(404)
-            .render('404', {err_message: "Sorry, this username already exists." });
-      }
-      db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-      sess = req.session;
-      sess.user = userName;
-      res.redirect('/')
-    });
+    db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
+    sess = req.session;
+    sess.user = userName;
+    res.redirect('/')
   })
 
   const CHAR_0 = '0'.charCodeAt(0);
@@ -237,7 +217,7 @@ app.post('/login', (req, res) => {
           }
           else {
               return res.status(404)
-                  .render('404', {err_message: "Sorry, no matching results." });
+                  .render('404');
           }
         });
 }
@@ -255,18 +235,23 @@ app.post('/login', (req, res) => {
   })
 
 app.post('/commenthandler/:roomId', function(req, res){
+  //change to CONSTS
   let text = req.body.comment;
   let userId = 20;
   let roomId = req.params.roomId;
-  let time = Date.now();
+  let created = Date.now();
   // Adds the comment and its object ID to the overall list of comments
-  db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time]);
+  db.run('INSERT INTO Comments(text, userId, roomId, created) VALUES(?, ?, ?, ?)', [text, userId, roomId, created]);
   // Creates and concatenates a string for the redirect URL to go back to object page
-  let address = '/room/';
-  address+= req.params.roomId;
+  //Callback function will be necessary to add and checking for errors
   // Redirects to page for the individual object after adding comment for it
-  res.redirect(address);
+  res.redirect(`/room/${roomId}`);
 })
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+  })
 
 // Listen on socket
 app.listen(port, hostname, () => {
