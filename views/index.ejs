@@ -97,7 +97,7 @@
       <input name = "inputs" class="awesomplete" autocomplete = "off" class = "form-control" type= "text" list="rooms" placeholder="Type to search a room or house."/>
       <datalist id="rooms">
         <% houses.forEach(house => { %>
-        <option><%=house.houseName %></option>
+        <option><%=house.name %></option>
         <% }); %>
         <% rooms.forEach(room => { %>
       	<option value ="<%= room.houseName + " " + room.name%>" ><%=room.name%> </option>

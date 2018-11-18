@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info: function(callback) {
-      db.all(`SELECT Rooms.name, Rooms.roomId, Houses.houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.houseId`, (err, rooms_info) => {
+      db.all(`SELECT Rooms.name, Rooms.roomId, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.houseId`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
             .render('404');
@@ -221,7 +221,7 @@ app.post('/login', (req, res) => {
         });
 }
   else{
-      db.get('SELECT houseId FROM Houses WHERE houseName = ?', name, (err, house) => {
+      db.get('SELECT houseId FROM Houses WHERE name = ?', name, (err, house) => {
         if(house){
           res.redirect(`/house/${house.houseId}`);
         }
