@@ -161,9 +161,10 @@ app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
     db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
-    if (err) {
+    console.log(result, err)
+      if (err) {
       return res.status(404)
-          .render('404');
+          .render('404', {err_message: "It looks like you have no registered account per those credentials." });
     }
     if (!result) {
       return res.status(404)
@@ -227,7 +228,7 @@ app.post('/login', (req, res) => {
         }
         else {
             return res.status(404)
-                .render('404');
+                .render('404', {err_message: "Sorry, no matching results" });
         }
       });
     }
