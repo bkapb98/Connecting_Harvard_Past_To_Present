@@ -101,7 +101,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404', , {err_message: "Sorry, you have reached an error" });
+            .render('404', {err_message: "Sorry, you have reached an error" });
         }
         callback(null, house_info);
       })
