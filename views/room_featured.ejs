@@ -36,7 +36,7 @@
     </div>
     <div>
         Comment:
-      <form action = "/commenthandler/<%- room.roomId %>", method = "post">
+      <form action = "/commenthandler/<%= room.id %>", method = "post">
         <input name = "comment", type="text"/>
         <input type = "submit"/>
       </form>
