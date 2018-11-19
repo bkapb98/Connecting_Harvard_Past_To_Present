@@ -94,7 +94,7 @@ dict = [
 ]
 for(let key in dict){
   //gets the houseId using its name since the two tables are linked by houseId
-  db.get('SELECT houseId FROM Houses WHERE houseName = ?', dict[key].house, (err, house) => {
+  db.get('SELECT houseId FROM Houses WHERE name = ?', dict[key].house, (err, house) => {
     if(err){
       throw err;
     }
