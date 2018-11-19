@@ -82,9 +82,9 @@
           <div class="row">
               <% houses.forEach(house => { %>
               <div class="col-md-4" style="background-color: azure">
-                  <a href="/house/<%- house.id %>"> <%- house.name %> </a>
+                  <a href="/house/<%= house.id %>"> <%= house.name %> </a>
                   <br>
-                  <%- house.description %>
+                  <%= house.description %>
               </div>
               <% }); %>
           </div>

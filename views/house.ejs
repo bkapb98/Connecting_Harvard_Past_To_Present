@@ -10,15 +10,15 @@
   <body>
     <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
     <!-- <img src= alt="Italian Trulli">  -->
-    <h1> <%- house.name %> </h1>
-    <h2> <%- house.description %> <h2>
+    <h1> <%-= house.name %> </h1>
+    <h2> <%-= house.description %> <h2>
     </h3> Events </h3>
     <div class="timeline">
         <% events.forEach(event => { %>
             <div class="container left">
               <div class="content">
-                  <h2><%- event.date %></h2>
-                  <p><%- event.eventName %>: <%- event.description %> </p>
+                  <h2><%= event.date %></h2>
+                  <p><%= event.eventName %>: <%= event.description %> </p>
               </div>
             </div>
         <% }); %>
@@ -29,7 +29,7 @@
         <% rooms.forEach(room => { %>
           <tr>
             <td>
-              <a href="/room/<%- room.id %>"> <%= room.name %> </a>
+              <a href="/room/<%= room.id %>"> <%= room.name %> </a>
             </td>
           </tr>
         <% }); %>
