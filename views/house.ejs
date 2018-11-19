@@ -29,7 +29,7 @@
         <% rooms.forEach(room => { %>
           <tr>
             <td>
-              <a href="/room/<%- room.id %>"> <%- room.name %> </a>
+              <a href="/room/<%= room.id %>"> <%= room.name %> </a>
             </td>
           </tr>
         <% }); %>
