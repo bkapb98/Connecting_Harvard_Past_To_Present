@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info: function(callback) {
-      db.all(`SELECT Rooms.name, Rooms.roomId, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.houseId`, (err, rooms_info) => {
+      db.all(`SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
             .render('404', {err_message: "Sorry, you have reached an error" } );
@@ -98,7 +98,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     },
     // Get house information
     house_info: function(callback) {
-      db.get(`SELECT * FROM Houses WHERE houseId = ?`, house_id, (err, house_info) => {
+      db.get(`SELECT * FROM Houses WHERE id = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(404)
             .render('404', {err_message: "Sorry, you have reached an error" });
@@ -128,7 +128,7 @@ app.get('/room/:roomId', (req, res) => {
   async.parallel({
     // Get room info
     room_info: function(callback) {
-      db.get(`SELECT * FROM Rooms WHERE roomId = ?`, room_id, (err, room_info) => {
+      db.get(`SELECT * FROM Rooms WHERE id = ?`, room_id, (err, room_info) => {
         if(err) {
           return res.status(404)
             .render('404', {err_message: "Sorry, you have reached an error"});
@@ -209,9 +209,9 @@ app.post('/login', (req, res) => {
     if (containsDigit(name))
       {
         name = name.slice(-3);
-        db.get('SELECT roomId FROM Rooms WHERE name = ?', name, (err, room) => {
+        db.get('SELECT id FROM Rooms WHERE name = ?', name, (err, room) => {
           if(room){
-            res.redirect(`/room/${room.roomId}`);
+            res.redirect(`/room/${room.id}`);
           }
           else {
               return res.status(404)
@@ -220,9 +220,9 @@ app.post('/login', (req, res) => {
         });
 }
   else{
-      db.get('SELECT houseId FROM Houses WHERE name = ?', name, (err, house) => {
+      db.get('SELECT id FROM Houses WHERE name = ?', name, (err, house) => {
         if(house){
-          res.redirect(`/house/${house.houseId}`);
+          res.redirect(`/house/${house.id}`);
         }
         else {
             return res.status(404)
@@ -233,13 +233,12 @@ app.post('/login', (req, res) => {
   })
 
 app.post('/commenthandler/:roomId', function(req, res){
-  //change to CONSTS
   const text = req.body.comment;
   const userId = 20;
   const roomId = req.params.roomId;
-  const created = Date.now();
+  const time = Date.now();
   // Adds the comment and its object ID to the overall list of comments
-  db.run('INSERT INTO Comments(text, userId, roomId, created) VALUES(?, ?, ?, ?)', [text, userId, roomId, created]);
+  db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time]);
   // Creates and concatenates a string for the redirect URL to go back to object page
   //Callback function will be necessary to add and checking for errors
   // Redirects to page for the individual object after adding comment for it
