@@ -160,9 +160,9 @@ app.post('/login', (req, res) => {
   const password = req.body.password;
     db.get(`SELECT * FROM Users WHERE userName = ? AND password = ?`, username, password, (err, result) => {
     console.log(result, err)
-      if (err) {
-      return res.status(404)
-          .render('404', {err_message: "It looks like you have no registered account per those credentials." });
+    if (err) {
+    return res.status(404)
+        .render('404', {err_message: "It looks like you have no registered account per those credentials." });
     }
     if (!result) {
       return res.status(404)
@@ -190,7 +190,7 @@ app.post('/login', (req, res) => {
       db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err, result) => {
         if (err) {
           return res.status(404)
-            .render('404', {err_message: "!!!Sorry, you have reached an error" });
+            .render('404', {err_message: "Sorry, you have reached an error. It's possible this username is taken." });
         }
         req.session.user = {userName};
         res.redirect('/')
@@ -208,29 +208,37 @@ app.post('/login', (req, res) => {
   }
 
   app.post('/roomhandler', function(req, res){
-    const name = req.body.inputs;
+    let name = req.body.inputs;
     console.log(containsDigit(name));
     if (containsDigit(name))
       {
         name = name.slice(-3);
         db.get('SELECT id FROM Rooms WHERE name = ?', name, (err, room) => {
+          if(err) {
+            return res.status(404)
+              .render('404', {err_message: "Sorry, you have reached an error" });
+          }
           if(room){
             res.redirect(`/room/${room.id}`);
           }
           else {
-              return res.status(404)
-                  .render('404', {err_message: "Sorry, no matching results." });
+            return res.status(404)
+              .render('404', {err_message: "Sorry, no matching results." });
           }
         });
-}
-  else{
+      }
+    else {
       db.get('SELECT id FROM Houses WHERE name = ?', name, (err, house) => {
+        if(err){
+          return res.status(404)
+              .render('404', {err_message: "Sorry, you have reached an error." });
+        }
         if(house){
           res.redirect(`/house/${house.id}`);
         }
         else {
             return res.status(404)
-                .render('404', {err_message: "Sorry, no matching results" });
+              .render('404', {err_message: "Sorry, no matching results" });
         }
       });
     }
@@ -242,11 +250,14 @@ app.post('/commenthandler/:roomId', function(req, res){
   const roomId = req.params.roomId;
   const time = Date.now();
   // Adds the comment and its object ID to the overall list of comments
-  db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time]);
-  // Creates and concatenates a string for the redirect URL to go back to object page
-  //Callback function will be necessary to add and checking for errors
-  // Redirects to page for the individual object after adding comment for it
-  res.redirect(`/room/${roomId}`);
+  db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time], (err, room) => {  
+    if(err){
+      return res.status(404)
+        .render('404', {err_message: "Sorry, you have reached an error"});
+    }
+    // Creates redirect URL to go back to object page, redirects to it
+    res.redirect(`/room/${roomId}`);
+  });
 })
 
 app.get('/logout', (req, res) => {
