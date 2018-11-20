@@ -98,6 +98,15 @@ app.get('/house/:houseId', authChecker, (req, res) => {
         callback(null, house_info);
       })
     },
+    fRoom_info: function(callback) {
+      db.all(`SELECT * FROM featuredRoom WHERE houseId = ?`, house_id, (err, house_info) => {
+        if(err) {
+          return res.status(404)
+            .render('404', {err_message: "Sorry, you have reached an error", session: req.session.user  });
+        }
+        callback(null, house_info);
+      })
+    },
     // Get room information
     rooms_info: function(callback) {
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
@@ -119,7 +128,8 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     .then(data => {
       res.render('house', { house: results.house_info, 
                             rooms: results.rooms_info, 
-                            events: results.events_info, 
+                            events: results.events_info,
+                            featuredRooms: results.fRoom_info,
                             resources: data.items.mods, 
                             session: req.session.user });
     });
