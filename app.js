@@ -110,8 +110,8 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     }
   },
   function(err, results) {
-    const house = results.house_info; 
-    const houseName = house.name; 
+    const house = results.house_info;
+    const houseName = house.name;
     // Search Hollis for house
     const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`
     fetch(url)
@@ -250,7 +250,7 @@ app.post('/commenthandler/:roomId', function(req, res){
   const roomId = req.params.roomId;
   const time = Date.now();
   // Adds the comment and its object ID to the overall list of comments
-  db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, time], (err, room) => {  
+  db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err, room) => {  
     if(err){
       return res.status(404)
         .render('404', {err_message: "Sorry, you have reached an error"});
