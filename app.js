@@ -167,7 +167,7 @@ app.get('/room/:roomId', (req, res) => {
 app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-    db.get(`SELECT * FROM Users WHERE userName = '${username}' AND password = '${password}'`, (err, result) => {
+    db.get(`SELECT * FROM Users WHERE userName = ? AND password = ?`, username, password, (err, result) => {
     console.log(result, err)
       if (err) {
       return res.status(404)
