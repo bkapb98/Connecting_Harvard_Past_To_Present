@@ -124,7 +124,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
 
 // Room Page
 app.get('/room/:roomId', (req, res) => {
-  const room_id = req.params.roomId;
+  let room_id = req.params.roomId;
   async.parallel({
     // Get room info
     room_info: function(callback) {
@@ -250,7 +250,7 @@ app.post('/commenthandler/:roomId', function(req, res){
   const roomId = req.params.roomId;
   const time = Date.now();
   // Adds the comment and its object ID to the overall list of comments
-  db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err, room) => {  
+  db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err, room) => {
     if(err){
       return res.status(404)
         .render('404', {err_message: "Sorry, you have reached an error"});

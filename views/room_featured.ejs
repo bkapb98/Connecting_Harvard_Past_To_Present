@@ -29,7 +29,8 @@
         <ul>
             <% comments.forEach(comment => { %>
             <li>
-                <%- comment.text %>
+                <%= comment.created %>
+                <%= comment.text %>
             </li>
             <% }); %>
         </ul>
