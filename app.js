@@ -67,7 +67,6 @@ app.get('/', (req, res) => {
   },
   // Render home page
   function(err, results) {
-    console.log('TODO', results.rooms_info)
     res.render('index', { houses: results.house_info, rooms: results.rooms_info, session: req.session.user });
   });
 });
@@ -126,12 +125,11 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      //console.log(data.items.mods[])
-      res.render('house', { house: results.house_info, 
-                            rooms: results.rooms_info, 
+      res.render('house', { house: results.house_info,
+                            rooms: results.rooms_info,
                             events: results.events_info,
                             featuredRooms: results.fRoom_info,
-                            resources: data.items.mods, 
+                            resources: data.items.mods,
                             session: req.session.user });
     });
   });
@@ -166,7 +164,7 @@ app.get('/room/:roomId', (req, res) => {
     });
   });
 
-  // room featured page 
+  // room featured page
   app.get('/featuredRoom/:roomId', (req, res) => {
     let room_id = req.params.roomId;
     db.get(`SELECT * FROM featuredRoom WHERE id = ?`, room_id, (err, room_info) => {
@@ -174,7 +172,6 @@ app.get('/room/:roomId', (req, res) => {
         return res.status(404)
           .render('404', {err_message: "Sorry, you have reached an error1", session: req.session.user });
       }
-      console.log(room_info)
         res.render('room_featured', { room: room_info, session: req.session.user });
 
       });
@@ -188,7 +185,6 @@ app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
     db.get(`SELECT * FROM Users WHERE userName = ? AND password = ?`, username, password, (err, result) => {
-    console.log(result, err)
       if (err) {
       return res.status(404)
           .render('404', {err_message: "It looks like you have no registered account per those credentials.", session: req.session.user  });
@@ -238,7 +234,6 @@ app.post('/login', (req, res) => {
 
   app.post('/roomhandler', function(req, res){
     let name = req.body.inputs;
-    console.log(containsDigit(name));
     if (containsDigit(name))
       {
         name = name.slice(-3);

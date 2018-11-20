@@ -6,13 +6,12 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
   if(err){
     throw err;
   }
-        var roomNum;
-        var studentSize = db.run('SELECT COUNT(*) FROM Students');
-        var roomSize = db.run('SELECT COUNT(*) FROM Rooms');
-        console.log(roomSize);
-        for(var i = 0; i< 10; i++)
+        let roomNum;
+        let studentSize = db.run('SELECT COUNT(*) FROM Students');
+        let roomSize = db.run('SELECT COUNT(*) FROM Rooms');
+        for(let i = 0; i< 10; i++)
         {
-          var roomNum = Math.floor(Math.random()*roomSize)
+          let roomNum = Math.floor(Math.random()*roomSize)
           db.run('INSERT INTO Student_Rooms(studentId, roomId) VALUES(?, ?)', [i, roomNum]);
         }
     });

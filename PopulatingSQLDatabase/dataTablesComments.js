@@ -1,6 +1,5 @@
 const fs = require('fs');
 const sqlite3 = require('sqlite3');
-var randomTimestamp = require('random-timestamps');
 
 const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict, err) => {
   if(err){
