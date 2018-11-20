@@ -12,6 +12,7 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
       <link href="https://unpkg.com/vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.css" rel="stylesheet">
       <script src="https://unpkg.com/vue-bootstrap-typeahead"></script>
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet"/>
       <link rel="stylesheet" href="awesomplete.css" />
       <script src="awesomplete.js" async></script>
       <style type="text/css">
@@ -20,27 +21,11 @@
             max-width: 60px ;
             max-height: 500px ;
           }
-            .buttoncontainer {
-              display: inline-block;
-              position: inherit;
-              float: right;
-          }
       </style>
   </head>
 
   <body>
-    <div class="buttoncontainer">
-      <form action="/login" method="get">
-          <button class="btn btn-primary" type="submit">Login</button>
-      </form>
-      <form action="/register" method="get">
-          <button class="btn btn-primary" type="submit">Register</button>
-      </form>
-      <form action="/logout" method="get">
-          <button class="btn btn-primary" type="submit">Logout</button>
-      </form>
-
-    </div>
+    <% include header %>
       <div class="container">
           <h2 style="color:red"> Connecting Harvard</h2>
           <div id="myCarousel" class="carousel slide" data-ride="carousel">
