@@ -117,6 +117,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     fetch(url)
     .then(response => response.json())
     .then(data => {
+      //console.log(data.items.mods[])
       res.render('house', { house: results.house_info, 
                             rooms: results.rooms_info, 
                             events: results.events_info, 
