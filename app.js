@@ -55,15 +55,6 @@ app.get('/', (req, res) => {
         }
         callback(null, rooms_info)
     })},
-    // rooms_info: function(callback) {
-    //   db.all(`SELECT * FROM Rooms`, (err, rooms_info) => {
-    //     if(err) {
-    //       return res.status(404)
-    //         .render('404');
-    //     }
-    //     callback(null, rooms_info)
-    // })},
-    // Get house information
     house_info: function(callback) {
       db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
@@ -121,11 +112,11 @@ app.get('/house/:houseId', authChecker, (req, res) => {
   function(err, results) {
     const house = results.house_info; 
     const houseName = house.name; 
+    // Search Hollis for house
     const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      console.log("YY", data.items.mods[3])
       res.render('house', { house: results.house_info, rooms: results.rooms_info, events: results.events_info, resources: data.items.mods});
     });
   });
@@ -196,10 +187,28 @@ app.post('/login', (req, res) => {
     const last = req.body.lastname;
     const userName = req.body.username;
     const password = req.body.password;
-    db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-    sess = req.session;
-    sess.user = userName;
-    res.redirect('/')
+    if (!first || !last || !userName || !password) {
+      return res.status(404)
+        .render('404', {err_message: "Sorry, you have reached an error" });
+    }
+    db.get(`SELECT * FROM Users WHERE userName = '${userName}'`, (err, result) => {
+      if (err) {
+        return res.status(404)
+            .render('404', {err_message: "Sorry, you have reached an error" });
+      }
+      if (result) {
+        return res.status(404)
+            .render('404', {err_message: "Sorry, this username already exists." });
+      }
+      db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
+      sess = req.session;
+      sess.user = userName;
+      res.redirect('/')
+    });
+    // db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
+    // sess = req.session;
+    // sess.user = userName;
+    // res.redirect('/')
   })
 
   const CHAR_0 = '0'.charCodeAt(0);
