@@ -187,29 +187,15 @@ app.post('/login', (req, res) => {
     const last = req.body.lastname;
     const userName = req.body.username;
     const password = req.body.password;
-    if (!first || !last || !userName || !password) {
-      return res.status(404)
-        .render('404', {err_message: "Sorry, you have reached an error" });
-    }
-    db.get(`SELECT * FROM Users WHERE userName = '${userName}'`, (err, result) => {
-      if (err) {
-        return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error" });
-      }
-      if (result) {
-        return res.status(404)
-            .render('404', {err_message: "Sorry, this username already exists." });
-      }
-      db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-      sess = req.session;
-      sess.user = userName;
-      res.redirect('/')
+      db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err, result) => {
+        if (err) {
+          return res.status(404)
+            .render('404', {err_message: "!!!Sorry, you have reached an error" });
+        }
+        req.session.user = {userName};
+        res.redirect('/')
+      });
     });
-    // db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-    // sess = req.session;
-    // sess.user = userName;
-    // res.redirect('/')
-  })
 
   const CHAR_0 = '0'.charCodeAt(0);
   const CHAR_9 = '9'.charCodeAt(0);
