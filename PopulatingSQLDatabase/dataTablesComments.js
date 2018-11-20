@@ -17,18 +17,12 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       }
       return text;
     }
-      //adapted from https://gist.github.com/miguelmota/5b67e03845d840c949c4
-  function randomDate(start, end)
-    {
-      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-    }
   for(let i = 0; i<500; i++)
     {
       let text = textMake();
-      let date = randomTimestamp();
       let houseId = Math.round(Math.random()*12);
       let userId = Math.round(Math.random()*50);
       let roomId = Math.round(Math.random()*2400);
-      db.run('INSERT INTO Comments(text, userId, roomId, time) VALUES(?, ?, ?, ?)', [text, userId, roomId, date]);
+      db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId]);
     }
     });
