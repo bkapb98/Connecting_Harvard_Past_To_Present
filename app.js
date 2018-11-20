@@ -119,7 +119,15 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     }
   },
   function(err, results) {
-    res.render('house', { house: results.house_info, rooms: results.rooms_info, events: results.events_info });
+    const house = results.house_info; 
+    const houseName = house.name; 
+    const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      console.log("YY", data.items.mods[3])
+      res.render('house', { house: results.house_info, rooms: results.rooms_info, events: results.events_info, resources: data.items.mods});
+    });
   });
 });
 

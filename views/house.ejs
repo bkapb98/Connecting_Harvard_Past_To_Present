@@ -23,7 +23,18 @@
             </div>
         <% }); %>
     </div>
- 
+    </h3> Resources </h3>
+    <div>
+        <ul>
+            <% resources.forEach(resource => { %>
+                    <% if(resource.titleInfo.title) { %>
+                    <li> 
+                        <%= resource.titleInfo.title %>
+                    </li>
+                    <% } %>
+            <% }); %>
+        </ul>
+    </div>
     <table class="table table-striped">
         <tr><td> Rooms </td></tr>
         <% rooms.forEach(room => { %>
