@@ -9,39 +9,39 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
 
 //taken from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
     function makeid() {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        let text = "";
+        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-        for (var i = 0; i < 5; i++)
+        for (let i = 0; i < 5; i++)
           text += possible.charAt(Math.floor(Math.random() * possible.length));
 
         return text;
       }
     function roomName() {
-        var text = "";
-        var possible = "1234567890";
-        for (var i = 0; i < 3; i++)
+        let text = "";
+        let possible = "1234567890";
+        for (let i = 0; i < 3; i++)
           text += possible.charAt(Math.floor(Math.random() * possible.length));
 
         return text;
       }
-    for(var i = 0; i<50; i++)
+    for(let i = 0; i<50; i++)
       {
-        var gradYear = Math.round(1900 + Math.random()*110);
-        var famous = false;
+        let gradYear = Math.round(1900 + Math.random()*110);
+        let famous = false;
         if (Math.random()<= .1)
         {
           famous = true;
         }
-        var privacyPref = false;
+        let privacyPref = false;
         if(Math.random()<=.1)
         {
           privacyPref = true;
         }
-        var first = makeid();
-        var last = makeid();
+        let first = makeid();
+        let last = makeid();
         db.run('INSERT INTO Students(firstName, lastName, graduationYear, famous, privacyPref) VALUES(?, ?, ?, ?, ?)', [first, last, gradYear, famous, privacyPref]);
-        var roomNum = parseInt(roomName(), 10);
+        let roomNum = parseInt(roomName(), 10);
         db.run('INSERT INTO Student_Rooms(studentId, roomId) VALUES(?, ?)', [i, roomNum]);
       }
     });

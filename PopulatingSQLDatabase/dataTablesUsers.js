@@ -9,8 +9,8 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
 
 //taken from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
     function makeid(n) {
-        var text = '';
-        var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        let text = '';
+        let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         for (let i = 0; i < n; i++)
           text += possible.charAt(Math.floor(Math.random() * possible.length));
         return text;
