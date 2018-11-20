@@ -98,6 +98,15 @@ app.get('/house/:houseId', authChecker, (req, res) => {
         callback(null, house_info);
       })
     },
+    fRoom_info: function(callback) {
+      db.all(`SELECT * FROM featuredRoom WHERE houseId = ?`, house_id, (err, house_info) => {
+        if(err) {
+          return res.status(404)
+            .render('404', {err_message: "Sorry, you have reached an error", session: req.session.user  });
+        }
+        callback(null, house_info);
+      })
+    },
     // Get room information
     rooms_info: function(callback) {
       db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
@@ -120,7 +129,8 @@ app.get('/house/:houseId', authChecker, (req, res) => {
       //console.log(data.items.mods[])
       res.render('house', { house: results.house_info, 
                             rooms: results.rooms_info, 
-                            events: results.events_info, 
+                            events: results.events_info,
+                            featuredRooms: results.fRoom_info,
                             resources: data.items.mods, 
                             session: req.session.user });
     });
@@ -152,9 +162,23 @@ app.get('/room/:roomId', (req, res) => {
     },
     // Render room page
     function(err, results) {
-      res.render('room_featured', { room: results.room_info, comments: results.comments, session: req.session.user });
+      res.render('room', { room: results.room_info, comments: results.comments, session: req.session.user });
     });
   });
+
+  // room featured page 
+  app.get('/featuredRoom/:roomId', (req, res) => {
+    let room_id = req.params.roomId;
+    db.get(`SELECT * FROM featuredRoom WHERE id = ?`, room_id, (err, room_info) => {
+      if(err) {
+        return res.status(404)
+          .render('404', {err_message: "Sorry, you have reached an error1", session: req.session.user });
+      }
+      console.log(room_info)
+        res.render('room_featured', { room: room_info, session: req.session.user });
+
+      });
+    });
 
   app.get('/login', (req, res) => {
     res.render('login.ejs', { session: req.session.user });

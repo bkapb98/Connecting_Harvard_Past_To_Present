@@ -35,6 +35,18 @@
             <% }); %>
         </ul>
     </div>
+</h3> Featured Rooms </h3>
+<div>
+    <ul>
+        <% featuredRooms.forEach(room => { %>
+            <tr>
+              <td>
+                <a href="/featuredRoom/<%= room.id %>"> <%= room.name %> </a>
+              </td>
+            </tr>
+        <% }); %>
+    </ul>
+</div>
     <table class="table table-striped">
         <tr><td> Rooms </td></tr>
         <% rooms.forEach(room => { %>
