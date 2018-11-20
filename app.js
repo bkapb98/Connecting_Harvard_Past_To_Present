@@ -201,8 +201,7 @@ app.post('/login', (req, res) => {
             .render('404', {err_message: "Sorry, this username already exists." });
       }
       db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
-      sess = req.session;
-      sess.user = userName;
+      req.session.user = {userName};
       res.redirect('/')
     });
     // db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password]);
