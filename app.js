@@ -67,7 +67,6 @@ app.get('/', (req, res) => {
   },
   // Render home page
   function(err, results) {
-    console.log('TODO', results.rooms_info)
     res.render('index', { houses: results.house_info, rooms: results.rooms_info, session: req.session.user });
   });
 });
@@ -109,7 +108,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     },
     // Get room information
     rooms_info: function(callback) {
-      db.all(`SELECT * FROM Rooms WHERE houseId = ?`, house_id, (err, rooms_info) => {
+      db.all(`SELECT * FROM Rooms WHERE houseId = ? ORDER BY Name ASC`, house_id, (err, rooms_info) => {
         if(err) {
           return res.status(404)
             .render('404', {err_message: "Sorry, you have reached an error", session: req.session.user  });
@@ -119,18 +118,20 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     }
   },
   function(err, results) {
+    // change to houseInfo
     const house = results.house_info;
     const houseName = house.name;
     // Search Hollis for house
     const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`
     fetch(url)
     .then(response => response.json())
+    // clean up variable names - froominfo
     .then(data => {
-      res.render('house', { house: results.house_info, 
-                            rooms: results.rooms_info, 
+      res.render('house', { house: results.house_info,
+                            rooms: results.rooms_info,
                             events: results.events_info,
                             featuredRooms: results.fRoom_info,
-                            resources: data.items.mods, 
+                            resources: data.items.mods,
                             session: req.session.user });
     });
   });
@@ -165,13 +166,14 @@ app.get('/room/:roomId', (req, res) => {
     });
   });
 
-  // room featured page 
+  // Featured Room Page
   app.get('/featuredRoom/:roomId', (req, res) => {
     let room_id = req.params.roomId;
     db.get(`SELECT * FROM featuredRoom WHERE id = ?`, room_id, (err, room_info) => {
-      if(err) {
+      // consistent space- node.js linter- spacing
+      if (err) {
         return res.status(404)
-          .render('404', {err_message: "Sorry, you have reached an error1", session: req.session.user });
+          .render('404', { err_message: "Sorry, you have reached an error1", session: req.session.user });
       }
       console.log(room_info)
         res.render('room_featured', { room: room_info, session: req.session.user });
@@ -216,9 +218,10 @@ app.post('/login', (req, res) => {
     const userName = req.body.username;
     const password = req.body.password;
       db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err, result) => {
+        // check number to see which type of error it is
         if (err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error. It's possible this username is taken." });
+            .render('404', {err_message: "Sorry, that username is taken." });
         }
         req.session.user = {userName};
         res.redirect('/')
@@ -237,6 +240,7 @@ app.post('/login', (req, res) => {
 
   app.post('/roomhandler', function(req, res){
     let name = req.body.inputs;
+    // condition of contains room number, then slice the number- regex (i.e. split on last space)
     console.log(containsDigit(name));
     if (containsDigit(name))
       {
@@ -258,7 +262,8 @@ app.post('/login', (req, res) => {
     else {
       db.get('SELECT id FROM Houses WHERE name = ?', name, (err, house) => {
         if(err){
-          return res.status(404)
+          // change 404 ejs and send 500 code (do that other places)
+          return res.status(500)
               .render('404', {err_message: "Sorry, you have reached an error." });
         }
         if(house){
@@ -276,11 +281,10 @@ app.post('/commenthandler/:roomId', function(req, res){
   const text = req.body.comment;
   const userId = 20;
   const roomId = req.params.roomId;
-  const time = Date.now();
   // Adds the comment and its object ID to the overall list of comments
   db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err, room) => {
     if(err){
-      return res.status(404)
+      return res.status(500)
         .render('404', {err_message: "Sorry, you have reached an error"});
     }
     // Creates redirect URL to go back to object page, redirects to it
