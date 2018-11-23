@@ -108,7 +108,7 @@ app.get('/house/:houseId', authChecker, (req, res) => {
     },
     // Get room information
     rooms_info: function(callback) {
-      db.all(`SELECT * FROM Rooms WHERE houseId = ? ORDER BY Name ASC`, house_id, (err, rooms_info) => {
+      db.all(`SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC`, house_id, (err, rooms_info) => {
         if(err) {
           return res.status(404)
             .render('404', {err_message: "Sorry, you have reached an error", session: req.session.user  });
