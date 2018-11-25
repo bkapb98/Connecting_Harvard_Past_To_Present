@@ -7,25 +7,25 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
   }
 //taken from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
     function dateMake() {
-        var text = "";
-        var possible = "0123456789";
-        for (var i = 0; i < 2; i++)
+        let text = "";
+        let possible = "0123456789";
+        for (let i = 0; i < 2; i++)
           text += possible.charAt(Math.floor(Math.random() * possible.length));
         return text;
       }
       function textMake(n) {
-          var text = "";
-          var possible = "abcdefghijklmnopqrstuvwxyz";
-          for (var i = 0; i < n; i++)
+          let text = "";
+          let possible = "abcdefghijklmnopqrstuvwxyz";
+          for (let i = 0; i < n; i++)
             text += possible.charAt(Math.floor(Math.random() * possible.length));
           return text;
         }
-    for(var i = 0; i<30; i++)
+    for(let i = 0; i<30; i++)
       {
-        var houseId = Math.round(Math.random()*12);
-        var date = "19" + dateMake();
-        var eventName = textMake(10);
-        var description = textMake(75);
+        let houseId = Math.round(Math.random()*12);
+        let date = "19" + dateMake();
+        let eventName = textMake(10);
+        let description = textMake(75);
         db.run('INSERT INTO Events(houseId, date, eventName, description) VALUES(?, ?, ?, ?)', [houseId, date, eventName, description]);
       }
     });

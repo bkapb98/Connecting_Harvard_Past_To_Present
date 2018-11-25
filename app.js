@@ -175,7 +175,6 @@ app.get('/room/:roomId', (req, res) => {
         return res.status(404)
           .render('404', { err_message: "Sorry, you have reached an error1", session: req.session.user });
       }
-      console.log(room_info)
         res.render('room_featured', { room: room_info, session: req.session.user });
 
       });
@@ -189,7 +188,6 @@ app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
     db.get(`SELECT * FROM Users WHERE userName = ? AND password = ?`, username, password, (err, result) => {
-    console.log(result, err)
       if (err) {
       return res.status(404)
           .render('404', {err_message: "It looks like you have no registered account per those credentials.", session: req.session.user  });
@@ -240,8 +238,6 @@ app.post('/login', (req, res) => {
 
   app.post('/roomhandler', function(req, res){
     let name = req.body.inputs;
-    // condition of contains room number, then slice the number- regex (i.e. split on last space)
-    console.log(containsDigit(name));
     if (containsDigit(name))
       {
         name = name.slice(-3);
