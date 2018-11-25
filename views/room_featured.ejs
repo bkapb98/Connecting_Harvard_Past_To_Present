@@ -12,24 +12,24 @@
     <!-- code taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_image_compare for comparison -->
     <style>
         * {box-sizing: border-box;}
-
+        
         .img-comp-container {
           position: relative;
           height: 300px; /*should be the same height as the images*/
         }
-
+        
         .img-comp-img {
           position: absolute;
           width: auto;
           height: auto;
           overflow:hidden;
         }
-
+        
         .img-comp-img img {
           display:block;
           vertical-align:middle;
         }
-
+        
         .img-comp-slider {
           position: absolute;
           z-index:9;
@@ -44,7 +44,7 @@
     </style>
     <script>
         function initComparisons() {
-          let x, i;
+          var x, i;
           /*find all elements with an "overlay" class:*/
           x = document.getElementsByClassName("img-comp-overlay");
           for (i = 0; i < x.length; i++) {
@@ -53,7 +53,7 @@
             compareImages(x[i]);
           }
           function compareImages(img) {
-            let slider, img, clicked = 0, w, h;
+            var slider, img, clicked = 0, w, h;
             /*get the width and height of the img element*/
             w = img.offsetWidth;
             h = img.offsetHeight;
@@ -89,7 +89,7 @@
               clicked = 0;
             }
             function slideMove(e) {
-              let pos;
+              var pos;
               /*if the slider is no longer clicked, exit this function:*/
               if (clicked == 0) return false;
               /*get the cursor's x position:*/
@@ -101,7 +101,7 @@
               slide(pos);
             }
             function getCursorPos(e) {
-              let a, x = 0;
+              var a, x = 0;
               e = e || window.event;
               /*get the x positions of the image:*/
               a = img.getBoundingClientRect();
@@ -138,7 +138,7 @@
           <img src="<%-room.afterImg%>" width="400" height="300">
         </div>
       </div>
-
+      
     <script>
     initComparisons();
     </script>
@@ -146,6 +146,6 @@
     <div>
         <%-room.description %>
     </div>
-
+    
   </body>
 </html>
