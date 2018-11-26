@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const polyfill = require('cross-fetch/polyfill');
 const sqlite3 = require('sqlite3');
 const async = require('async');
 const session = require('express-session');
@@ -287,9 +286,9 @@ app.post('/commenthandler/:roomId', authChecker, function(req, res){
 })
 
 app.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-  })
+  req.session.destroy();
+  res.redirect('/');
+})
 
 // Listen on socket
 app.listen(port, hostname, () => {

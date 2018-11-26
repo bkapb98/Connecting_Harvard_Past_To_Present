@@ -1,4 +1,3 @@
-const fs = require('fs');
 const sqlite3 = require('sqlite3');
 //used Random Name Generator to generate 50 names http://random-name-generator.info/random/?n=50&g=1&st=2
 
