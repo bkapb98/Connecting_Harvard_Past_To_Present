@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
       db.all(`SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id`, (err, rooms_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error", user: req.session.user  } );
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  } );
         }
         callback(null, rooms_info)
     })},
@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
       db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error", user: req.session.user  } );
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  } );
         }
         callback(null, house_info)
       }
@@ -82,7 +82,7 @@ app.get('/house/:houseId', (req, res) => {
       db.all(`SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC`, house_id, (err, events_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error", user: req.session.user  });
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  });
         }
         callback(null, events_info);
       })
@@ -92,7 +92,7 @@ app.get('/house/:houseId', (req, res) => {
       db.get(`SELECT * FROM Houses WHERE id = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error", user: req.session.user  });
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  });
         }
         callback(null, house_info);
       })
@@ -101,7 +101,7 @@ app.get('/house/:houseId', (req, res) => {
       db.all(`SELECT * FROM featuredRoom WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error", user: req.session.user  });
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  });
         }
         callback(null, house_info);
       })
@@ -111,7 +111,7 @@ app.get('/house/:houseId', (req, res) => {
       db.all(`SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC`, house_id, (err, rooms_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error", user: req.session.user  });
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  });
         }
         callback(null, rooms_info);
       })
@@ -146,7 +146,7 @@ app.get('/room/:roomId', (req, res) => {
       db.get(`SELECT * FROM Rooms WHERE id = ?`, room_id, (err, room_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error", user: req.session.user });
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, room_info);
       })},
@@ -155,7 +155,7 @@ app.get('/room/:roomId', (req, res) => {
       db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
         if(err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, you have reached an error", user: req.session.user });
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, comments_info);
       })}
@@ -173,7 +173,7 @@ app.get('/room/:roomId', (req, res) => {
       // consistent space- node.js linter- spacing
       if (err) {
         return res.status(404)
-          .render('404', { err_message: "Sorry, you have reached an error1", user: req.session.user });
+          .render('error', { err_message: "Sorry, you have reached an error1", user: req.session.user });
       }
         res.render('room_featured', { room: room_info, user: req.session.user });
 
@@ -190,11 +190,11 @@ app.post('/login', (req, res) => {
     db.get(`SELECT * FROM Users WHERE userName = ? AND password = ?`, username, password, (err, result) => {
       if (err) {
       return res.status(404)
-          .render('404', {err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
+          .render('error', {err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
     }
     if (!result) {
       return res.status(404)
-          .render('404', {err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
+          .render('error', {err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
     }
     if (result.userName === username && result.password === password){
       req.session.user = {username};
@@ -219,7 +219,7 @@ app.post('/login', (req, res) => {
         // check number to see which type of error it is
         if (err) {
           return res.status(404)
-            .render('404', {err_message: "Sorry, that username is taken." });
+            .render('error', {err_message: "Sorry, that username is taken." });
         }
         req.session.user = {userName};
         res.redirect('/')
@@ -244,14 +244,14 @@ app.post('/login', (req, res) => {
         db.get('SELECT id FROM Rooms WHERE name = ?', name, (err, room) => {
           if(err) {
             return res.status(404)
-              .render('404', {err_message: "Sorry, you have reached an error" });
+              .render('error', {err_message: "Sorry, you have reached an error" });
           }
           if(room){
             res.redirect(`/room/${room.id}`);
           }
           else {
               return res.status(404)
-                  .render('404', {err_message: "Sorry, no matching results.", user: req.session.user  });
+                  .render('error', {err_message: "Sorry, no matching results.", user: req.session.user  });
           }
         });
       }
@@ -260,14 +260,14 @@ app.post('/login', (req, res) => {
         if(err){
           // change 404 ejs and send 500 code (do that other places)
           return res.status(500)
-              .render('404', {err_message: "Sorry, you have reached an error." });
+              .render('error', {err_message: "Sorry, you have reached an error." });
         }
         if(house){
           res.redirect(`/house/${house.id}`);
         }
         else {
             return res.status(404)
-                .render('404', {err_message: "Sorry, no matching results", user: req.session.user  });
+                .render('error', {err_message: "Sorry, no matching results", user: req.session.user  });
         }
       });
     }
@@ -281,7 +281,7 @@ app.post('/commenthandler/:roomId', authChecker, function(req, res){
   db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err, room) => {
     if(err){
       return res.status(500)
-        .render('404', {err_message: "Sorry, you have reached an error"});
+        .render('error', {err_message: "Sorry, you have reached an error"});
     }
     // Creates redirect URL to go back to object page, redirects to it
     res.redirect(`/room/${roomId}`);
