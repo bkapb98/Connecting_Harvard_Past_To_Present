@@ -73,7 +73,7 @@ app.get('/', (req, res) => {
 
 
 // House Page
-app.get('/house/:houseId', authChecker, (req, res) => {
+app.get('/house/:houseId', (req, res) => {
   const house_id = req.params.houseId;
   async.parallel({
     // Get event information
@@ -273,7 +273,7 @@ app.post('/login', (req, res) => {
     }
   })
 
-app.post('/commenthandler/:roomId', function(req, res){
+app.post('/commenthandler/:roomId', authChecker, function(req, res){
   const text = req.body.comment;
   const userId = 20;
   const roomId = req.params.roomId;
