@@ -190,12 +190,15 @@ app.post('/login', (req, res) => {
       if (err) {
       return res.status(500)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           .render('error', {err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
     }
     if (!result) {
       return res.status(404)
           .render('error', {err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
 =======
+=======
+>>>>>>> Stashed changes
           .render('404', {err_message: "It looks like you have no registered account per those credentials.", session: req.session.user  });
     }
     if (!result) {
@@ -225,8 +228,13 @@ app.post('/login', (req, res) => {
       db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err, result) => {
         if (err) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           return res.status(404)
             .render('error', {err_message: "Sorry, that username is taken." });
+=======
+          return res.status(500)
+            .render('500', {err_message: "Sorry, that username is taken." });
+>>>>>>> Stashed changes
 =======
           return res.status(500)
             .render('500', {err_message: "Sorry, that username is taken." });
@@ -256,7 +264,11 @@ app.post('/login', (req, res) => {
           if(err) {
             return res.status(500)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               .render('error', {err_message: "Sorry, you have reached an error" });
+=======
+              .render('500', {err_message: "Sorry, you have reached an error" });
+>>>>>>> Stashed changes
 =======
               .render('500', {err_message: "Sorry, you have reached an error" });
 >>>>>>> Stashed changes
@@ -266,8 +278,13 @@ app.post('/login', (req, res) => {
           }
           else {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               return res.status(404)
                   .render('error', {err_message: "Sorry, no matching results.", user: req.session.user  });
+=======
+              return res.status(500)
+                  .render('500', {err_message: "Sorry, no matching results.", session: req.session.user  });
+>>>>>>> Stashed changes
 =======
               return res.status(500)
                   .render('500', {err_message: "Sorry, no matching results.", session: req.session.user  });
@@ -280,7 +297,11 @@ app.post('/login', (req, res) => {
         if(err){
           return res.status(500)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               .render('error', {err_message: "Sorry, you have reached an error." });
+=======
+              .render('500', {err_message: "Sorry, you have reached an error." });
+>>>>>>> Stashed changes
 =======
               .render('500', {err_message: "Sorry, you have reached an error." });
 >>>>>>> Stashed changes
@@ -290,8 +311,13 @@ app.post('/login', (req, res) => {
         }
         else {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             return res.status(404)
                 .render('error', {err_message: "Sorry, no matching results", user: req.session.user  });
+=======
+            return res.status(500)
+                .render('500', {err_message: "Sorry, no matching results", session: req.session.user  });
+>>>>>>> Stashed changes
 =======
             return res.status(500)
                 .render('500', {err_message: "Sorry, no matching results", session: req.session.user  });
@@ -310,7 +336,11 @@ app.post('/commenthandler/:roomId', authChecker, function(req, res){
     if(err){
       return res.status(500)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         .render('error', {err_message: "Sorry, you have reached an error"});
+=======
+        .render('500', {err_message: "Sorry, you have reached an error"});
+>>>>>>> Stashed changes
 =======
         .render('500', {err_message: "Sorry, you have reached an error"});
 >>>>>>> Stashed changes
