@@ -54,6 +54,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(__dirname));
 
 
 app.use(session({
@@ -67,7 +68,7 @@ app.use(bodyParser.json());
 
 function error_handling(req, res, code, message) {
   res.status(code)
-    .render('error', { err_message: message, user: req.session.user });
+    .render('error', { err_message: message, user: req.session.user, title: 'ERROR' });
 }
 
 // Create database
@@ -81,25 +82,18 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info(callback) {
-      db.all('SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id', (err, rooms_info) => {
-        if (err) {
-          return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
-        }
-        callback(null, rooms_info);
-      });
+      db.all('SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id', callback)
     },
     house_info(callback) {
-      db.all('SELECT * FROM Houses', (err, house_info) => {
-        if (err) {
-          return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
-        }
-        callback(null, house_info);
-      });
+      db.all('SELECT * FROM Houses', callback) 
     },
   },
   // Render home page
   (err, results) => {
-    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user });
+    if (err) {
+      return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+    }
+    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user, title: 'Connecting' });
   });
 });
 
@@ -111,41 +105,24 @@ app.get('/house/:houseId', (req, res) => {
     // Get event information
     events_info(callback) {
       // Sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
-      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC', house_id, (err, events_info) => {
-        if (err) {
-          return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
-        }
-        callback(null, events_info);
-      });
+      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC', house_id, callback)
     },
     // Get house information
     house_info(callback) {
-      db.get('SELECT * FROM Houses WHERE id = ?', house_id, (err, house_info) => {
-        if (err) {
-          return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
-        }
-        callback(null, house_info);
-      });
+      db.get('SELECT * FROM Houses WHERE id = ?', house_id, callback)
     },
     featuredRooms_info(callback) {
-      db.all('SELECT * FROM featuredRoom WHERE houseId = ?', house_id, (err, house_info) => {
-        if (err) {
-          return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
-        }
-        callback(null, house_info);
-      });
+      db.all('SELECT * FROM featuredRoom WHERE houseId = ?', house_id, callback)
     },
     // Get room information
     rooms_info(callback) {
-      db.all('SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC', house_id, (err, rooms_info) => {
-        if (err) {
-          return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
-        }
-        callback(null, rooms_info);
-      });
+      db.all('SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC', house_id, callback)
     },
   },
   (err, results) => {
+    if (err) {
+      return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+    }
     // change to houseInfo
     const house = results.house_info;
     const houseName = house.name;
@@ -153,10 +130,10 @@ app.get('/house/:houseId', (req, res) => {
     const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
     fetch(url)
       .then(response => response.json())
-    // clean up variable names - froominfo
       .then((data) => {
         res.render('house', {
           house: results.house_info,
+          title: houseName,
           rooms: results.rooms_info,
           events: results.events_info,
           featuredRooms: results.featuredRooms_info,
@@ -173,26 +150,19 @@ app.get('/room/:roomId', (req, res) => {
   async.parallel({
     // Get room info
     room_info(callback) {
-      db.get('SELECT * FROM Rooms WHERE id = ?', room_id, (err, room_info) => {
-        if (err) {
-          return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
-        }
-        callback(null, room_info);
-      });
+      db.get('SELECT * FROM Rooms WHERE id = ?', room_id, callback)
     },
     // Get comments
     comments(callback) {
-      db.all('SELECT * FROM Comments WHERE roomId = ?', room_id, (err, comments_info) => {
-        if (err) {
-          return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
-        }
-        callback(null, comments_info);
-      });
+      db.all('SELECT * FROM Comments WHERE roomId = ?', room_id, callback)
     },
   },
   // Render room page
   (err, results) => {
-    res.render('room', { room: results.room_info, comments: results.comments, user: req.session.user });
+    if (err) {
+      return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+    }
+    res.render('room', { room: results.room_info, comments: results.comments, user: req.session.user, title: results.room_info.name });
   });
 });
 
@@ -204,16 +174,15 @@ app.get('/featuredRoomJs.js', (req, res) => {
 app.get('/featuredRoom/:roomId', (req, res) => {
   const room_id = req.params.roomId;
   db.get('SELECT * FROM featuredRoom WHERE id = ?', room_id, (err, room_info) => {
-    // consistent space- node.js linter- spacing
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    res.render('room_featured', { room: room_info, user: req.session.user });
+    res.render('room_featured', { room: room_info, user: req.session.user, title: room_info.name });
   });
 });
 
 app.get('/login', (req, res) => {
-  res.render('login.ejs', { user: req.session.user });
+  res.render('login.ejs', { user: req.session.user, title: 'Login' });
 });
 
 app.post('/login', (req, res) => {
@@ -236,7 +205,7 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  res.render('register.ejs', { user: req.session.user });
+  res.render('register.ejs', { user: req.session.user, title: 'Register' });
 });
 
 app.post('/register', (req, res) => {
