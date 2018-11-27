@@ -51,6 +51,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(__dirname));
 
 
 app.use(session({
@@ -64,7 +65,7 @@ app.use(bodyParser.json());
 
 function error_handling(req, res, code, message) {
   res.status(code)
-    .render('error', { err_message: message, user: req.session.user });
+    .render('error', { err_message: message, user: req.session.user, title: 'ERROR' });
 }
 
 // Create database
@@ -96,7 +97,7 @@ app.get('/', (req, res) => {
   },
   // Render home page
   (err, results) => {
-    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user });
+    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user, title: 'Connecting' });
   });
 });
 
@@ -154,6 +155,7 @@ app.get('/house/:houseId', (req, res) => {
       .then((data) => {
         res.render('house', {
           house: results.house_info,
+          title: houseName,
           rooms: results.rooms_info,
           events: results.events_info,
           featuredRooms: results.featuredRooms_info,
@@ -189,7 +191,7 @@ app.get('/room/:roomId', (req, res) => {
   },
   // Render room page
   (err, results) => {
-    res.render('room', { room: results.room_info, comments: results.comments, user: req.session.user });
+    res.render('room', { room: results.room_info, comments: results.comments, user: req.session.user, title: results.room_info.name });
   });
 });
 
@@ -205,12 +207,12 @@ app.get('/featuredRoom/:roomId', (req, res) => {
     if (err) {
       return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    res.render('room_featured', { room: room_info, user: req.session.user });
+    res.render('room_featured', { room: room_info, user: req.session.user, title: room_info.name });
   });
 });
 
 app.get('/login', (req, res) => {
-  res.render('login.ejs', { user: req.session.user });
+  res.render('login.ejs', { user: req.session.user, title: 'Login' });
 });
 
 app.post('/login', (req, res) => {
@@ -233,7 +235,7 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  res.render('register.ejs', { user: req.session.user });
+  res.render('register.ejs', { user: req.session.user, title: 'Register' });
 });
 
 app.post('/register', (req, res) => {
