@@ -8,15 +8,33 @@ const sqlite3 = require('sqlite3');
 const async = require('async');
 const session = require('express-session');
 const Tokenizer = require('tokenize-text');
+const validator = require('validator')
+
 
 const tokenize = new Tokenizer();
 require('cross-fetch/polyfill');
 const bodyParser = require('body-parser');
 
-const hostname = '127.0.0.1';
-const port = 3000;
+// Check if enough arguments https://www.npmjs.com/package/validator
+if(process.argv.length != 4) {
+  return(console.log("Sorry, you do not have the appropriate number of arguments."));
+}
+// Based on https://nodejs.org/docs/latest/api/process.html#process_process_argv
+const hostname = `${process.argv[2]}`;
+const port = process.argv[3];
 
-// authorizer middleware
+// Check valid inputs, using https://www.npmjs.com/package/validator
+if(validator.isIP(hostname) == false) {
+  return(console.log("Sorry, that is an invalid hostname."));
+}
+
+if(validator.isPort(port) == false) {
+  return(console.log("Sorry, that is an invalid port."));
+}
+
+// Error handling https://getbootstrap.com/docs/4.0/components/jumbotron/
+
+// Authorizer middleware
 const authChecker = (req, res, next) => {
   if (!req.session.user) {
     res.redirect('/login');
@@ -103,7 +121,7 @@ app.get('/house/:houseId', (req, res) => {
         callback(null, house_info);
       });
     },
-    fRoom_info(callback) {
+    featuredRooms_info(callback) {
       db.all('SELECT * FROM featuredRoom WHERE houseId = ?', house_id, (err, house_info) => {
         if (err) {
           return res.status(500)
@@ -137,7 +155,7 @@ app.get('/house/:houseId', (req, res) => {
           house: results.house_info,
           rooms: results.rooms_info,
           events: results.events_info,
-          featuredRooms: results.fRoom_info,
+          featuredRooms: results.featuredRooms_info,
           resources: data.items.mods,
           user: req.session.user,
         });
