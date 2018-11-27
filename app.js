@@ -31,7 +31,7 @@ if(validator.isPort(port) == false) {
 // Error handling https://getbootstrap.com/docs/4.0/components/jumbotron/
 
 // Authorizer middleware
-authChecker = (req, res, next) => {
+const authChecker = (req, res, next) => {
   if (!req.session.user) {
     res.redirect('/login');
   } else {
