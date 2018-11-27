@@ -3,8 +3,9 @@ const path = require('path');
 const sqlite3 = require('sqlite3');
 const async = require('async');
 const session = require('express-session');
-
-
+const Tokenizer = require('tokenize-text');
+const tokenize = new Tokenizer();
+require('cross-fetch/polyfill');
 const bodyParser = require('body-parser');
 
 const hostname = '127.0.0.1';
@@ -248,18 +249,16 @@ app.post('/login', (req, res) => {
   const CHAR_0 = '0'.charCodeAt(0);
   const CHAR_9 = '9'.charCodeAt(0);
 
-  function containsDigit (s) {
-    return [...s].some(x => {
-      const c = x.charCodeAt(0);
-      return c >= CHAR_0 && c <= CHAR_9;
-    });
+  function containsDigit (name) {
+    let extractNumber = tokenize.re(/[0-9]/);
+    return extractNumber(contents);
   }
 
   app.post('/roomhandler', function(req, res){
     let name = req.body.inputs;
     if (containsDigit(name))
       {
-        name = name.slice(-3);
+        name = containsDigit(name);
         db.get('SELECT id FROM Rooms WHERE name = ?', name, (err, room) => {
           if(err) {
             return res.status(500)
