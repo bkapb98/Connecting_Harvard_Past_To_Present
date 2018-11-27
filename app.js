@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
       db.all(`SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id`, (err, rooms_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user});
+            .render('error', { err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, rooms_info)
       }
@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
       db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user});
+            .render('error', { err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, house_info)
       }
@@ -66,7 +66,7 @@ app.get('/', (req, res) => {
   },
   // Render home page
   function(err, results) {
-    res.render('index', {houses: results.house_info, rooms: results.rooms_info, user: req.session.user});
+    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user });
   });
 });
 
@@ -81,7 +81,7 @@ app.get('/house/:houseId', (req, res) => {
       db.all(`SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC`, house_id, (err, events_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  });
+            .render('error', { err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, events_info);
       })
@@ -91,16 +91,16 @@ app.get('/house/:houseId', (req, res) => {
       db.get(`SELECT * FROM Houses WHERE id = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  });
+            .render('error', { err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, house_info);
       })
     },
-    fRoom_info: function(callback) {
+    featuredRoom_info: function(callback) {
       db.all(`SELECT * FROM featuredRoom WHERE houseId = ?`, house_id, (err, house_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  });
+            .render('error', { err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, house_info);
       })
@@ -110,7 +110,7 @@ app.get('/house/:houseId', (req, res) => {
       db.all(`SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC`, house_id, (err, rooms_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  });
+            .render('error', { err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, rooms_info);
       })
@@ -129,7 +129,7 @@ app.get('/house/:houseId', (req, res) => {
       res.render('house', { house: results.house_info,
                             rooms: results.rooms_info,
                             events: results.events_info,
-                            featuredRooms: results.fRoom_info,
+                            featuredRooms: results.featuredRoom_info,
                             resources: data.items.mods,
                             user: req.session.user });
     });
@@ -145,16 +145,17 @@ app.get('/room/:roomId', (req, res) => {
       db.get(`SELECT * FROM Rooms WHERE id = ?`, room_id, (err, room_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user });
+            .render('error', { err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, room_info);
-      })},
+      })
+    },
     // Get comments
     comments: function(callback) {
       db.all(`SELECT * FROM Comments WHERE roomId = ?`, room_id, (err, comments_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user });
+            .render('error', { err_message: "Sorry, you have reached an error", user: req.session.user });
         }
         callback(null, comments_info);
       })}
@@ -169,15 +170,13 @@ app.get('/room/:roomId', (req, res) => {
   app.get('/featuredRoom/:roomId', (req, res) => {
     let room_id = req.params.roomId;
     db.get(`SELECT * FROM featuredRoom WHERE id = ?`, room_id, (err, room_info) => {
-      // consistent space- node.js linter- spacing
-      if (err) {
+      if(err) {
         return res.status(500)
           .render('error', { err_message: "Sorry, you have reached an error1", user: req.session.user });
       }
-        res.render('room_featured', { room: room_info, user: req.session.user });
-
-      });
+      res.render('room_featured', { room: room_info, user: req.session.user });
     });
+  });
 
   app.get('/login', (req, res) => {
     res.render('login.ejs', { user: req.session.user });
@@ -187,15 +186,15 @@ app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
     db.get(`SELECT * FROM Users WHERE userName = ? AND password = ?`, username, password, (err, result) => {
-      if (err) {
+      if(err) {
       return res.status(500)
-          .render('error', {err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
+        .render('error', { err_message: "It looks like you have no registered account per those credentials.", user: req.session.user });
     }
-    if (!result) {
+    if(!result) {
       return res.status(404)
-          .render('error', {err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
+        .render('error', { err_message: "It looks like you have no registered account per those credentials.", user: req.session.user  });
     }
-    if (result.userName === username && result.password === password){
+    if(result.userName === username && result.password === password){
       req.session.user = {username};
       res.redirect('/');
     }
@@ -215,14 +214,14 @@ app.post('/login', (req, res) => {
     const userName = req.body.username;
     const password = req.body.password;
       db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err, result) => {
-        if (err) {
+        if(err) {
           return res.status(404)
-            .render('error', {err_message: "Sorry, that username is taken." });
+            .render('error', { err_message: "Sorry, that username is taken." });
         }
-        req.session.user = {userName};
-        res.redirect('/')
-      });
+      req.session.user = {userName};
+      res.redirect('/')
     });
+  });
 
   const CHAR_0 = '0'.charCodeAt(0);
   const CHAR_9 = '9'.charCodeAt(0);
@@ -234,22 +233,21 @@ app.post('/login', (req, res) => {
     });
   }
 
-  app.post('/roomhandler', function(req, res){
+  app.post('/roomhandler', function(req, res) {
     let name = req.body.inputs;
-    if (containsDigit(name))
-      {
+    if(containsDigit(name)) {
         name = name.slice(-3);
         db.get('SELECT id FROM Rooms WHERE name = ?', name, (err, room) => {
           if(err) {
             return res.status(500)
-              .render('error', {err_message: "Sorry, you have reached an error" });
+              .render('error', { err_message: "Sorry, you have reached an error" });
           }
           if(room){
             res.redirect(`/room/${room.id}`);
           }
           else {
-              return res.status(404)
-                  .render('error', {err_message: "Sorry, no matching results.", user: req.session.user  });
+            return res.status(404)
+              .render('error', { err_message: "Sorry, no matching results.", user: req.session.user });
           }
         });
       }
@@ -257,14 +255,14 @@ app.post('/login', (req, res) => {
       db.get('SELECT id FROM Houses WHERE name = ?', name, (err, house) => {
         if(err){
           return res.status(500)
-              .render('error', {err_message: "Sorry, you have reached an error." });
+            .render('error', { err_message: "Sorry, you have reached an error." });
         }
         if(house){
           res.redirect(`/house/${house.id}`);
         }
         else {
-            return res.status(404)
-                .render('error', {err_message: "Sorry, no matching results", user: req.session.user  });
+          return res.status(404)
+            .render('error', { err_message: "Sorry, no matching results", user: req.session.user });
         }
       });
     }
@@ -276,7 +274,7 @@ app.post('/commenthandler/:roomId', authChecker, function(req, res){
   const roomId = req.params.roomId;
   // Adds the comment and its object ID to the overall list of comments
   db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err, room) => {
-    if(err){
+    if(err) {
       return res.status(500)
         .render('error', {err_message: "Sorry, you have reached an error"});
     }
@@ -286,9 +284,9 @@ app.post('/commenthandler/:roomId', authChecker, function(req, res){
 })
 
 app.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-  })
+  req.session.destroy();
+  res.redirect('/');
+})
 
 // Listen on socket
 app.listen(port, hostname, () => {
