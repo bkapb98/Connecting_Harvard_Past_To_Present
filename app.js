@@ -3,7 +3,7 @@ const path = require('path');
 const sqlite3 = require('sqlite3');
 const async = require('async');
 const session = require('express-session');
-
+require('cross-fetch/polyfill');
 
 const bodyParser = require('body-parser');
 
@@ -164,6 +164,10 @@ app.get('/room/:roomId', (req, res) => {
       res.render('room', { room: results.room_info, comments: results.comments, user: req.session.user });
     });
   });
+
+  app.get('/featuredRoomJs.js', function(req, res) {
+    res.sendfile('featuredRoomJs.js');  
+});
 
   // Featured Room Page
   app.get('/featuredRoom/:roomId', (req, res) => {
