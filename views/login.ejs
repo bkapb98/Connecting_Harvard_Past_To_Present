@@ -1,6 +1,6 @@
+<% include header %>
 
-    <% include header %>
-    <form action="/login" method="post">
+<form action="/login" method="post">
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text"/>
         </div>
@@ -8,9 +8,9 @@
             <input class="form-control" name="password" placeholder="Password" type="password"/>
         </div>
         <button class="btn btn-primary" type="submit">Log In</button>
-     </form>
-    <div> 
-      Have you not registered? Create an account <a href = "/register"> here. </a>
-    </div>
-  </body>
-</html>
+ </form>
+<div> 
+  Have you not registered? Create an account <a href = "/register"> here. </a>
+</div>
+
+<% include footer %>

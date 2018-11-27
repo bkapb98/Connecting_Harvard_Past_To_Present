@@ -43,7 +43,7 @@
       <script src="awesomplete.js" async></script>
       <form action = "/roomhandler", method = "post">
       <label for="inputs">Search a Room or House:</label>
-      <input name = "inputs" class="awesomplete" data-maxitems = "5" data-minchars = "1" autocomplete = "off" class = "form-control" type= "text" list="rooms" placeholder="Type to search a room or house."/>
+      <input name = "inputs" class="awesomplete" data-maxitems = "5" data-minchars = "1" autocomplete = "off" type= "text" list="rooms" placeholder="Type to search a room or house."/>
       <datalist id="rooms">
         <% houses.forEach(house => { %>
             <option><%=house.name %></option>
@@ -54,5 +54,4 @@
       </datalist>
     </form>
     </div>
-  </body>
-  </html>
+<% include footer %>
