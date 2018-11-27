@@ -237,16 +237,23 @@ app.post('/register', (req, res) => {
   });
 });
 
-function containsDigit(contents) {
+function roomNumber(contents) {
   const extractNumber = tokenize.re(/[0-9]/);
-  return extractNumber(contents);
+  const nums = extractNumber(contents);
+  console.log(nums)
+  let name = "";
+  nums.forEach(num=>{
+    name+=num.value;
+})
+  return name;
 }
 
 app.post('/roomhandler', (req, res) => {
-  let name = req.body.inputs;
-  if (containsDigit(name)) {
-    name = containsDigit(name);
-    db.get('SELECT id FROM Rooms WHERE name = ?', name, (err, room) => {
+  const name = req.body.inputs;
+  if (roomNumber(name)) {
+    const roomName = roomNumber(name);
+    console.log(roomName)
+    db.get('SELECT id FROM Rooms WHERE name = ?', roomName, (err, room) => {
       if (err) {
         return res.status(500)
 
