@@ -276,7 +276,8 @@ app.post('/roomhandler', (req, res) => {
         return (error_handling(req, res, 404, 'Sorry, no matching results.'));
       }
     });
-  } else {
+  } 
+  else {
     db.get('SELECT id FROM Houses WHERE name = ?', name, (err, house) => {
       if (err) {
         return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
