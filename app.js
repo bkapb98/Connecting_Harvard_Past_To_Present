@@ -166,6 +166,10 @@ app.get('/room/:roomId', (req, res) => {
     });
   });
 
+  app.get('/featuredRoomJs.js', function(req, res) {
+    res.sendfile('featuredRoomJs.js');  
+});
+
   // Featured Room Page
   app.get('/featuredRoom/:roomId', (req, res) => {
     let room_id = req.params.roomId;
@@ -190,22 +194,11 @@ app.post('/login', (req, res) => {
     db.get('SELECT * FROM Users WHERE userName = ? AND password = ?', username, password, (err, result) => {
       if (err) {
       return res.status(500)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
           .render('error', {err_message: 'It looks like you have no registered account per those credentials.', user: req.session.user  });
     }
     if (!result) {
       return res.status(404)
           .render('error', {err_message: 'It looks like you have no registered account per those credentials.', user: req.session.user  });
-=======
-=======
->>>>>>> Stashed changes
-          .render('404', {err_message: 'It looks like you have no registered account per those credentials.', session: req.session.user  });
-    }
-    if (!result) {
-      return res.status(500)
-          .render('404', {err_message: 'It looks like you have no registered account per those credentials.', session: req.session.user  });
->>>>>>> Stashed changes
     }
     if (result.userName === username && result.password === password){
       req.session.user = {username};
@@ -228,18 +221,8 @@ app.post('/login', (req, res) => {
     const password = req.body.password;
       db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err, result) => {
         if (err) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
           return res.status(404)
             .render('error', {err_message: 'Sorry, that username is taken.' });
-=======
-          return res.status(500)
-            .render('500', {err_message: 'Sorry, that username is taken.' });
->>>>>>> Stashed changes
-=======
-          return res.status(500)
-            .render('500', {err_message: 'Sorry, that username is taken.' });
->>>>>>> Stashed changes
         }
         req.session.user = {userName};
         res.redirect('/')
@@ -262,32 +245,15 @@ app.post('/login', (req, res) => {
         db.get('SELECT id FROM Rooms WHERE name = ?', name, (err, room) => {
           if(err) {
             return res.status(500)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
               .render('error', {err_message: 'Sorry, you have reached an error' });
-=======
-              .render('500', {err_message: 'Sorry, you have reached an error' });
->>>>>>> Stashed changes
-=======
-              .render('500', {err_message: 'Sorry, you have reached an error' });
->>>>>>> Stashed changes
           }
           if(room){
             res.redirect('/room/${room.id}');
           }
           else {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
               return res.status(404)
                   .render('error', {err_message: 'Sorry, no matching results.', user: req.session.user  });
-=======
-              return res.status(500)
-                  .render('500', {err_message: 'Sorry, no matching results.', session: req.session.user  });
->>>>>>> Stashed changes
-=======
-              return res.status(500)
-                  .render('500', {err_message: 'Sorry, no matching results.', session: req.session.user  });
->>>>>>> Stashed changes
           }
         });
       }
@@ -295,32 +261,14 @@ app.post('/login', (req, res) => {
       db.get('SELECT id FROM Houses WHERE name = ?', name, (err, house) => {
         if(err){
           return res.status(500)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
               .render('error', {err_message: 'Sorry, you have reached an error.' });
-=======
-              .render('500', {err_message: 'Sorry, you have reached an error.' });
->>>>>>> Stashed changes
-=======
-              .render('500', {err_message: 'Sorry, you have reached an error.' });
->>>>>>> Stashed changes
         }
         if(house){
           res.redirect('/house/${house.id}');
         }
         else {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
             return res.status(404)
                 .render('error', {err_message: 'Sorry, no matching results', user: req.session.user  });
-=======
-            return res.status(500)
-                .render('500', {err_message: 'Sorry, no matching results', session: req.session.user  });
->>>>>>> Stashed changes
-=======
-            return res.status(500)
-                .render('500', {err_message: 'Sorry, no matching results', session: req.session.user  });
->>>>>>> Stashed changes
         }
       });
     }
@@ -334,15 +282,7 @@ app.post('/commenthandler/:roomId', authChecker, function(req, res){
   db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err, room) => {
     if(err){
       return res.status(500)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         .render('error', {err_message: 'Sorry, you have reached an error'});
-=======
-        .render('500', {err_message: 'Sorry, you have reached an error'});
->>>>>>> Stashed changes
-=======
-        .render('500', {err_message: 'Sorry, you have reached an error'});
->>>>>>> Stashed changes
     }
     // Creates redirect URL to go back to object page, redirects to it
     res.redirect('/room/${roomId}');
