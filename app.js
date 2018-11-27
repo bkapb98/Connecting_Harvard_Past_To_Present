@@ -8,7 +8,7 @@ const sqlite3 = require('sqlite3');
 const async = require('async');
 const session = require('express-session');
 const Tokenizer = require('tokenize-text');
-const validator = require('validator')
+const validator = require('validator');
 
 
 const tokenize = new Tokenizer();
@@ -16,8 +16,9 @@ require('cross-fetch/polyfill');
 const bodyParser = require('body-parser');
 
 // Check if enough arguments https://www.npmjs.com/package/validator
-if(process.argv.length != 4) {
-  console.log("Sorry, you do not have the appropriate number of arguments.");
+if (process.argv.length !== 4) {
+  // eslint-disable-next-line no-console
+  console.log('Sorry, you do not have the appropriate number of arguments.');
   process.exit(1);
 }
 // Based on https://nodejs.org/docs/latest/api/process.html#process_process_argv
@@ -25,13 +26,15 @@ const hostname = `${process.argv[2]}`;
 const port = process.argv[3];
 
 // Check valid inputs, using https://www.npmjs.com/package/validator
-if(validator.isIP(hostname) == false) {
-  console.log("Sorry, that is an invalid hostname.");
+if (!validator.isIP(hostname)) {
+  // eslint-disable-next-line no-console
+  console.log('Sorry, that is an invalid hostname.');
   process.exit(1);
 }
 
-if(validator.isPort(port) == false) {
-  console.log("Sorry, that is an invalid port.");
+if (!validator.isPort(port)) {
+  // eslint-disable-next-line no-console
+  console.log('Sorry, that is an invalid port.');
   process.exit(1);
 }
 
@@ -51,6 +54,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(__dirname));
 
 
 app.use(session({
@@ -64,7 +68,7 @@ app.use(bodyParser.json());
 
 function error_handling(req, res, code, message) {
   res.status(code)
-    .render('error', { err_message: message, user: req.session.user });
+    .render('error', { err_message: message, user: req.session.user, title: 'ERROR' });
 }
 
 // Create database
@@ -89,7 +93,7 @@ app.get('/', (req, res) => {
     if (err) {
       return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user });
+    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user, title: 'Connecting' });
   });
 });
 
@@ -129,6 +133,7 @@ app.get('/house/:houseId', (req, res) => {
       .then((data) => {
         res.render('house', {
           house: results.house_info,
+          title: houseName,
           rooms: results.rooms_info,
           events: results.events_info,
           featuredRooms: results.featuredRooms_info,
@@ -157,7 +162,7 @@ app.get('/room/:roomId', (req, res) => {
     if (err) {
       return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    res.render('room', { room: results.room_info, comments: results.comments, user: req.session.user });
+    res.render('room', { room: results.room_info, comments: results.comments, user: req.session.user, title: results.room_info.name });
   });
 });
 
@@ -170,14 +175,14 @@ app.get('/featuredRoom/:roomId', (req, res) => {
   const room_id = req.params.roomId;
   db.get('SELECT * FROM featuredRoom WHERE id = ?', room_id, (err, room_info) => {
     if (err) {
-      return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+      return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    res.render('room_featured', { room: room_info, user: req.session.user });
+    res.render('room_featured', { room: room_info, user: req.session.user, title: room_info.name });
   });
 });
 
 app.get('/login', (req, res) => {
-  res.render('login.ejs', { user: req.session.user });
+  res.render('login.ejs', { user: req.session.user, title: 'Login' });
 });
 
 app.post('/login', (req, res) => {
@@ -185,10 +190,10 @@ app.post('/login', (req, res) => {
   const password = req.body.password;
   db.get('SELECT * FROM Users WHERE userName = ? AND password = ?', username, password, (err, result) => {
     if (err) {
-      return(error_handling(req, res, 404, 'It looks like you have no registered account per those credentials.'));
+      return (error_handling(req, res, 404, 'It looks like you have no registered account per those credentials.'));
     }
     if (!result) {
-      return(error_handling(req, res, 404, 'It looks like you have no registered account per those credentials.'));
+      return (error_handling(req, res, 404, 'It looks like you have no registered account per those credentials.'));
     }
     if (result.userName === username && result.password === password) {
       req.session.user = { username };
@@ -200,7 +205,7 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  res.render('register.ejs', { user: req.session.user });
+  res.render('register.ejs', { user: req.session.user, title: 'Register' });
 });
 
 app.post('/register', (req, res) => {
@@ -210,7 +215,7 @@ app.post('/register', (req, res) => {
   const password = req.body.password;
   db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err) => {
     if (err) {
-      return(error_handling(req, res, 404, 'Sorry, that username is taken.'));
+      return (error_handling(req, res, 404, 'Sorry, that username is taken.'));
     }
     req.session.user = { userName };
     res.redirect('/');
@@ -220,10 +225,10 @@ app.post('/register', (req, res) => {
 function roomNumber(contents) {
   const extractNumber = tokenize.re(/[0-9]/);
   const nums = extractNumber(contents);
-  let name = "";
-  nums.forEach(num=>{
-    name+=num.value;
-})
+  let name = '';
+  nums.forEach((num) => {
+    name += num.value;
+  });
   return name;
 }
 
@@ -231,26 +236,25 @@ app.post('/roomhandler', (req, res) => {
   const name = req.body.inputs;
   if (roomNumber(name)) {
     const roomName = roomNumber(name);
-    console.log(roomName)
     db.get('SELECT id FROM Rooms WHERE name = ?', roomName, (err, room) => {
       if (err) {
-        return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+        return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
       }
       if (room) {
         res.redirect(`/room/${room.id}`);
       } else {
-        return(error_handling(req, res, 404, 'Sorry, no matching results.'));
+        return (error_handling(req, res, 404, 'Sorry, no matching results.'));
       }
     });
   } else {
     db.get('SELECT id FROM Houses WHERE name = ?', name, (err, house) => {
       if (err) {
-        return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+        return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
       }
       if (house) {
         res.redirect(`/house/${house.id}`);
       } else {
-        return(error_handling(req, res, 404, 'Sorry, no matching results.'));
+        return (error_handling(req, res, 404, 'Sorry, no matching results.'));
       }
     });
   }
@@ -263,7 +267,7 @@ app.post('/commenthandler/:roomId', authChecker, (req, res) => {
   // Adds the comment and its object ID to the overall list of comments
   db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err) => {
     if (err) {
-      return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+      return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
     // Creates redirect URL to go back to object page, redirects to it
     res.redirect(`/room/${roomId}`);
