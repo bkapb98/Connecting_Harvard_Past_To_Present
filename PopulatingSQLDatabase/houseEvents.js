@@ -93,16 +93,45 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       description: "Winthrop House football loses to Yale's team, 7 to 0, after a touchdown by Pinky Pinkham.",
       source: 'Special to THE NEW,YORK TIMES. (1932, Nov 16). YALE JUNIORS DEFEAT WINTHROP HOUSE, 7-0. New York Times (1923-Current File) Retrieved from http://search.proquest.com.ezp-prod1.hul.harvard.edu/docview/99777544?accountid=11311',
     },
+    {
+    // will use join to say the alias of house is "name" in the house table, can join
+      house: 'Adams',
+      date: '1893',
+      name: 'Claverly Hall Built',
+      description: "Claverly featured steam heat and a swimming pool which has been repurposed to a theater. It was the first incredibly luxurious Gold Coast dorm, a collection of living spaces for wealthy students.",
+      source: 'https://adamshouse.harvard.edu/house-history',
+    },
+    {
+      house: 'Cabot',
+      date: 'January 2014',
+      name: 'Cabot Dean named College Dean',
+      description: "The Faculty Dean (then known as Master) of Cabot House, Rakesh Khurana, is named Dean of Harvard College. Khurana had become Faculty Dean of Cabot in 2010.",
+      source: 'https://search-proquest-com.ezp-prod1.hul.harvard.edu/docview/1498242455?accountid=11311&rfr_id=info%3Axri%2Fsid%3Aprimo',
+    },
+    {
+      house: 'Currier',
+      date: '1975',
+      name: 'Bill Gates and Steve Ballmer',
+      description: 'As Steve Ballmer reflects in a 1997 interview, he met Microsoft founder Bill Gates as sophomores in Currier House in 1975. Ballmer would go on to become CEO of Microsoft. They lived down the hall from each other and both were into "math and science-type stuff"',
+      source: 'Whitaker, Mark. “How We Did It.” Newsweek, vol. 129, no. 25, June 1997, p. 78. EBSCOhost, ezp-prod1.hul.harvard.edu/login?url=http://search.ebscohost.com/login.aspx?direct=true&db=bth&AN=9706246969&site=ehost-live&scope=site.',
+    },
+    {
+      house: 'Dunster',
+      date: '1972',
+      name: "Film Society",
+      description: 'In 1972, the Dunster House Film Society was founded to screen movies in Dunster House as well as in "larger university venues" like the Science Center.',
+      source: 'Dunster House Film Society. (1972). General Information by and about the Dunster House Film Society, 1972-1979.',
+    }
   ];
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
   // gets the houseId using its name since the two tables are linked by houseId
     // eslint-disable-next-line no-shadow
-    db.get('SELECT houseId FROM Houses WHERE name = ?', dict[key].house, (err, house) => {
+    db.get('SELECT id FROM Houses WHERE name = ?', dict[key].house, (err, house) => {
       if (err) {
         throw err;
       }
-      db.run('INSERT INTO Events(houseId, date, eventName, description, source) VALUES(?, ?, ?, ?, ?)', [house.houseId, dict[key].date, dict[key].name, dict[key].description, dict[key].source]);
+      db.run('INSERT INTO Events(houseId, date, eventName, description, source) VALUES(?, ?, ?, ?, ?)', [house.id, dict[key].date, dict[key].name, dict[key].description, dict[key].source]);
     });
   }
 });
