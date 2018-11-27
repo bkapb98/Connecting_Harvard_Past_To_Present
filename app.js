@@ -11,12 +11,12 @@ const bodyParser = require('body-parser');
 const hostname = '127.0.0.1';
 const port = 3000;
 
-// authorizer middleware
+// Set up authorizing middleware
 authChecker = (req, res, next) => {
   if (!req.session.user) {
     res.redirect("/login");
   } else {
-      next();
+    next();
   }
 }
 
@@ -27,7 +27,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-
+// Set up session
 app.use(session({
   secret: 'ssshhhhh',
   resave: false,
@@ -40,10 +40,8 @@ app.use(bodyParser.json());
 // Create database
 const db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
 
-// List houses
-// Implement in parallel instead: https://caolan.github.io/async/docs.html#parallel
+// Index Page
 room_numbers = []
-
 app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
@@ -51,15 +49,16 @@ app.get('/', (req, res) => {
       db.all(`SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id`, (err, rooms_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  } );
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user});
         }
         callback(null, rooms_info)
-    })},
+      }
+    )},
     house_info: function(callback) {
       db.all('SELECT * FROM Houses', (err, house_info) => {
         if(err) {
           return res.status(500)
-            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user  } );
+            .render('error', {err_message: "Sorry, you have reached an error", user: req.session.user});
         }
         callback(null, house_info)
       }
@@ -67,7 +66,7 @@ app.get('/', (req, res) => {
   },
   // Render home page
   function(err, results) {
-    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user });
+    res.render('index', {houses: results.house_info, rooms: results.rooms_info, user: req.session.user});
   });
 });
 
