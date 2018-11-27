@@ -9,9 +9,9 @@
 
 img.resize{
   width: 100%;
-  max-width: 60px ;
-  max-height: 500px ;
+  height: 600px ;
 }
+
 body{
    padding: 10px;
     }
