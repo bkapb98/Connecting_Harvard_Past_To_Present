@@ -1,3 +1,7 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-undef */
+/* eslint-disable consistent-return */
+/* eslint-disable camelcase */
 const express = require('express');
 const path = require('path');
 const sqlite3 = require('sqlite3');
@@ -13,7 +17,7 @@ const hostname = '127.0.0.1';
 const port = 3000;
 
 // authorizer middleware
-authChecker = (req, res, next) => {
+const authChecker = (req, res, next) => {
   if (!req.session.user) {
     res.redirect('/login');
   } else {
@@ -223,7 +227,7 @@ app.post('/register', (req, res) => {
   const last = req.body.lastname;
   const userName = req.body.username;
   const password = req.body.password;
-  db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err, result) => {
+  db.run('INSERT INTO Users(firstName, lastName, userName, password) VALUES(?, ?, ?, ?)', [first, last, userName, password], (err) => {
     if (err) {
       return res.status(404)
         .render('error', { err_message: 'Sorry, that username is taken.' });
@@ -233,10 +237,7 @@ app.post('/register', (req, res) => {
   });
 });
 
-const CHAR_0 = '0'.charCodeAt(0);
-const CHAR_9 = '9'.charCodeAt(0);
-
-function containsDigit(name) {
+function containsDigit(contents) {
   const extractNumber = tokenize.re(/[0-9]/);
   return extractNumber(contents);
 }
@@ -279,7 +280,7 @@ app.post('/commenthandler/:roomId', authChecker, (req, res) => {
   const userId = 20;
   const roomId = req.params.roomId;
   // Adds the comment and its object ID to the overall list of comments
-  db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err, room) => {
+  db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err) => {
     if (err) {
       return res.status(500)
         .render('error', { err_message: 'Sorry, you have reached an error' });
@@ -296,5 +297,6 @@ app.get('/logout', (req, res) => {
 
 // Listen on socket
 app.listen(port, hostname, () => {
+  // eslint-disable-next-line no-console
   console.log(`Server running on http://${hostname}:${port}/`);
 });
