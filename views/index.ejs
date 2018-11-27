@@ -65,7 +65,7 @@
             <option><%=house.name %></option>
         <% }); %>
         <% rooms.forEach(room => { %>
-      	    <option value ="<%= room.houseName + " " + room.name%>" ><%=room.name%> </option>
+      	    <option value ="<%= room.houseName + " " + room.name%>" ><%=room.houseName + " " + room.name%> </option>
         <% }); %>
       </datalist>
     </form>
