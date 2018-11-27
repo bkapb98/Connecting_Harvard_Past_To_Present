@@ -250,7 +250,6 @@ app.post('/register', (req, res) => {
 function roomNumber(contents) {
   const extractNumber = tokenize.re(/[0-9]/);
   const nums = extractNumber(contents);
-  console.log(nums)
   let name = "";
   nums.forEach(num=>{
     name+=num.value;
@@ -262,7 +261,6 @@ app.post('/roomhandler', (req, res) => {
   const name = req.body.inputs;
   if (roomNumber(name)) {
     const roomName = roomNumber(name);
-    console.log(roomName)
     db.get('SELECT id FROM Rooms WHERE name = ?', roomName, (err, room) => {
       if (err) {
         return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
