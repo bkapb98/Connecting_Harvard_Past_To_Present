@@ -82,18 +82,20 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info(callback) {
-      db.all('SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id', callback)
+      db.all('SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id', callback);
     },
     house_info(callback) {
-      db.all('SELECT * FROM Houses', callback) 
+      db.all('SELECT * FROM Houses', callback);
     },
   },
   // Render home page
   (err, results) => {
     if (err) {
-      return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+      return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    res.render('index', { houses: results.house_info, rooms: results.rooms_info, user: req.session.user, title: 'Connecting' });
+    res.render('index', {
+      houses: results.house_info, rooms: results.rooms_info, user: req.session.user, title: 'Connecting',
+    });
   });
 });
 
@@ -105,23 +107,23 @@ app.get('/house/:houseId', (req, res) => {
     // Get event information
     events_info(callback) {
       // Sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
-      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC', house_id, callback)
+      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC', house_id, callback);
     },
     // Get house information
     house_info(callback) {
-      db.get('SELECT * FROM Houses WHERE id = ?', house_id, callback)
+      db.get('SELECT * FROM Houses WHERE id = ?', house_id, callback);
     },
     featuredRooms_info(callback) {
-      db.all('SELECT * FROM featuredRoom WHERE houseId = ?', house_id, callback)
+      db.all('SELECT * FROM featuredRoom WHERE houseId = ?', house_id, callback);
     },
     // Get room information
     rooms_info(callback) {
-      db.all('SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC', house_id, callback)
+      db.all('SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC', house_id, callback);
     },
   },
   (err, results) => {
     if (err) {
-      return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+      return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
     // change to houseInfo
     const house = results.house_info;
@@ -150,19 +152,24 @@ app.get('/room/:roomId', (req, res) => {
   async.parallel({
     // Get room info
     room_info(callback) {
-      db.get('SELECT * FROM Rooms WHERE id = ?', room_id, callback)
+      db.get('SELECT * FROM Rooms WHERE id = ?', room_id, callback);
     },
     // Get comments
     comments(callback) {
-      db.all('SELECT * FROM Comments WHERE roomId = ?', room_id, callback)
+      db.all('SELECT * FROM Comments WHERE roomId = ?', room_id, callback);
     },
   },
   // Render room page
   (err, results) => {
     if (err) {
-      return(error_handling(req, res, 500, 'Sorry, you have reached an error.'));
+      return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    res.render('room', { room: results.room_info, comments: results.comments, user: req.session.user, title: results.room_info.name });
+    res.render('room', {
+      room: results.room_info,
+      comments: results.comments,
+      user: req.session.user,
+      title: results.room_info.name,
+    });
   });
 });
 
