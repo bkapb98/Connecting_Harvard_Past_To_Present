@@ -246,7 +246,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       house: 'Pforzheimer',
       date: 'January 2018',
       name: 'Associate Dean to Live in Pforzheimer',
-      description: 'Recently named Associate Dean of Students Lauren E. Brandt \'\01 is assigned to live in Pforzheimer House.',
+      description: 'Recently named Associate Dean of Students Lauren E. Brandt `01 is assigned to live in Pforzheimer House.',
       source: 'https://hollis.harvard.edu/primo-explore/fulldisplay?docid=TN_proquest1986790177&context=PC&vid=HVD2&search_scope=everything&tab=everything&lang=en_US',
     },
     {
