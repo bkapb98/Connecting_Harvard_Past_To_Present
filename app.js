@@ -237,7 +237,7 @@ app.post('/register', (req, res) => {
   });
 });
 
-function containsDigit(contents) {
+function roomNumber(contents) {
   const extractNumber = tokenize.re(/[0-9]/);
   const nums = extractNumber(contents);
   console.log(nums)
@@ -250,8 +250,8 @@ function containsDigit(contents) {
 
 app.post('/roomhandler', (req, res) => {
   const name = req.body.inputs;
-  if (containsDigit(name)) {
-    const roomName = containsDigit(name);
+  if (roomNumber(name)) {
+    const roomName = roomNumber(name);
     console.log(roomName)
     db.get('SELECT id FROM Rooms WHERE name = ?', roomName, (err, room) => {
       if (err) {
