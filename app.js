@@ -220,7 +220,6 @@ app.post('/register', (req, res) => {
 function roomNumber(contents) {
   const extractNumber = tokenize.re(/[0-9]/);
   const nums = extractNumber(contents);
-  console.log(nums)
   let name = "";
   nums.forEach(num=>{
     name+=num.value;
