@@ -61,6 +61,12 @@
   </body>
 
 <style>  
+=======
+      <style>  
+>>>>>>> Stashed changes
+=======
+      <style>  
+>>>>>>> Stashed changes
       body{
           padding: 10px;
           }  
@@ -194,4 +200,59 @@
         }
       }
   </style>
+  </head>
+<!-- used https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_timeline-->
+  <body>
+    <% include header %>
+    <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
+    <!-- <img src= alt="Italian Trulli">  -->
+    <h1> <%= house.name %> </h1>
+    <h2> <%= house.description %> <h2>
+    </h3> Events </h3>
+    <div class="timeline">
+        <% events.forEach(event => { %>
+            <div class="container left">
+              <div class="content">
+                  <h2><%= event.date %></h2>
+                  <p><%= event.eventName %>: <%= event.description %> </p>
+              </div>
+            </div>
+        <% }); %>
+    </div>
+    <h3> Resources </h3>
+    <div>
+        <ul>
+            <% resources.forEach(resource => { %>
+                    <% if(resource.titleInfo.title) { %>
+                    <li> 
+                        <%= resource.titleInfo.title %>
+                        <% console.log(resource.location) %>
+                    </li>
+                    <% } %>
+            <% }); %>
+        </ul>
+    </div>
+<h3> Featured Rooms </h3>
+<div>
+    <ul>
+        <% featuredRooms.forEach(room => { %>
+            <tr>
+              <td>
+                <a href="/featuredRoom/<%= room.id %>"> <%= room.name %> </a>
+              </td>
+            </tr>
+        <% }); %>
+    </ul>
+</div>
+    <table class="table table-striped">
+        <tr><td> Rooms </td></tr>
+        <% rooms.forEach(room => { %>
+          <tr>
+            <td>
+              <a href="/room/<%= room.id %>"> <%= room.name %> </a>
+            </td>
+          </tr>
+        <% }); %>
+    </table>
+  </body>
 </html>
