@@ -28,7 +28,6 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
   // eslint-disable-next-line guard-for-in
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
-  // gets the houseId using its name since the two tables are linked by houseId
     // eslint-disable-next-line no-shadow
     db.get('SELECT id FROM Houses WHERE name = ?', dict[key].house, (err, house) => {
       if (err) {
