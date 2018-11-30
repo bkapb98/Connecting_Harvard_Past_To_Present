@@ -53,9 +53,11 @@ let dict = [
     firstName: 'Tobyn',
     lastName: 'Aaron',
     graduationYear: '2011',
-    roomOne: '2008 Old Quincy B43',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'Old Quincy',
+      name: 'B43'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -66,9 +68,11 @@ let dict = [
     firstName: 'Pierre',
     lastName: 'Abousleim',
     graduationYear: '2011',
-    roomOne: '2008 Old Quincy D22',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'Old Quincy',
+      name: 'D22'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -78,9 +82,11 @@ let dict = [
     firstName: 'Joshua',
     lastName: 'Abram',
     graduationYear: '2010',
-    roomOne: '2008 Old Quincy E43',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'Old Quincy',
+      name: 'E43'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -90,9 +96,11 @@ let dict = [
     firstName: 'Anna',
     lastName: 'Acosta',
     graduationYear: '2010',
-    roomOne: '2008 New Quincy 308',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'New Quincy',
+      name: '308'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -102,9 +110,11 @@ let dict = [
     firstName: 'Edwin',
     lastName: 'Acosta',
     graduationYear: '2010',
-    roomOne: '2008 New Quincy 316',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'New Quincy',
+      name: '316'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -114,9 +124,11 @@ let dict = [
     firstName: 'Whitney',
     lastName: 'Adair',
     graduationYear: '2011',
-    roomOne: '2008 Old Quincy Dewolfe 26',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: '20 DeWolfe',
+      name: '26'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -126,9 +138,11 @@ let dict = [
     firstName: 'Elizabeth',
     lastName: 'Adams',
     graduationYear: '2010',
-    roomOne: '2008 New Quincy 318',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'New Quincy',
+      name: '318'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -138,9 +152,11 @@ let dict = [
     firstName: 'Khaled',
     lastName: 'Al Rabe',
     graduationYear: '2009',
-    roomOne: '2008 Off Campus',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'Off Campus',
+      name: '0'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -150,9 +166,11 @@ let dict = [
     firstName: 'Talal',
     lastName: 'Alhammad',
     graduationYear: '2011',
-    roomOne: '2008 Dewolfe 01',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'Dewolfe',
+      name: '01'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -162,9 +180,11 @@ let dict = [
     firstName: 'Melissa',
     lastName: 'Alpert',
     graduationYear: '2010',
-    roomOne: '2008 New Quincy 308',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'New Quincy',
+      name: '308'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -174,9 +194,11 @@ let dict = [
     firstName: 'Elizabeth',
     lastName: 'Altmaier',
     graduationYear: '2010',
-    roomOne: '2008 New Quincy 315',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'New Quincy',
+      name: '315'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
@@ -186,9 +208,11 @@ let dict = [
     firstName: 'Alexandra',
     lastName: 'Alves',
     graduationYear: '2011',
-    roomOne: '2008 Old Quincy C43',
-    roomTwo: '',
-    roomThree: '',
+    rooms: [
+      {year: '2008',
+      entryway: 'Old Quincy',
+      name: 'C43'}
+    ],
     famous: '',
     privacyPref: '',
     house: 'Quincy',
