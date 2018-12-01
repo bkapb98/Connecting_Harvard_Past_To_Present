@@ -6,27 +6,77 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
   if (err) {
     throw err;
   }
-  // taken from https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
-  function roomName() {
-    let text = '';
-    const possible = '1234567890';
-    // eslint-disable-next-line max-len
-    for (let i = 0; i < 3; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)); }
 
-    return text;
+dict = [
+  {
+    house: 'Quincy',
+    entryway: 'Stone Hall D',
+    number: '32'
+  },
+  {
+    house: 'Eliot',
+    entryway: 'A',
+    number: '51'
+  },
+  {
+    house: 'Kirkland',
+    entryway: 'H',
+    number: '21'
+  },
+  {
+    house: 'Leverett',
+    entryway: 'McKinlock D',
+    number: '34'
+  },
+  {
+    house: 'Pforzheimer',
+    entryway: 'Moors D',
+    number: '1'
+  },
+  {
+    house: 'Cabot',
+    entryway: 'D',
+    number: '216'
+  },
+  {
+    house: 'Currier',
+    entryway: 'Daniels',
+    number: '539'
+  },
+  {
+    house: 'Mather',
+    entryway: 'Tower',
+    number: '12'
+  },
+  {
+    house: 'Dunster',
+    entryway: 'West',
+    number: '423'
+  },
+  {
+    house: 'Lowell',
+    entryway: 'Fairfax',
+    number: '1313'
+  },
+  {
+    house: 'Winthrop',
+    entryway: 'Gore',
+    number: '313'
+  },
+  {
+    house: 'Adams',
+    entryway: 'Claverly',
+    number: '4243'
   }
-  function roomDescription() {
-    let text = '';
-    const possible = 'abcdefghijklmnopqrstuvwxyz';
-    // eslint-disable-next-line max-len
-    for (let i = 0; i < 20; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)); }
+]
 
-    return text;
-  }
-  for (let i = 0; i < 2400; i++) {
-    const name = roomName();
-    const description = roomDescription();
-    const houseId = Math.round(Math.random() * 12);
-    db.run('INSERT INTO Rooms(name, description, houseId) VALUES(?, ?, ?)', [name, description, houseId]);
+  for (const key in dict) {
+    // eslint-disable-next-line no-shadow
+    db.get('SELECT id FROM Houses WHERE name = ?', dict[key].house, (err, house) => {
+      if (err) {
+        throw err;
+      }
+      db.run('INSERT INTO Rooms(houseId, entryway, number) VALUES(?, ?, ?)', [house.id, dict[key].entryway, dict[key].number]);
+    });
   }
 });

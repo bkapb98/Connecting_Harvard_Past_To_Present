@@ -82,7 +82,7 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info(callback) {
-      db.all('SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id', callback);
+      db.all('SELECT Rooms.entryway, Rooms.number, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id', callback);
     },
     house_info(callback) {
       db.all('SELECT * FROM Houses', callback);
@@ -118,7 +118,7 @@ app.get('/house/:houseId', (req, res) => {
     },
     // Get room information
     rooms_info(callback) {
-      db.all('SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC', house_id, callback);
+      db.all('SELECT * FROM Rooms WHERE houseId = ? ORDER BY Entryway, LENGTH(Number), Number ASC', house_id, callback);
     },
   },
   (err, results) => {
@@ -239,11 +239,25 @@ function roomNumber(contents) {
   return name;
 }
 
+function entryway(contents){
+  const entryway = tokenize.words()(contents);
+  let entry = '';
+  for(let i = 1; i<entryway.length-1; i++){
+    entry+= entryway[i].value;
+    if(i != entryway.length-2){
+      entry+= " ";
+    }
+  }
+  return entry;
+}
+
 app.post('/roomhandler', (req, res) => {
   const name = req.body.inputs;
   if (roomNumber(name)) {
     const roomName = roomNumber(name);
-    db.get('SELECT id FROM Rooms WHERE name = ?', roomName, (err, room) => {
+    const entry = entryway(name);
+    db.get('SELECT id FROM Rooms WHERE number = ? AND entryway = ?', [roomName, entry], (err, room) => {
+      console.log(room)
       if (err) {
         return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
       }
