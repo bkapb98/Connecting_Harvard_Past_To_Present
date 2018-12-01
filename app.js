@@ -240,11 +240,13 @@ function roomNumber(contents) {
 }
 
 function entryway(contents){
-  const extractEntryway = tokenize.words()(contents);
-  const entryway =  extractEntryway(contents);
+  const entryway = tokenize.words()(contents);
   let entry = '';
   for(let i = 1; i<entryway.length-1; i++){
-    entry+= entryway[i];
+    entry+= entryway[i].value;
+    if(i != entryway.length-2){
+      entry+= " ";
+    }
   }
   return entry;
 }
@@ -254,7 +256,8 @@ app.post('/roomhandler', (req, res) => {
   if (roomNumber(name)) {
     const roomName = roomNumber(name);
     const entry = entryway(name);
-    db.get('SELECT id FROM Rooms WHERE number = ?, entryway = ?', roomName, entry (err, room) => {
+    db.get('SELECT id FROM Rooms WHERE number = ? AND entryway = ?', [roomName, entry], (err, room) => {
+      console.log(room)
       if (err) {
         return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
       }
