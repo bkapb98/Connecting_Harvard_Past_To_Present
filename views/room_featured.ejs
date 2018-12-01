@@ -1,27 +1,28 @@
 <% include header %>
-    <h1>
-        Welcome to Room <%-room.name %>!
-    </h1>
-    <br>
-    <br>
-    <p>Before / After</p>
-    <br>
-    <div class="rf">
-    <div class="img-comp-container">
-        <div class="img-comp-img">
-          <img src="<%-room.beforeImg%>" width="400" height="300">
-        </div>
-        <div class="img-comp-img img-comp-overlay">
-          <img src="<%-room.afterImg%>" width="400" height="300">
-        </div>
+
+  <h1>
+      Welcome to Room <%-room.name %>!
+  </h1>
+  <br>
+  <br>
+  <p>Before / After</p>
+  <br>
+  <div class="rf">
+  <div class="img-comp-container">
+      <div class="img-comp-img">
+        <img src="<%-room.beforeImg%>" width="400" height="300">
       </div>
-    <br>
-    <script>
-      initComparisons();
-    </script>
-    <div>
-        <%-room.description %>
+      <div class="img-comp-img img-comp-overlay">
+        <img src="<%-room.afterImg%>" width="400" height="300">
+      </div>
     </div>
+  <br>
+  <script>
+    initComparisons();
+  </script>
+  <div>
+      <%-room.description %>
   </div>
-  </body>
-</html>
+</div>
+
+<% include footer %>

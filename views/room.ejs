@@ -1,36 +1,37 @@
 <% include header %>
-    <h1>
-        Welcome to Room <%-room.name %>!
-    </h1>
-    <br>
-    <br>
-    <div>
-        <%-room.description %>
-    </div>
-    <br>
-    <br>
-    <div>
-        Did you live in room <%-room.name %>? Leave a comment with your experience.
-    </div>
-    <br>
-    <br>
-    <div>
-        <h2> Comments </h2>
-        <ul>
-            <% comments.forEach(comment => { %>
-            <li>
-                <%= comment.created %>
-                <%= comment.text %>
-            </li>
-            <% }); %>
-        </ul>
-    </div>
-    <div>
-        Comment:
-      <form action = "/commenthandler/<%= room.id %>", method = "post">
-        <input name = "comment", type="text"/>
-        <input type = "submit"/>
-      </form>
-    </div>
-  </body>
-</html>
+
+<h1>
+    Welcome to Room <%-room.name %>!
+</h1>
+<br>
+<br>
+<div>
+    <%-room.description %>
+</div>
+<br>
+<br>
+<div>
+    Did you live in room <%-room.name %>? Leave a comment with your experience.
+</div>
+<br>
+<br>
+<div>
+    <h2> Comments </h2>
+    <ul>
+        <% comments.forEach(comment => { %>
+        <li>
+            <%= comment.created %>
+            <%= comment.text %>
+        </li>
+        <% }); %>
+    </ul>
+</div>
+<div>
+    Comment:
+    <form action = "/commenthandler/<%= room.id %>", method = "post">
+    <input name = "comment", type="text"/>
+    <input type = "submit"/>
+    </form>
+</div>
+
+<% include footer %>
