@@ -8,11 +8,11 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
   }
 
 dict = [
-  {
-    house: 'Quincy',
-    entryway: 'Stone Hall D',
-    number: '32'
-  },
+   {
+     house: 'Quincy',
+     entryway: 'New Quincy',
+     number: '200'
+ },
   {
     house: 'Eliot',
     entryway: 'A',
@@ -69,6 +69,10 @@ dict = [
     number: '4243'
   }
 ]
+for(let i = 300; i<328; i++)
+{
+  dict.push({house: 'Quincy', entryway: 'New Quincy', number: i})
+}
 
   for (const key in dict) {
     // eslint-disable-next-line no-shadow
