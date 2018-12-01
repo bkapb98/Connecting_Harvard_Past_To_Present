@@ -82,7 +82,7 @@ app.get('/', (req, res) => {
   async.parallel({
     // Get room numbers
     rooms_info(callback) {
-      db.all('SELECT Rooms.name, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id', callback);
+      db.all('SELECT Rooms.entryway, Rooms.number, Rooms.id, Houses.name AS houseName FROM Rooms LEFT JOIN Houses ON Rooms.houseId = Houses.id', callback);
     },
     house_info(callback) {
       db.all('SELECT * FROM Houses', callback);
@@ -118,7 +118,7 @@ app.get('/house/:houseId', (req, res) => {
     },
     // Get room information
     rooms_info(callback) {
-      db.all('SELECT * FROM Rooms WHERE houseId = ? ORDER BY LENGTH(Name), Name ASC', house_id, callback);
+      db.all('SELECT * FROM Rooms WHERE houseId = ? ORDER BY Entryway, LENGTH(Number), Number ASC', house_id, callback);
     },
   },
   (err, results) => {

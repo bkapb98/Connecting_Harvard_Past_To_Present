@@ -27,6 +27,16 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
     const name = roomName();
     const description = roomDescription();
     const houseId = Math.round(Math.random() * 12);
-    db.run('INSERT INTO Rooms(name, description, houseId) VALUES(?, ?, ?)', [name, description, houseId]);
+    db.run('INSERT INTO Rooms(name, entryway, number, houseId) VALUES(?, ?, ?)', [name, description, houseId]);
+  }
+
+  for (const key in dict) {
+    // eslint-disable-next-line no-shadow
+    db.get('SELECT id FROM Houses WHERE name = ?', dict[key].house, (err, house) => {
+      if (err) {
+        throw err;
+      }
+      db.run('INSERT INTO Rooms(houseId, entryway, number) VALUES(?, ?, ?)', [house.id, dict[key].entryway, dict[key].number]);
+    });
   }
 });
