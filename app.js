@@ -239,11 +239,22 @@ function roomNumber(contents) {
   return name;
 }
 
+function entryway(contents){
+  const extractEntryway = tokenize.words()(contents);
+  const entryway =  extractEntryway(contents);
+  let entry = '';
+  for(let i = 1; i<entryway.length-1; i++){
+    entry+= entryway[i];
+  }
+  return entry;
+}
+
 app.post('/roomhandler', (req, res) => {
   const name = req.body.inputs;
   if (roomNumber(name)) {
     const roomName = roomNumber(name);
-    db.get('SELECT id FROM Rooms WHERE name = ?', roomName, (err, room) => {
+    const entry = entryway(name);
+    db.get('SELECT id FROM Rooms WHERE number = ?, entryway = ?', roomName, entry (err, room) => {
       if (err) {
         return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
       }
