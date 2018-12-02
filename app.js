@@ -107,7 +107,7 @@ app.get('/house/:houseId', (req, res) => {
     // Get event information
     events_info(callback) {
       // Sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
-      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC', house_id, callback);
+      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY YEAR ASC, MONTH ASC', house_id, callback);
     },
     // Get house information
     house_info(callback) {

@@ -9,8 +9,12 @@
         <% events.forEach(event => { %>
             <div class="container left">
               <div class="content">
-                  <h2><%= event.date %></h2>
-                  <p><%= event.eventName %>: <%= event.description %> </p>
+                <h2>
+                <% if(event.month) { %>
+                    <%= event.month %>
+                <% }; %>
+                <%= event.year %> </h2>
+                <p><%= event.eventName %>: <%= event.description %> </p>
               </div>
             </div>
         <% }); %>
