@@ -8,11 +8,16 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
   }
 
 dict = [
-  {
-    house: 'Quincy',
-    entryway: 'Stone Hall D',
-    number: '32'
-  },
+   {
+     house: 'Quincy',
+     entryway: 'New Quincy',
+     number: '200'
+ },
+ {
+   house: 'Quincy',
+   entryway: 'New Quincy',
+   number: '500'
+},
   {
     house: 'Eliot',
     entryway: 'A',
@@ -69,6 +74,28 @@ dict = [
     number: '4243'
   }
 ]
+for(let i = 300, j = 601; i<328, j<629; i++, j++)
+{
+  dict.push({house: 'Quincy', entryway: 'New Quincy', number: i});
+  dict.push({house: 'Quincy', entryway: 'New Quincy', number: j});
+}
+for(let i = 101; i<115; i++)
+{
+  dict.push({house: 'Quincy', entryway: 'Stone Hall South', number: i});
+  if(i<=113){
+  dict.push({house: 'Quincy', entryway: 'Stone Hall North', number: i});
+  }
+  if(i<=112){
+    dict.push({house: 'Quincy', entryway: 'Stone Hall South', number: i+100});
+    dict.push({house: 'Quincy', entryway: 'Stone Hall North', number: i+100});
+    dict.push({house: 'Quincy', entryway: 'Stone Hall South', number: i+200});
+    dict.push({house: 'Quincy', entryway: 'Stone Hall North', number: i+200});
+    dict.push({house: 'Quincy', entryway: 'Stone Hall South', number: i+300});
+  }
+  if(i<=114){
+    dict.push({house: 'Quincy', entryway: 'Stone Hall North', number: i+300});
+  }
+}
 
   for (const key in dict) {
     // eslint-disable-next-line no-shadow
