@@ -8,6 +8,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
   }
 
 dict = [
+  //anomalies that cannot be uploaded using loop
    {
      house: 'Quincy',
      entryway: 'New Quincy',
@@ -17,16 +18,6 @@ dict = [
      house: 'Quincy',
      entryway: 'New Quincy',
      number: '500'
-  },
-  {
-    house: 'Eliot',
-    entryway: 'I',
-    number: '35'
-  },
-  {
-    house: 'Eliot',
-    entryway: 'O',
-    number: '11'
   },
   {
     house: 'Kirkland',
@@ -112,6 +103,15 @@ for (let i = 0; i< eliots.length; i++){
   for(let j = 1; j<=eliots[i].charAt(2); j++)
   {
     dict.push({house: 'Eliot', entryway: eliots[i].charAt(0), number: eliots[i].charAt(1)+ j})
+  }
+}
+let kirkland = 'A13B13C14D12E12F12G14I11A27B24C23D22E22F21G24H24I28A34B34C34D32E32F31G34H34I34A41B44C42E42G42H42I42B52K52L52M52'
+//splits this into a list of strings of length three
+let kirks = (kirkland.match(/.{1,3}/g));
+for (let i = 0; i< kirks.length; i++){
+  for(let j = 1; j<=kirks[i].charAt(2); j++)
+  {
+    dict.push({house: 'Kirkland', entryway: kirks[i].charAt(0), number: kirks[i].charAt(1)+ j})
   }
 }
   for (const key in dict) {
