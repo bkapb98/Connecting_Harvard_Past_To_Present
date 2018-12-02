@@ -23,22 +23,22 @@
               </div>
           </div>
   <br> <br>
-  <div>
-        <link rel="stylesheet" href="awesomplete.css" />
-        <script src="awesomplete.js" async></script>
-        <form action = "/roomhandler", method = "post">
-        <label for="inputs">Search a Room or House:</label>
-        <input name = "inputs" class="awesomplete" data-maxitems = "5" data-minchars = "1" autocomplete = "off" type= "text" list="rooms" placeholder="Type to search a room or house."/>
-        <datalist id="rooms">
-          <% houses.forEach(house => { %>
-              <option><%=house.name %></option>
-          <% }); %>
-          <% rooms.forEach(room => { %>
-                <option value ="<%= room.houseName + " " + room.name%>" ><%=room.houseName + " " + room.name%> </option>
-          <% }); %>
-        </datalist>
-      </form>
-      </div>
+      <div>
+      <link rel="stylesheet" href="awesomplete.css" />
+      <script src="awesomplete.js" async></script>
+      <form action = "/roomhandler", method = "post">
+      <label for="inputs">Search a Room or House:</label>
+      <input name = "inputs" class="awesomplete" data-maxitems = "5" data-minchars = "1" autocomplete = "off" type= "text" list="rooms" placeholder="Type to search a room or house."/>
+      <datalist id="rooms">
+        <% houses.forEach(house => { %>
+            <option><%=house.name %></option>
+        <% }); %>
+        <% rooms.forEach(room => { %>
+      	    <option value ="<%= room.houseName + " " + room.entryway + " " + room.number%>" ><%=room.houseName + " " + room.entryway + " " + room.number%> </option>
+        <% }); %>
+      </datalist>
+    </form>
+    </div>
     <br> 
     <br>
     <style>
@@ -56,5 +56,4 @@
             <% }); %>
           </div>
       </div>
-
 <% include footer %>
