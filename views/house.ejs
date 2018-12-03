@@ -5,33 +5,72 @@
     <h2> <%= house.description %> <h2>
     </h3> Events </h3>
     <div class ="tl">
-    <div class="timeline">
+
+<!-- <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="main-timeline">
+                <% events.forEach(event => { %>
+                    <div class="timeline">
+                        <a href="#" class="timeline-content">
+                        <span class="year"><%= event.date %></span>
+                        <div class="inner-content">
+                            <h3 class="title"><%= event.eventName %></h3>
+                            <p class="description"> <%= event.description %></p>
+                        </div>
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</div>
+<hr> -->
+
+<div class="container">
+    <div class="row">
+    
+        <div class="timeline-centered">
+
         <% events.forEach(event => { %>
-            <div class="container left">
-              <div class="content">
-                <h2>
-                <% if(event.month) { %>
+        <article class="timeline-entry">
+
+            <div class="timeline-entry-inner">
+
+                <div class="timeline-icon bg-info">
+                    <i class="entypo-feather"></i>
+                </div>
+
+                <div class="timeline-label">
+                    <h2><a href="#"><% if(event.month) { %>
                     <%= month_name(event.month) %>
                 <% }; %>
-                <%= event.year %> </h2>
-                <p><%= event.eventName %>: <%= event.description %> </p>
-              </div>
+                <%= event.year %></a> <span><%= event.eventName %></span></h2>
+                    <p> <%= event.description %> </p>
+                </div>
             </div>
+
+        </article>
         <% }); %>
+
+        </div>
     </div>
-    </div>
-    <h3> Resources </h3>
-    <div>
-        <ul>
-            <% resources.forEach(resource => { %>
-                    <% if(resource.titleInfo.title) { %>
-                    <li>
-                        <%= resource.titleInfo.title %>
-                    </li>
-                    <% } %>
-            <% }); %>
-        </ul>
-    </div>
+ </div>
+
+
+</div>
+<h3> Resources </h3>
+<div>
+    <ul>
+        <% resources.forEach(resource => { %>
+                <% if(resource.titleInfo.title) { %>
+                <li>
+                    <%= resource.titleInfo.title %>
+                </li>
+                <% } %>
+        <% }); %>
+    </ul>
+</div>
 <h3> Featured Rooms </h3>
 <div>
     <ul>
