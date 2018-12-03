@@ -4,22 +4,22 @@
       Welcome to Room <%-room.name %>!
   </h1>
   <br>
-  <br>
+  <hr>
   <p>Before / After</p>
-  <br>
   <div class="rf">
   <div class="img-comp-container">
       <div class="img-comp-img">
-        <img src="<%-room.beforeImg%>" width="400" height="300">
+        <img src="<%-room.afterImg%>" width="400" height="300">
       </div>
       <div class="img-comp-img img-comp-overlay">
-        <img src="<%-room.afterImg%>" width="400" height="300">
+        <img src="<%-room.beforeImg%>" width="400" height="300">
       </div>
     </div>
   <br>
   <script>
     initComparisons();
   </script>
+  <hr>
   <div>
       <%-room.description %>
   </div>

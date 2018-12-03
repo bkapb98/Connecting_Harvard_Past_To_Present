@@ -72,10 +72,10 @@ function error_handling(req, res, code, message) {
 }
 // Translates numeric month into month name
 function month(num_month) {
-  months = ['January', 'February', 'March', 
-            'April', 'May', 'June', 'July', 
-            'August', 'September', 'October', 
-            'November', 'December'];
+  months = ['January', 'February', 'March',
+    'April', 'May', 'June', 'July',
+    'August', 'September', 'October',
+    'November', 'December'];
   return (months[num_month - 1]);
 }
 
@@ -149,7 +149,7 @@ app.get('/house/:houseId', (req, res) => {
           featuredRooms: results.featuredRooms_info,
           resources: data.items.mods,
           user: req.session.user,
-          month_name: month
+          month_name: month,
         });
       });
   });
@@ -248,13 +248,15 @@ function roomNumber(contents) {
   return name;
 }
 
-function entryway(contents){
+function entryway(contents) {
+  // eslint-disable-next-line no-shadow
   const entryway = tokenize.words()(contents);
   let entry = '';
-  for(let i = 1; i<entryway.length-1; i++){
-    entry+= entryway[i].value;
-    if(i != entryway.length-2){
-      entry+= " ";
+  // eslint-disable-next-line no-plusplus
+  for (let i = 1; i < entryway.length - 1; i++) {
+    entry += entryway[i].value;
+    if (i !== entryway.length - 2) {
+      entry += ' ';
     }
   }
   return entry;
@@ -266,7 +268,6 @@ app.post('/roomhandler', (req, res) => {
     const roomName = roomNumber(name);
     const entry = entryway(name);
     db.get('SELECT id FROM Rooms WHERE number = ? AND entryway = ?', [roomName, entry], (err, room) => {
-      console.log(room)
       if (err) {
         return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
       }

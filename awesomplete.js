@@ -1,3 +1,35 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-plusplus */
+/* eslint-disable block-scoped-var */
+/* eslint-disable no-new */
+/* eslint-disable no-loop-func */
+/* eslint-disable no-shadow */
+/* eslint-disable radix */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable camelcase */
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-undef */
+/* eslint-disable object-shorthand */
+/* eslint-disable vars-on-top */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable quote-props */
+/* eslint-disable padded-blocks */
+/* eslint-disable eqeqeq */
+/* eslint-disable comma-dangle */
+/* eslint-disable no-multi-assign */
+/* eslint-disable prefer-template */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
+/* eslint-disable max-len */
+/* eslint-disable quotes */
+/* eslint-disable indent */
+/* eslint-disable no-tabs */
+/* eslint-disable no-var */
+/* eslint-disable func-names */
 /**
  * Simple, lightweight, usable local autocomplete library for modern browsers
  * Because there weren’t enough autocomplete scripts in the world? Because I’m completely insane and have NIH syndrome? Probably both. :P
@@ -68,25 +100,22 @@ var _ = function (input, o) {
 		input: {
 			"input": this.evaluate.bind(this),
 			"blur": this.close.bind(this, { reason: "blur" }),
-			"keydown": function(evt) {
+			"keydown": function (evt) {
 				var c = evt.keyCode;
 
 				// If the dropdown `ul` is in view, then act on keydown for the following keys:
 				// Enter / Esc / Up / Down
-				if(me.opened) {
+				if (me.opened) {
 					if (c === 13 && me.selected) { // Enter
 						evt.preventDefault();
 						me.select();
-					}
-					else if (c === 9 && me.selected && me.tabSelect) {
+					} else if (c === 9 && me.selected && me.tabSelect) {
 						me.select();
-					}
-					else if (c === 27) { // Esc
+					} else if (c === 27) { // Esc
 						me.close({ reason: "esc" });
-					}
-					else if (c === 38 || c === 40) { // Down/Up arrow
+					} else if (c === 38 || c === 40) { // Down/Up arrow
 						evt.preventDefault();
-						me[c === 38? "previous" : "next"]();
+						me[c === 38 ? "previous" : "next"]();
 					}
 				}
 			}
@@ -98,11 +127,11 @@ var _ = function (input, o) {
 			// Prevent the default mousedowm, which ensures the input is not blurred.
 			// The actual selection will happen on click. This also ensures dragging the
 			// cursor away from the list item will cancel the selection
-			"mousedown": function(evt) {
+			"mousedown": function (evt) {
 				evt.preventDefault();
 			},
 			// The click event is fired even if the corresponding mousedown event has called preventDefault
-			"click": function(evt) {
+			"click": function (evt) {
 				var li = evt.target;
 
 				if (li !== this) {
@@ -111,7 +140,7 @@ var _ = function (input, o) {
 						li = li.parentNode;
 					}
 
-					if (li && evt.button === 0) {  // Only select on left click
+					if (li && evt.button === 0) { // Only select on left click
 						evt.preventDefault();
 						me.select(li, evt.target);
 					}
@@ -127,8 +156,7 @@ var _ = function (input, o) {
 	if (this.input.hasAttribute("list")) {
 		this.list = "#" + this.input.getAttribute("list");
 		this.input.removeAttribute("list");
-	}
-	else {
+	} else {
 		this.list = this.input.getAttribute("data-list") || o.list || [];
 	}
 
@@ -139,16 +167,14 @@ _.prototype = {
 	set list(list) {
 		if (Array.isArray(list)) {
 			this._list = list;
-		}
-		else if (typeof list === "string" && list.indexOf(",") > -1) {
+		} else if (typeof list === "string" && list.indexOf(",") > -1) {
 				this._list = list.split(/\s*,\s*/);
-		}
-		else { // Element or CSS selector
+		} else { // Element or CSS selector
 			list = $(list);
 
 			if (list && list.children) {
 				var items = [];
-				slice.apply(list.children).forEach(function (el) {
+				slice.apply(list.children).forEach((el) => {
 					if (!el.disabled) {
 						var text = el.textContent.trim();
 						var value = el.value || text;
@@ -175,7 +201,7 @@ _.prototype = {
 		return this.isOpened;
 	},
 
-	close: function (o) {
+	close(o) {
 		if (!this.opened) {
 			return;
 		}
@@ -189,7 +215,7 @@ _.prototype = {
 		$.fire(this.input, "awesomplete-close", o || {});
 	},
 
-	open: function () {
+	open() {
 		this.ul.removeAttribute("hidden");
 		this.isOpened = true;
 
@@ -202,25 +228,25 @@ _.prototype = {
 		$.fire(this.input, "awesomplete-open");
 	},
 
-	destroy: function() {
-		//remove events from the input and its form
+	destroy() {
+		// remove events from the input and its form
 		$.unbind(this.input, this._events.input);
 		$.unbind(this.input.form, this._events.form);
 
 		// cleanup container if it was created by Awesomplete but leave it alone otherwise
 		if (!this.options.container) {
-			//move the input out of the awesomplete container and remove the container and its children
+			// move the input out of the awesomplete container and remove the container and its children
 			var parentNode = this.container.parentNode;
 
 			parentNode.insertBefore(this.input, this.container);
 			parentNode.removeChild(this.container);
 		}
 
-		//remove autocomplete and aria-autocomplete attributes
+		// remove autocomplete and aria-autocomplete attributes
 		this.input.removeAttribute("autocomplete");
 		this.input.removeAttribute("aria-autocomplete");
 
-		//remove this awesomeplete instance from the global array of instances
+		// remove this awesomeplete instance from the global array of instances
 		var indexOfAwesomplete = _.all.indexOf(this);
 
 		if (indexOfAwesomplete !== -1) {
@@ -228,12 +254,12 @@ _.prototype = {
 		}
 	},
 
-	next: function () {
+	next() {
 		var count = this.ul.children.length;
-		this.goto(this.index < count - 1 ? this.index + 1 : (count ? 0 : -1) );
+		this.goto(this.index < count - 1 ? this.index + 1 : (count ? 0 : -1));
 	},
 
-	previous: function () {
+	previous() {
 		var count = this.ul.children.length;
 		var pos = this.index - 1;
 
@@ -241,7 +267,7 @@ _.prototype = {
 	},
 
 	// Should not be used, highlights specific item without any checks!
-	goto: function (i) {
+	goto(i) {
 		var lis = this.ul.children;
 
 		if (this.selected) {
@@ -266,7 +292,7 @@ _.prototype = {
 		}
 	},
 
-	select: function (selected, origin) {
+	select(selected, origin) {
 		if (selected) {
 			this.index = $.siblingIndex(selected);
 		} else {
@@ -291,7 +317,7 @@ _.prototype = {
 		}
 	},
 
-	evaluate: function() {
+	evaluate() {
 		var me = this;
 		var value = this.input.value;
 
@@ -301,10 +327,10 @@ _.prototype = {
 			this.ul.innerHTML = "";
 
 			this.suggestions = this._list
-				.map(function(item) {
+				.map((item) => {
 					return new Suggestion(me.data(item, value));
 				})
-				.filter(function(item) {
+				.filter((item) => {
 					return me.filter(item, value);
 				});
 
@@ -314,7 +340,7 @@ _.prototype = {
 
 			this.suggestions = this.suggestions.slice(0, this.maxItems);
 
-			this.suggestions.forEach(function(text, index) {
+			this.suggestions.forEach((text, index) => {
 					me.ul.appendChild(me.item(text, value, index));
 				});
 
@@ -329,8 +355,7 @@ _.prototype = {
 
                 this.status.textContent = this.ul.children.length + " results found";
 			}
-		}
-		else {
+		} else {
 			this.close({ reason: "nomatches" });
 
                 this.status.textContent = "No results found";
@@ -355,7 +380,7 @@ _.SORT_BYLENGTH = function (a, b) {
 		return a.length - b.length;
 	}
 
-	return a < b? -1 : 1;
+	return a < b ? -1 : 1;
 };
 
 _.CONTAINER = function (input) {
@@ -363,7 +388,7 @@ _.CONTAINER = function (input) {
 		className: "awesomplete",
 		around: input
 	});
-}
+};
 
 _.ITEM = function (text, input, item_id) {
 	var html = input.trim() === "" ? text : text.replace(RegExp($.regExpEscape(input.trim()), "gi"), "<mark>$&</mark>");
@@ -378,7 +403,7 @@ _.REPLACE = function (text) {
 	this.input.value = text.value;
 };
 
-_.DATA = function (item/*, input*/) { return item; };
+_.DATA = function (item/* , input */) { return item; };
 
 // Private functions
 
@@ -391,7 +416,7 @@ function Suggestion(data) {
 	this.value = o.value;
 }
 Object.defineProperty(Suggestion.prototype = Object.create(String.prototype), "length", {
-	get: function() { return this.label.length; }
+	get() { return this.label.length; }
 });
 Suggestion.prototype.toString = Suggestion.prototype.valueOf = function () {
 	return "" + this.label;
@@ -399,24 +424,23 @@ Suggestion.prototype.toString = Suggestion.prototype.valueOf = function () {
 
 function configure(instance, properties, o) {
 	for (var i in properties) {
-		var initial = properties[i],
-		    attrValue = instance.input.getAttribute("data-" + i.toLowerCase());
+		var initial = properties[i];
+
+
+var attrValue = instance.input.getAttribute("data-" + i.toLowerCase());
 
 		if (typeof initial === "number") {
 			instance[i] = parseInt(attrValue);
-		}
-		else if (initial === false) { // Boolean options must be false by default anyway
+		} else if (initial === false) { // Boolean options must be false by default anyway
 			instance[i] = attrValue !== null;
-		}
-		else if (initial instanceof Function) {
+		} else if (initial instanceof Function) {
 			instance[i] = null;
-		}
-		else {
+		} else {
 			instance[i] = attrValue;
 		}
 
 		if (!instance[i] && instance[i] !== 0) {
-			instance[i] = (i in o)? o[i] : initial;
+			instance[i] = (i in o) ? o[i] : initial;
 		}
 	}
 }
@@ -426,14 +450,14 @@ function configure(instance, properties, o) {
 var slice = Array.prototype.slice;
 
 function $(expr, con) {
-	return typeof expr === "string"? (con || document).querySelector(expr) : expr || null;
+	return typeof expr === "string" ? (con || document).querySelector(expr) : expr || null;
 }
 
 function $$(expr, con) {
 	return slice.call((con || document).querySelectorAll(expr));
 }
 
-$.create = function(tag, o) {
+$.create = function (tag, o) {
 	var element = document.createElement(tag);
 
 	for (var i in o) {
@@ -441,8 +465,7 @@ $.create = function(tag, o) {
 
 		if (i === "inside") {
 			$(val).appendChild(element);
-		}
-		else if (i === "around") {
+		} else if (i === "around") {
 			var ref = $(val);
 			ref.parentNode.insertBefore(element, ref);
 			element.appendChild(ref);
@@ -450,11 +473,9 @@ $.create = function(tag, o) {
 			if (ref.getAttribute("autofocus") != null) {
 				ref.focus();
 			}
-		}
-		else if (i in element) {
+		} else if (i in element) {
 			element[i] = val;
-		}
-		else {
+		} else {
 			element.setAttribute(i, val);
 		}
 	}
@@ -462,34 +483,34 @@ $.create = function(tag, o) {
 	return element;
 };
 
-$.bind = function(element, o) {
+$.bind = function (element, o) {
 	if (element) {
 		for (var event in o) {
 			var callback = o[event];
 
-			event.split(/\s+/).forEach(function (event) {
+			event.split(/\s+/).forEach((event) => {
 				element.addEventListener(event, callback);
 			});
 		}
 	}
 };
 
-$.unbind = function(element, o) {
+$.unbind = function (element, o) {
 	if (element) {
 		for (var event in o) {
 			var callback = o[event];
 
-			event.split(/\s+/).forEach(function(event) {
+			event.split(/\s+/).forEach((event) => {
 				element.removeEventListener(event, callback);
 			});
 		}
 	}
 };
 
-$.fire = function(target, type, properties) {
+$.fire = function (target, type, properties) {
 	var evt = document.createEvent("HTMLEvents");
 
-	evt.initEvent(type, true, true );
+	evt.initEvent(type, true, true);
 
 	for (var j in properties) {
 		evt[j] = properties[j];
@@ -511,7 +532,7 @@ $.siblingIndex = function (el) {
 // Initialization
 
 function init() {
-	$$("input.awesomplete").forEach(function (input) {
+	$$("input.awesomplete").forEach((input) => {
 		new _(input);
 	});
 }
@@ -526,8 +547,7 @@ if (typeof Document !== "undefined") {
 	// DOM already loaded?
 	if (document.readyState !== "loading") {
 		init();
-	}
-	else {
+	} else {
 		// Wait for it
 		document.addEventListener("DOMContentLoaded", init);
 	}
