@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-useless-concat */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-undef */
 /* eslint-disable consistent-return */
@@ -107,7 +109,19 @@ app.get('/', (req, res) => {
   });
 });
 
-
+// get news articles
+const getNewsByYear = (year) => {
+  console.log(year);
+  const key = 'e8ebee351d174f58bc3086a7917d1509';
+  const url = `https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=${key}&begin_date=${year}0101&end_date${year}1231&q=review`;
+  fetch(url)
+    .then(response => response.json())
+    .then((data) => {
+      const article = data.response.docs[0].web_url;
+      console.log(article, 'LLL');
+      return article;
+    });
+};
 // House Page
 app.get('/house/:houseId', (req, res) => {
   const house_id = req.params.houseId;
@@ -136,6 +150,14 @@ app.get('/house/:houseId', (req, res) => {
     // change to houseInfo
     const house = results.house_info;
     const houseName = house.name;
+    const eventResults = results.events_info;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const i in eventResults) {
+      console.log(eventResults[i], 'CCC');
+      const article = getNewsByYear(eventResults[i].year);
+      eventResults[i].article = `${article}`;
+    }
+    console.log(eventResults[0].article, 'CCC');
     // Search Hollis for house
     const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
     fetch(url)
@@ -145,7 +167,7 @@ app.get('/house/:houseId', (req, res) => {
           house: results.house_info,
           title: houseName,
           rooms: results.rooms_info,
-          events: results.events_info,
+          events: eventResults,
           featuredRooms: results.featuredRooms_info,
           resources: data.items.mods,
           user: req.session.user,
