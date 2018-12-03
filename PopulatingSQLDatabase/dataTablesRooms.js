@@ -115,6 +115,22 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       dict.push({ house: 'Kirkland', entryway: kirks[i].charAt(0), number: kirks[i].charAt(1) + j });
     }
   }
+  for(let i = 1, j = 1, k = 1, l = 1, m = 0, n = 0; i<=5, j<= 9, k<=22, l<=38, m<=2, n<=20; i++, j++, k++, l++, m++, n++)
+  {
+    dict.push({house: 'Mather', entryway: 'Tower', number: 20 + i})
+    dict.push({house: 'Mather', entryway: 'Tower', number: 30 + j})
+    dict.push({house: 'Mather', entryway: 'Tower', number: 40 + i-1})
+    dict.push({house: 'Mather', entryway: 'Tower', number: 300+k})
+    dict.push({house: 'Mather', entryway: 'Tower', number: 400+l})
+    dict.push({house: 'Mather', entryway: 'Lowrise', number: 400+l})
+    dict.push({house: 'Mather', entryway: 'Tower', number: (19).toString()+ m.toString()})
+    dict.push({house: 'Mather', entryway: 'Lowrise', number: 300+n})
+  }
+  for(let i = 5; i<=18; i++)
+    for(let j = 0; j<=9; j++)
+    {
+      dict.push({house: 'Mather', entryway: 'Tower', number: i.toString()+j.toString()})
+    }
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
     // eslint-disable-next-line no-shadow
