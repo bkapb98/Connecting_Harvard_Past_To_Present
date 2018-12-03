@@ -70,6 +70,14 @@ function error_handling(req, res, code, message) {
   res.status(code)
     .render('error', { err_message: message, user: req.session.user, title: 'ERROR' });
 }
+// Translates numeric month into month name
+function month(num_month) {
+  months = ['January', 'February', 'March', 
+            'April', 'May', 'June', 'July', 
+            'August', 'September', 'October', 
+            'November', 'December'];
+  return (months[num_month - 1]);
+}
 
 // Create database
 const db = new sqlite3.Database('PopulatingSQLDatabase/ConnectingPG.db', sqlite3.OPEN_READWRITE);
@@ -107,7 +115,7 @@ app.get('/house/:houseId', (req, res) => {
     // Get event information
     events_info(callback) {
       // Sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
-      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY DATE ASC', house_id, callback);
+      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY YEAR ASC, MONTH ASC', house_id, callback);
     },
     // Get house information
     house_info(callback) {
@@ -141,6 +149,7 @@ app.get('/house/:houseId', (req, res) => {
           featuredRooms: results.featuredRooms_info,
           resources: data.items.mods,
           user: req.session.user,
+          month_name: month
         });
       });
   });
