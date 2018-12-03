@@ -42,7 +42,10 @@
                 </div>
 
                 <div class="timeline-label">
-                    <h2><a href="#"><%= event.date %></a> <span><%= event.eventName %></span></h2>
+                    <h2><a href="#"><% if(event.month) { %>
+                    <%= month_name(event.month) %>
+                <% }; %>
+                <%= event.year %></a> <span><%= event.eventName %></span></h2>
                     <p> <%= event.description %> </p>
                 </div>
             </div>
