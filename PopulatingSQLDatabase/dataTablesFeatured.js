@@ -23,7 +23,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       house: 'Winthrop',
       beforeImg: 'https://i2.wp.com/news.harvard.edu/wp-content/uploads/2017/01/jfk-at-his-desk3_605.jpg?resize=605%2C403&ssl=1',
       afterImg: 'https://i0.wp.com/news.harvard.edu/wp-content/uploads/2011/06/pj_09.jpg?fit=940%2C627&ssl=1',
-    }
+    },
   ];
   // eslint-disable-next-line guard-for-in
   // eslint-disable-next-line no-restricted-syntax

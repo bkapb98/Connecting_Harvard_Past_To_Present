@@ -8,13 +8,7 @@
 <div>
     <%-room.description %>
 </div>
-<br>
-<br>
-<div>
-    Did you live in room <%=room.entryway %>  <%=room.number %>? Leave a comment with your experience.
-</div>
-<br>
-<br>
+<hr>
 <div>
     <h2> Comments </h2>
     <ul>
@@ -27,7 +21,7 @@
     </ul>
 </div>
 <div>
-    Comment:
+        Did you live in room <%=room.entryway %>  <%=room.number %>? Leave a comment with your experience.
     <form action = "/commenthandler/<%= room.id %>", method = "post">
     <input name = "comment", type="text"/>
     <input type = "submit"/>

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable guard-for-in */
 const sqlite3 = require('sqlite3');
 
@@ -148,7 +149,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
     },
     {
       house: 'Leverett',
-      month: '01', 
+      month: '01',
       year: '1932',
       name: 'Basketball Championship',
       description: 'Leverett wins the championship of the Harvard House Basketball League after defeating Winthrop, 12-10. The victory was made possible by two last-minute free throws.',
@@ -172,7 +173,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
     },
     {
       house: 'Pforzheimer',
-      month: '03', 
+      month: '03',
       year: '2018',
       name: 'Best Cinematography Runner-Up',
       description: 'According to the Harvard Crimson, Pforzheimer wins runner-up for Best Cinematography in its Housing Day video, which centered around the popular TV show "Stranger Things".',
@@ -236,7 +237,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
     },
     {
       house: 'Kirkland',
-      month: '05', 
+      month: '05',
       year: '1930',
       name: 'Kirkland Named',
       description: 'Kirkland House is named in memory of John Thornton Kirkland, who presided over Harvard from 1810 to 1828 and brought Harvard from a college to a university.',
@@ -377,7 +378,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       name: 'Voter Turnout in Swing States',
       description: 'The dean of Winthrop House donates $600 to print 800 t-shirts that state "I DECIDE," 400 of which were sent to students at Penn State University, a swing state in which every vote was important leading into the 2004 presidential election.',
       source: 'https://hollis.harvard.edu/primo-explore/fulldisplay?docid=TN_gale_hrca123375595&context=PC&vid=HVD2&search_scope=everything&tab=everything&lang=en_US',
-    }
+    },
   ];
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
