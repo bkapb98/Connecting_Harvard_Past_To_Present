@@ -177,7 +177,7 @@ app.get('/room/:roomId', (req, res) => {
       room: results.room_info,
       comments: results.comments,
       user: req.session.user,
-      title: results.room_info.name,
+      title: `${results.room_info.entryway} ${results.room_info.number}`,
     });
   });
 });
