@@ -140,6 +140,8 @@ opacity: 0.7;
 border-radius: 50%;
 }
 
+/* timeline css & html sourced from heres */
+/* https://bootsnipp.com/snippets/featured/single-column-timeline-dotted */
 .img {
   vertical-align: middle;
 }
@@ -428,3 +430,15 @@ border-radius: 50%;
                       -ms-filter: alpha(opacity=60);
                       filter: alpha(opacity=60);
                   }
+
+/* login register form css */
+.loginRegister .form-group .form-control {
+    width: 250px;
+    margin: auto;
+    display: table;
+}
+
+.loginRegister #btn {
+    margin: auto;
+    display: table;
+}
