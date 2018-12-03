@@ -1,16 +1,18 @@
 <% include header %>
 
+<div class="loginRegister">
 <form action="/login" method="post">
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text"/>
         </div>
         <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password"/>
+            <input autocomplete="off" class="form-control" autofocus name="password" placeholder="Password" type="password"/>
         </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
- </form>
-<div> 
+        <button class="btn btn-primary" id="btn" type="submit">Log In</button>
+</form>
+<h5> 
   Have you not registered? Create an account <a href = "/register"> here. </a>
+</h5>
 </div>
 
 <% include footer %>
