@@ -22,16 +22,6 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       number: '500',
     },
     {
-      house: 'Kirkland',
-      entryway: 'H',
-      number: '21',
-    },
-    {
-      house: 'Leverett',
-      entryway: 'McKinlock D',
-      number: '34',
-    },
-    {
       house: 'Pforzheimer',
       entryway: 'Moors D',
       number: '1',
@@ -45,11 +35,6 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       house: 'Currier',
       entryway: 'Daniels',
       number: '539',
-    },
-    {
-      house: 'Mather',
-      entryway: 'Tower',
-      number: '12',
     },
     {
       house: 'Dunster',
@@ -163,6 +148,54 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
     {
       dict.push({house: 'Leverett', entryway: 'G Tower', number: i})
     }
+const cabot = [
+  {
+    entryway: 'Briggs Hall',
+    roomString: 'B13B21B31B41C11C24C34C47D13D21D31D41'
+  },
+  {
+    entryway: 'Eliot Hall',
+    roomString: 'I11I22I32I42J12J22J32J41'
+  },
+  {
+    entryway: 'Bertram Hall',
+    roomString: 'K22K32K42L21L31L41'
+  },
+  {
+    entryway: 'Barnard Hall',
+    roomString: 'M13M21M31M41N11N24N34N44'
+  }
+]
+// populates for Briggs, Eliot, Bertram, and Barnard Entryways
+for (const cab in cabot)
+{
+const cabString = (cabot[cab].roomString.match(/.{1,3}/g));
+for (let i = 0; i < cabString.length; i++) {
+  for (let j = 1; j <= cabString[i].charAt(2); j++) {
+    dict.push({ house: 'Cabot', entryway: cabot[cab].entryway + " " + cabString[i].charAt(0), number: cabString[i].charAt(1) + j });
+  }
+}
+}
+
+const cabot2 = [
+  {
+    entryway: 'Cabot Hall',
+    roomString: 'E102F101E221E322E422E508F101F500'
+  },
+  {
+    entryway: 'Whitman Hall',
+    roomString: 'G100G204G304G404H101H211H311H410'
+  }
+]
+for (const cab in cabot2)
+{
+const cabString = (cabot2[cab].roomString.match(/.{1,4}/g));
+for (let i = 0; i < cabString.length; i++) {
+  for (let j = 0; j <= cabString[i].substring(2); j++) {
+    dict.push({ house: 'Cabot', entryway: cabot2[cab].entryway + " " + cabString[i].charAt(0), number: cabString[i].charAt(1)*100 + j });
+  }
+}
+}
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
