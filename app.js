@@ -16,27 +16,28 @@ require('cross-fetch/polyfill');
 const bodyParser = require('body-parser');
 
 // Check if enough arguments https://www.npmjs.com/package/validator
-if (process.argv.length !== 4) {
-  // eslint-disable-next-line no-console
-  console.log('Sorry, you do not have the appropriate number of arguments.');
-  process.exit(1);
-}
+// if (process.argv.length !== 4) {
+//   // eslint-disable-next-line no-console
+//   console.log('Sorry, you do not have the appropriate number of arguments.');
+//   process.exit(1);
+// }
 // Based on https://nodejs.org/docs/latest/api/process.html#process_process_argv
-const hostname = `${process.argv[2]}`;
+// const hostname = `${process.argv[2]}`;
+const hostname = 'localhost';
 const port = process.env.PORT || 8080;
 
 // Check valid inputs, using https://www.npmjs.com/package/validator
-if (!validator.isIP(hostname)) {
-  // eslint-disable-next-line no-console
-  console.log('Sorry, that is an invalid hostname.');
-  process.exit(1);
-}
+// if (!validator.isIP(hostname)) {
+//   // eslint-disable-next-line no-console
+//   console.log('Sorry, that is an invalid hostname.');
+//   process.exit(1);
+// }
 
-if (!validator.isPort(port)) {
-  // eslint-disable-next-line no-console
-  console.log('Sorry, that is an invalid port.');
-  process.exit(1);
-}
+// if (!validator.isPort(port)) {
+//   // eslint-disable-next-line no-console
+//   console.log('Sorry, that is an invalid port.');
+//   process.exit(1);
+// }
 
 // Error handling https://getbootstrap.com/docs/4.0/components/jumbotron/
 // Authorizer middleware
