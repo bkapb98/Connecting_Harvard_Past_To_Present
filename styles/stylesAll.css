@@ -7,6 +7,23 @@ body {
    padding: 10px;
 }
 
+/* globbal css */
+*
+{
+   font-family: "Raleway", sans-serif !important;
+}
+
+/* index page hover over */
+.container-fluid .col-md-4 img {
+    margin-bottom: -6px;
+    cursor: pointer
+}
+
+.container-fluid .col-md-4 img:hover {
+    opacity: 0.6; 
+    transition: 0.3s
+}
+
 /* footer styles */
 /* https://bootsnipp.com/snippets/featured/footer-using-bootstrap-4 */
 /* Footer */
