@@ -23,7 +23,7 @@ const bodyParser = require('body-parser');
 // }
 // Based on https://nodejs.org/docs/latest/api/process.html#process_process_argv
 // const hostname = `${process.argv[2]}`;
-const hostname = '127.0.0.1';
+const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
 const port = process.env.PORT || 8080;
 
 // Check valid inputs, using https://www.npmjs.com/package/validator
