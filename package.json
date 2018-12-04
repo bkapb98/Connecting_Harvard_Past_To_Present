@@ -27,6 +27,7 @@
     "eslint-plugin-node": "^8.0.0"
   },
   "scripts": {
+    "start": "node app.js 127.0.0.1 3000"
     "lint": "eslint --ignore-path .gitignore .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
