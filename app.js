@@ -23,7 +23,7 @@ if (process.argv.length !== 4) {
 }
 // Based on https://nodejs.org/docs/latest/api/process.html#process_process_argv
 const hostname = `${process.argv[2]}`;
-const port = process.argv[3];
+const port = process.env.PORT || 8080;
 
 // Check valid inputs, using https://www.npmjs.com/package/validator
 if (!validator.isIP(hostname)) {
