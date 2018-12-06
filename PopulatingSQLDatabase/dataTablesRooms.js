@@ -20,21 +20,6 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       house: 'Quincy',
       entryway: 'New Quincy',
       number: '500',
-    },
-    {
-      house: 'Currier',
-      entryway: 'Daniels',
-      number: '539',
-    },
-    {
-      house: 'Dunster',
-      entryway: 'West',
-      number: '423',
-    },
-    {
-      house: 'Lowell',
-      entryway: 'Fairfax',
-      number: '1313',
     }
   ];
   // eslint-disable-next-line no-sequences
@@ -128,202 +113,270 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
     {
       dict.push({house: 'Leverett', entryway: 'G Tower', number: i})
     }
-const cabot = [
+  const cabot = [
+    {
+      entryway: 'Briggs Hall',
+      roomString: 'B13B21B31B41C11C24C34C47D13D21D31D41'
+    },
+    {
+      entryway: 'Eliot Hall',
+      roomString: 'I11I22I32I42J12J22J32J41'
+    },
+    {
+      entryway: 'Bertram Hall',
+      roomString: 'K22K32K42L21L31L41'
+    },
+    {
+      entryway: 'Barnard Hall',
+      roomString: 'M13M21M31M41N11N24N34N44'
+    }
+  ]
+  // populates for Briggs, Eliot, Bertram, and Barnard Entryways
+  for (const cab in cabot)
   {
-    entryway: 'Briggs Hall',
-    roomString: 'B13B21B31B41C11C24C34C47D13D21D31D41'
-  },
-  {
-    entryway: 'Eliot Hall',
-    roomString: 'I11I22I32I42J12J22J32J41'
-  },
-  {
-    entryway: 'Bertram Hall',
-    roomString: 'K22K32K42L21L31L41'
-  },
-  {
-    entryway: 'Barnard Hall',
-    roomString: 'M13M21M31M41N11N24N34N44'
+  const cabString = (cabot[cab].roomString.match(/.{1,3}/g));
+  for (let i = 0; i < cabString.length; i++) {
+    for (let j = 1; j <= cabString[i].charAt(2); j++) {
+      dict.push({ house: 'Cabot', entryway: cabot[cab].entryway + " " + cabString[i].charAt(0), number: cabString[i].charAt(1) + j });
+    }
   }
-]
-// populates for Briggs, Eliot, Bertram, and Barnard Entryways
-for (const cab in cabot)
-{
-const cabString = (cabot[cab].roomString.match(/.{1,3}/g));
-for (let i = 0; i < cabString.length; i++) {
-  for (let j = 1; j <= cabString[i].charAt(2); j++) {
-    dict.push({ house: 'Cabot', entryway: cabot[cab].entryway + " " + cabString[i].charAt(0), number: cabString[i].charAt(1) + j });
   }
-}
-}
 
-const cabot2 = [
+  const cabot2 = [
+    {
+      entryway: 'Cabot Hall',
+      roomString: 'E102F101E221E322E422E508F101F500'
+    },
+    {
+      entryway: 'Whitman Hall',
+      roomString: 'G100G204G304G404H101H211H311H410'
+    }
+  ]
+  for (const cab in cabot2)
   {
-    entryway: 'Cabot Hall',
-    roomString: 'E102F101E221E322E422E508F101F500'
-  },
-  {
-    entryway: 'Whitman Hall',
-    roomString: 'G100G204G304G404H101H211H311H410'
+  const cabString = (cabot2[cab].roomString.match(/.{1,4}/g));
+  for (let i = 0; i < cabString.length; i++) {
+    for (let j = 0; j <= cabString[i].substring(2); j++) {
+      dict.push({ house: 'Cabot', entryway: cabot2[cab].entryway + " " + cabString[i].charAt(0), number: cabString[i].charAt(1)*100 + j });
+    }
   }
-]
-for (const cab in cabot2)
-{
-const cabString = (cabot2[cab].roomString.match(/.{1,4}/g));
-for (let i = 0; i < cabString.length; i++) {
-  for (let j = 0; j <= cabString[i].substring(2); j++) {
-    dict.push({ house: 'Cabot', entryway: cabot2[cab].entryway + " " + cabString[i].charAt(0), number: cabString[i].charAt(1)*100 + j });
   }
-}
-}
 
-const pfoho = [
+  const pfoho = [
+    {
+      entryway: 'Comstock',
+      rooms: [18, 18, 12]
+    },
+    {
+      entryway: 'Holmes',
+      rooms: [15, 15, 12]
+    },
+    {
+      entryway: 'Moors',
+      rooms: [22, 22, 12]
+    },
+    {
+      entryway: 'Wolbach',
+      rooms: [7, 7, 7]
+    }
+  ]
+  for (const pfo in pfoho)
   {
-    entryway: 'Comstock',
-    rooms: [18, 18, 12]
-  },
-  {
-    entryway: 'Holmes',
-    rooms: [15, 15, 12]
-  },
-  {
-    entryway: 'Moors',
-    rooms: [22, 22, 12]
-  },
-  {
-    entryway: 'Wolbach',
-    rooms: [7, 7, 7]
+    for(let i = 2; i<=4; i++)
+    {
+      for(let j = 1; j<= pfoho[pfo].rooms[i-2]; j++)
+        dict.push({ house: 'Pforzheimer', entryway: pfoho[pfo].entryway, number: j + i*100 })
+    }
   }
-]
-for (const pfo in pfoho)
-{
-  for(let i = 2; i<=4; i++)
-  {
-    for(let j = 1; j<= pfoho[pfo].rooms[i-2]; j++)
-      dict.push({ house: 'Pforzheimer', entryway: pfoho[pfo].entryway, number: j + i*100 })
-  }
-}
 
-const pfoJordans = [
+  const pfoJordans = [
+    {
+      entryway: 'North',
+      roomString: '152333'
+    },
+    {
+      entryway: 'South',
+      roomString: '152535'
+    }
+  ]
+  for (const pfo in pfoJordans)
   {
-    entryway: 'North',
-    roomString: '152333'
-  },
-  {
-    entryway: 'South',
-    roomString: '152535'
+  const pfoString = (pfoJordans[pfo].roomString.match(/.{1,2}/g));
+  for (let i = 0; i < pfoString.length; i++) {
+    for (let j = 1; j <= pfoString[i].substring(1); j++) {
+      dict.push({ house: 'Pforzheimer', entryway: 'Jordans ' + pfoJordans[pfo].entryway, number: pfoString[i].charAt(0) + j });
+    }
   }
-]
-for (const pfo in pfoJordans)
-{
-const pfoString = (pfoJordans[pfo].roomString.match(/.{1,2}/g));
-for (let i = 0; i < pfoString.length; i++) {
-  for (let j = 1; j <= pfoString[i].substring(1); j++) {
-    dict.push({ house: 'Pforzheimer', entryway: 'Jordans ' + pfoJordans[pfo].entryway, number: pfoString[i].charAt(0) + j });
   }
-}
-}
 
-const throp = [
+  const throp = [
+    {
+      entryway: 'Gore',
+      rooms: [6, 48, 48, 48]
+    },
+    {
+      entryway: 'Beren',
+      rooms: [0, 3, 3, 3]
+    },
+    {
+      entryway: 'Standish',
+      rooms: [19, 49, 49, 49]
+    }
+  ]
+  for (const thr in throp)
   {
-    entryway: 'Gore',
-    rooms: [6, 48, 48, 48]
-  },
-  {
-    entryway: 'Beren',
-    rooms: [0, 3, 3, 3]
-  },
-  {
-    entryway: 'Standish',
-    rooms: [19, 49, 49, 49]
+    for(let i = 1; i<=4; i++)
+    {
+      for(let j = 1; j<= throp[thr].rooms[i-1]; j++)
+        dict.push({ house: 'Winthrop', entryway: throp[thr].entryway, number: j + i*100 })
+    }
   }
-]
-for (const thr in throp)
-{
-  for(let i = 1; i<=4; i++)
-  {
-    for(let j = 1; j<= throp[thr].rooms[i-1]; j++)
-      dict.push({ house: 'Winthrop', entryway: throp[thr].entryway, number: j + i*100 })
-  }
-}
 
-const adams = [
+  const adams = [
+    {
+      entryway: 'Westmorly',
+      roomString: 'A17B17A23B27A37B37A47B47'
+    },
+    {
+      entryway: 'Russell',
+      roomString: 'C05C16C27C37C47C57'
+    },
+    {
+      entryway: 'Randolph',
+      roomString: 'F03G01I03D13E12F12G13H12I12D23D33D44E22E32E42F22F32G44G24G34H42H22H32H42I22I32I42'
+    }
+  ]
+  // populates for Briggs, Eliot, Bertram, and Barnard Entryways
+  for (const ad in adams)
   {
-    entryway: 'Westmorly',
-    roomString: 'A17B17A23B27A37B37A47B47'
-  },
-  {
-    entryway: 'Russell',
-    roomString: 'C05C16C27C37C47C57'
-  },
-  {
-    entryway: 'Randolph',
-    roomString: 'F03G01I03D13E12F12G13H12I12D23D33D44E22E32E42F22F32G44G24G34H42H22H32H42I22I32I42'
+  const adamString = (adams[ad].roomString.match(/.{1,3}/g));
+  for (let i = 0; i < adamString.length; i++) {
+    for (let j = 1; j <= adamString[i].charAt(2); j++) {
+      dict.push({ house: 'Adams', entryway: adams[ad].entryway + " " + adamString[i].charAt(0), number: adamString[i].charAt(1) + j });
+    }
   }
-]
-// populates for Briggs, Eliot, Bertram, and Barnard Entryways
-for (const ad in adams)
-{
-const adamString = (adams[ad].roomString.match(/.{1,3}/g));
-for (let i = 0; i < adamString.length; i++) {
-  for (let j = 1; j <= adamString[i].charAt(2); j++) {
-    dict.push({ house: 'Adams', entryway: adams[ad].entryway + " " + adamString[i].charAt(0), number: adamString[i].charAt(1) + j });
   }
-}
-}
 
-const clav = [
+  const clav = [
+    {
+      entryway: 'J',
+      start: 101,
+      end: 106
+    },
+    {
+      entryway: 'J',
+      start: 201,
+      end: 213
+    },
+    {
+      entryway: 'K',
+      start: 301,
+      end: 313
+    },
+    {
+      entryway: 'L',
+      start: 401,
+      end: 413
+    },
+    {
+      entryway: 'M',
+      start: 501,
+      end: 513
+    }
+  ]
+  for (const cla in clav)
   {
-    entryway: 'J',
-    start: 101,
-    end: 106
-  },
-  {
-    entryway: 'J',
-    start: 201,
-    end: 213
-  },
-  {
-    entryway: 'K',
-    start: 301,
-    end: 313
-  },
-  {
-    entryway: 'L',
-    start: 401,
-    end: 413
-  },
-  {
-    entryway: 'M',
-    start: 501,
-    end: 513
+    for(let i = clav[cla].start; i<= clav[cla].end; i++)
+        dict.push({ house: 'Adams', entryway: 'Claverly ' + clav[cla].entryway, number: i })
   }
-]
-for (const cla in clav)
-{
-  for(let i = clav[cla].start; i<= clav[cla].end; i++)
-      dict.push({ house: 'Adams', entryway: 'Claverly ' + clav[cla].entryway, number: i })
-}
 
-const dunster = [
+  const dunster = [
+    {
+      entryway: 'West',
+      rooms: [22, 18, 20, 23, 14]
+    },
+    {
+      entryway: 'East',
+      rooms: [0, 12, 14, 17, 16]
+    }
+  ]
+  for (const dun in dunster)
   {
-    entryway: 'West',
-    rooms: [22, 18, 20, 23, 14]
-  },
-  {
-    entryway: 'East',
-    rooms: [0, 12, 14, 17, 16]
+    for(let i = 1; i<=5; i++)
+    {
+      for(let j = 1; j<= dunster[dun].rooms[i-1]; j++)
+        dict.push({ house: 'Dunster', entryway: dunster[dun].entryway, number: j + i*100 })
+    }
   }
-]
-for (const dun in dunster)
-{
+
+  for (let i = 2; i<=5; i++)
+  {
+    for (let j = 1; j<=11; j++)
+    {
+      dict.push({house: 'Lowell', entryway: 'Fairfax', number: j + i*100})
+    }
+  }
+
+  const inns = [
+    {
+      start: 206,
+      end: 215
+    },
+    {
+      start: 301,
+      end: 335
+    },
+    {
+      entryway: 'K',
+      start: 401,
+      end: 435
+    }
+  ]
+  for (const inn in inns)
+  {
+    for(let i = inns[inn].start; i<= inns[inn].end; i++)
+        dict.push({ house: 'Lowell', entryway: 'Inn', number: i })
+  }
   for(let i = 1; i<=5; i++)
   {
-    for(let j = 1; j<= dunster[dun].rooms[i-1]; j++)
-      dict.push({ house: 'Dunster', entryway: dunster[dun].entryway, number: j + i*100 })
+    for(let j = 1; j<=8; j++)
+    {
+      dict.push({ house: 'Lowell', entryway: '20 Prescott', number: j + i*10 })
+    }
   }
-}
+  for(let i = 1; i<=25; i++)
+  {
+      dict.push({ house: 'Lowell', entryway: '24 Prescott', number: i })
+  }
+  for(let i = 2; i<=7; i++)
+  {
+    for(let j = 1; j<=5; j++)
+    {
+      dict.push({ house: 'Lowell', entryway: 'Ridgely', number: j + i*10 })
+    }
+  }
+  for(let i = 2; i<=6; i++)
+  {
+    for(let j = 1; j<=9; j++)
+    {
+      dict.push({ house: 'Lowell', entryway: 'Hampden', number: j + i*10 })
+    }
+  }
+  for(let i = 1; i<=5; i++)
+  {
+    for(let j = 0; j<= 18; j++)
+    {
+      dict.push({ house: 'Currier', entryway: 'Daniels', number: j + i*100 })
+      dict.push({ house: 'Currier', entryway: 'Gilbert', number: j + i*100 })
+      dict.push({ house: 'Currier', entryway: 'Tuchman', number: j + i*100 })
+      dict.push({ house: 'Currier', entryway: 'Bingham', number: j + i*100 })
+    }
+  }
 
+  for(let i = 1; i<=10; i++)
+  {
+      dict.push({ house: 'Currier', entryway: 'Daniels Lower Mezzanine', number: i })
+  }
 
 
   // eslint-disable-next-line no-restricted-syntax
