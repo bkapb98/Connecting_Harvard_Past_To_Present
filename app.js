@@ -1,3 +1,6 @@
+/* eslint-disable no-useless-concat */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-undef */
 /* eslint-disable consistent-return */
@@ -116,12 +119,13 @@ app.get('/house/:houseId', (req, res) => {
     events_info(callback) {
       // Help with sorting by date via https://www.dofactory.com/sql/order-by
       db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY YEAR ASC, MONTH ASC', house_id, (err, events) => {
-        /* Code for NYT API (entire for loop) with help from 
-        https://developer.nytimes.com/article_search_v2.json#/Console/GET/articlesearch.json */ 
-        for(const i in events) {
+        /* Code for NYT API (entire for loop) with help from
+        https://developer.nytimes.com/article_search_v2.json#/Console/GET/articlesearch.json */
+        for (const i in events) {
           // Set article to null to initialize
+          // eslint-disable-next-line no-param-reassign
           events[i].article = null;
-          // Construct url for NYT API 
+          // Construct url for NYT API
           const url = new URL('https://api.nytimes.com/svc/search/v2/articlesearch.json');
           const params = {
             'api-key': 'e8ebee351d174f58bc3086a7917d1509',
@@ -133,13 +137,14 @@ app.get('/house/:houseId', (req, res) => {
           fetch(url)
             .then(response => response.json())
             .then((data) => {
-              if(data.response) {
-                if(data.response.docs[0]) {
+              if (data.response) {
+                if (data.response.docs[0]) {
+                  // eslint-disable-next-line no-param-reassign
                   events[i].article = data.response.docs[0].web_url;
                 }
               }
             });
-          };
+        }
         callback(err, events);
       });
     },
@@ -162,22 +167,22 @@ app.get('/house/:houseId', (req, res) => {
 
     const house = results.house_info;
     const houseName = house.name;
-      // Search Hollis for house
-      const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
-      fetch(url)
-        .then(response => response.json())
-        .then((data) => {
-          res.render('house', {
-            house: results.house_info,
-            title: houseName,
-            rooms: results.rooms_info,
-            events: results.events_info,
-            featuredRooms: results.featuredRooms_info,
-            resources: data.items.mods,
-            user: req.session.user,
-            month_name: month,
-          });
+    // Search Hollis for house
+    const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
+    fetch(url)
+      .then(response => response.json())
+      .then((data) => {
+        res.render('house', {
+          house: results.house_info,
+          title: houseName,
+          rooms: results.rooms_info,
+          events: results.events_info,
+          featuredRooms: results.featuredRooms_info,
+          resources: data.items.mods,
+          user: req.session.user,
+          month_name: month,
         });
+      });
   });
 });
 
@@ -191,7 +196,7 @@ app.get('/room/:roomId', (req, res) => {
     },
     // Get comments
     comments(callback) {
-      db.all('SELECT * FROM Comments WHERE roomId = ?', room_id, callback);
+      db.all('SELECT * FROM Comments LEFT JOIN Users on Comments.userId = Users.id WHERE Comments.roomId = ?', room_id, callback);
     },
   },
   // Render room page
@@ -199,6 +204,7 @@ app.get('/room/:roomId', (req, res) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
+    console.log(results.comments)
     res.render('room', {
       room: results.room_info,
       comments: results.comments,
@@ -238,7 +244,7 @@ app.post('/login', (req, res) => {
       return (error_handling(req, res, 404, 'It looks like you have no registered account per those credentials.'));
     }
     if (result.userName === username && result.password === password) {
-      req.session.user = { username };
+      req.session.user = { id: result.id };
       res.redirect('/');
     } else {
       res.redirect('/login');
@@ -259,8 +265,14 @@ app.post('/register', (req, res) => {
     if (err) {
       return (error_handling(req, res, 404, 'Sorry, that username is taken.'));
     }
-    req.session.user = { userName };
-    res.redirect('/');
+    // need user id so have to call db
+    db.get('SELECT * FROM Users WHERE userName = ?', userName, (err, result) => {
+      if (err) {
+        return (error_handling(req, res, 404, 'Sorry, something went wrong'));
+      }
+      req.session.user = { id: result.id };
+      res.redirect('/');
+    });
   });
 });
 
@@ -319,7 +331,7 @@ app.post('/roomhandler', (req, res) => {
 
 app.post('/commenthandler/:roomId', authChecker, (req, res) => {
   const text = req.body.comment;
-  const userId = 20;
+  const userId = req.session.user.id;
   const roomId = req.params.roomId;
   // Adds the comment and its object ID to the overall list of comments
   db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err) => {
