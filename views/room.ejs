@@ -1,8 +1,10 @@
 <% include header %>
 
 <h1>
-    Welcome to <%=room.entryway %>  <%=room.number %>!
+    <img src="<%= room.logourl %> "></a>
+    Welcome to <%=room.entryway %>  <%=room.number %>! 
 </h1>
+
 <br>
 <br>
 <div>
@@ -23,7 +25,7 @@
 <div>
         Did you live in room <%=room.entryway %>  <%=room.number %>? Leave a comment with your experience.
     <form action = "/commenthandler/<%= room.id %>", method = "post">
-    <input name = "comment", type="text"/>
+    <input name = "comment", type="text" size="50"/>
     <input type = "submit"/>
     </form>
 </div>
