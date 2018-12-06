@@ -8,7 +8,9 @@
     
     <h3> <%= house.description %> </h3>
     <hr>
-</h3> Events </h3>
+<h3> Events </h3>
+<h4> Click on the timing of the event to learn more about that year. </h4>
+
 <div class="container">
     <div class="row">
     
@@ -24,7 +26,7 @@
                 </div>
 
                 <div class="timeline-label">
-                    <h2><a href="#"><% if(event.month) { %>
+                    <h2><a href="<%= event.article %>"><% if(event.month) { %>
                     <%= month_name(event.month) %>
                 <% }; %>
                 <%= event.year %></a> <span><%= event.eventName %></span></h2>
@@ -38,10 +40,14 @@
         </div>
     </div>
  </div>
-
+ 
+ <div>
+    <a href="http://developer.nytimes.com/"> For some linked events, data provided by The New York Times. </a>
+ </div>
 <hr>
 </div>
 <h3> Resources </h3>
+<h4> Search for the following titles on Hollis to learn more about the house. </h4>
 <div>
     <ul>
         <% resources.forEach(resource => { %>
