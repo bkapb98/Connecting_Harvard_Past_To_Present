@@ -166,7 +166,7 @@ app.get('/room/:roomId', (req, res) => {
   async.parallel({
     // Get room info
     room_info(callback) {
-      db.get('SELECT * FROM Rooms WHERE id = ?', room_id, callback);
+      db.get('SELECT * FROM Rooms LEFT JOIN Houses on Rooms.houseId =  Houses.id WHERE Rooms.id = ?', room_id, callback);
     },
     // Get comments
     comments(callback) {
