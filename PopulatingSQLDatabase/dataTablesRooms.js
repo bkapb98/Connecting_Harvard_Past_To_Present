@@ -35,17 +35,7 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       house: 'Lowell',
       entryway: 'Fairfax',
       number: '1313',
-    },
-    {
-      house: 'Winthrop',
-      entryway: 'Gore',
-      number: '313',
-    },
-    {
-      house: 'Adams',
-      entryway: 'Claverly',
-      number: '4243',
-    },
+    }
   ];
   // eslint-disable-next-line no-sequences
   for (let i = 300, j = 601; i < 328, j < 629; i++, j++) {
