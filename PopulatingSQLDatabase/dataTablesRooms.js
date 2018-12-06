@@ -25,16 +25,6 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       house: 'Currier',
       entryway: 'Daniels',
       number: '539',
-    },
-    {
-      house: 'Dunster',
-      entryway: 'West',
-      number: '423',
-    },
-    {
-      house: 'Lowell',
-      entryway: 'Fairfax',
-      number: '1313',
     }
   ];
   // eslint-disable-next-line no-sequences
@@ -324,7 +314,59 @@ for (const dun in dunster)
   }
 }
 
+for (let i = 2; i<=5; i++)
+{
+  for (let j = 1; j<=11; j++)
+  {
+    dict.push({house: 'Lowell', entryway: 'Fairfax', number: j + i*100})
+  }
+}
 
+const inns = [
+  {
+    start: 206,
+    end: 215
+  },
+  {
+    start: 301,
+    end: 335
+  },
+  {
+    entryway: 'K',
+    start: 401,
+    end: 435
+  }
+]
+for (const inn in inns)
+{
+  for(let i = inns[inn].start; i<= inns[inn].end; i++)
+      dict.push({ house: 'Lowell', entryway: 'Inn', number: i })
+}
+for(let i = 1; i<=5; i++)
+{
+  for(let j = 1; j<=8; j++)
+  {
+    dict.push({ house: 'Lowell', entryway: '20 Prescott', number: j + i*10 })
+  }
+}
+for(let i = 1; i<=25; i++)
+{
+    dict.push({ house: 'Lowell', entryway: '24 Prescott', number: i })
+}
+for(let i = 2; i<=7; i++)
+{
+  for(let j = 1; j<=5; j++)
+  {
+    dict.push({ house: 'Lowell', entryway: 'Ridgely', number: j + i*10 })
+  }
+}
+for(let i = 2; i<=6; i++)
+{
+  for(let j = 1; j<=9; j++)
+  {
+    dict.push({ house: 'Lowell', entryway: 'Hampden', number: j + i*10 })
+  }
+}
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
