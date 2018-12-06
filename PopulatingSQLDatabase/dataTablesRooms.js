@@ -20,11 +20,6 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       house: 'Quincy',
       entryway: 'New Quincy',
       number: '500',
-    },
-    {
-      house: 'Currier',
-      entryway: 'Daniels',
-      number: '539',
     }
   ];
   // eslint-disable-next-line no-sequences
@@ -367,6 +362,22 @@ for(let i = 2; i<=6; i++)
     dict.push({ house: 'Lowell', entryway: 'Hampden', number: j + i*10 })
   }
 }
+for(let i = 1; i<=5; i++)
+{
+  for(let j = 0; j<= 18; j++)
+  {
+    dict.push({ house: 'Currier', entryway: 'Daniels', number: j + i*100 })
+    dict.push({ house: 'Currier', entryway: 'Gilbert', number: j + i*100 })
+    dict.push({ house: 'Currier', entryway: 'Tuchman', number: j + i*100 })
+    dict.push({ house: 'Currier', entryway: 'Bingham', number: j + i*100 })
+  }
+}
+
+for(let i = 1; i<=10; i++)
+{
+    dict.push({ house: 'Currier', entryway: 'Daniels Lower Mezzanine', number: i })
+}
+
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
