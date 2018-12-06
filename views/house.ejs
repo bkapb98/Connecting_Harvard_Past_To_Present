@@ -1,17 +1,17 @@
 <% include header %>
     <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
     <!-- <img src= alt="Italian Trulli">  -->
-    <h1> 
+    <h1>
         <img src="<%= house.logourl %> "></a>
-        <%= house.name %> 
+        <%= house.name %>
     </h1>
-    
+
     <h3> <%= house.description %> </h3>
     <hr>
 </h3> Events </h3>
 <div class="container">
     <div class="row">
-    
+
         <div class="timeline-centered">
 
         <% events.forEach(event => { %>
@@ -58,11 +58,13 @@
 <div>
     <ul>
         <% featuredRooms.forEach(room => { %>
+          <p>
             <tr>
               <td>
                 <a href="/featuredRoom/<%= room.id %>"> <%= room.name %> </a>
               </td>
             </tr>
+          </p>
         <% }); %>
     </ul>
 </div>
