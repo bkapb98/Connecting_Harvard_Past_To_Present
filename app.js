@@ -118,8 +118,32 @@ app.get('/house/:houseId', (req, res) => {
   async.parallel({
     // Get event information
     events_info(callback) {
-      // Sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
-      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY YEAR ASC, MONTH ASC', house_id, callback);
+      // Help with sorting by date via https://www.dofactory.com/sql/order-by
+      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY YEAR ASC, MONTH ASC', house_id, (err, events) => {
+        /* Code for NYT API (entire for loop) with help from 
+        https://developer.nytimes.com/article_search_v2.json#/Console/GET/articlesearch.json */ 
+        for(const i in events) {
+          // Set article to null to initialize
+          events[i].article = null;
+          // Construct url for NYT API 
+          const url = new URL('https://api.nytimes.com/svc/search/v2/articlesearch.json');
+          const params = {
+            'api-key': 'e8ebee351d174f58bc3086a7917d1509',
+            q: `${events[i].year}`,
+            begin_date: `${events[i].year}` + '0101',
+            end_date: `${events[i].year}` + '1231',
+          };
+          Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+          fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+              if(data.response) {
+                events[i].article = data.response.docs[0].web_url;
+              }
+            });
+          };
+        callback(err, events);
+      });
     },
     // Get house information
     house_info(callback) {
@@ -137,30 +161,9 @@ app.get('/house/:houseId', (req, res) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    // change to houseInfo
+
     const house = results.house_info;
     const houseName = house.name;
-    const eventResults = results.events_info;
-    for(const i in eventResults) {
-      // Default url would be 
-      eventResults[i].article = 'https://www.google.com/';
-      const url = new URL('https://api.nytimes.com/svc/search/v2/articlesearch.json');
-      const params = {
-        'api-key': 'e8ebee351d174f58bc3086a7917d1509',
-        q: `${eventResults[i].year}`,
-        begin_date: `${eventResults[i].year}` + '0101',
-        end_date: `${eventResults[i].year}` + '1231',
-      };
-      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-      fetch(url)
-        .then(response => response.json())
-        .then((data) => {
-          if(data.response) {
-            eventResults[i].article = data.response.docs[0].web_url;
-          }
-        });
-      };
-    function waiting() {
       // Search Hollis for house
       const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
       fetch(url)
@@ -170,15 +173,13 @@ app.get('/house/:houseId', (req, res) => {
             house: results.house_info,
             title: houseName,
             rooms: results.rooms_info,
-            events: eventResults,
+            events: results.events_info,
             featuredRooms: results.featuredRooms_info,
             resources: data.items.mods,
             user: req.session.user,
             month_name: month,
           });
         });
-      }
-    setTimeout(waiting, 1500);
   });
 });
 
