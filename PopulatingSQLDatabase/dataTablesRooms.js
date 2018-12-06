@@ -257,6 +257,64 @@ for (const thr in throp)
   }
 }
 
+const adams = [
+  {
+    entryway: 'Westmorly',
+    roomString: 'A17B17A23B27A37B37A47B47'
+  },
+  {
+    entryway: 'Russell',
+    roomString: 'C05C16C27C37C47C57'
+  },
+  {
+    entryway: 'Randolph',
+    roomString: 'F03G01I03D13E12F12G13H12I12D23D33D44E22E32E42F22F32G44G24G34H42H22H32H42I22I32I42'
+  }
+]
+// populates for Briggs, Eliot, Bertram, and Barnard Entryways
+for (const ad in adams)
+{
+const adamString = (adams[ad].roomString.match(/.{1,3}/g));
+for (let i = 0; i < adamString.length; i++) {
+  for (let j = 1; j <= adamString[i].charAt(2); j++) {
+    dict.push({ house: 'Adams', entryway: adams[ad].entryway + " " + adamString[i].charAt(0), number: adamString[i].charAt(1) + j });
+  }
+}
+}
+
+const clav = [
+  {
+    entryway: 'J',
+    start: 101,
+    end: 106
+  },
+  {
+    entryway: 'J',
+    start: 201,
+    end: 213
+  },
+  {
+    entryway: 'K',
+    start: 301,
+    end: 313
+  },
+  {
+    entryway: 'L',
+    start: 401,
+    end: 413
+  },
+  {
+    entryway: 'M',
+    start: 501,
+    end: 513
+  }
+]
+for (const cla in clav)
+{
+  for(let i = clav[cla].start; i<= clav[cla].end; i++)
+      dict.push({ house: 'Adams', entryway: 'Claverly ' + clav[cla].entryway, number: i })
+}
+
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
