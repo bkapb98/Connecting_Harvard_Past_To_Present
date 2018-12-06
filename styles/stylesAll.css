@@ -141,12 +141,12 @@ height: 300px; /*should be the same height as the images*/
 position: absolute;
 width: auto;
 height: auto;
-overflow:hidden;
+overflow: hidden;
 }
 
 .rf .img-comp-img img {
-display:block;
-vertical-align:middle;
+display: block;
+vertical-align: middle;
 }
 
 .rf .img-comp-slider {
@@ -462,4 +462,13 @@ border-radius: 50%;
 .loginRegister #btn {
     margin: auto;
     display: table;
+}
+
+#searchbar {
+    width: 250px;
+}
+
+#searchbarTitle {
+    font-size: 20px;
+    font-weight: bold;
 }
