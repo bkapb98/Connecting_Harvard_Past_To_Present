@@ -25,8 +25,8 @@ if (process.argv.length !== 4) {
 const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
 const port = process.env.PORT || 8080;
 //comment out the above two lines and uncomment the below two lines to run locally without heroku
-//const hostname = process.argv[2];
-//const port = process.argv[3];
+// const hostname = process.argv[2];
+// const port = process.argv[3];
 
 
 // Check valid inputs, using https://www.npmjs.com/package/validator
@@ -118,8 +118,34 @@ app.get('/house/:houseId', (req, res) => {
   async.parallel({
     // Get event information
     events_info(callback) {
-      // Sorted per https://www.tutorialspoint.com/sql/sql-sorting-results.htm
-      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY YEAR ASC, MONTH ASC', house_id, callback);
+      // Help with sorting by date via https://www.dofactory.com/sql/order-by
+      db.all('SELECT * FROM Events WHERE houseId = ? ORDER BY YEAR ASC, MONTH ASC', house_id, (err, events) => {
+        /* Code for NYT API (entire for loop) with help from 
+        https://developer.nytimes.com/article_search_v2.json#/Console/GET/articlesearch.json */ 
+        for(const i in events) {
+          // Set article to null to initialize
+          events[i].article = null;
+          // Construct url for NYT API 
+          const url = new URL('https://api.nytimes.com/svc/search/v2/articlesearch.json');
+          const params = {
+            'api-key': 'e8ebee351d174f58bc3086a7917d1509',
+            q: `${events[i].year}`,
+            begin_date: `${events[i].year}` + '0101',
+            end_date: `${events[i].year}` + '1231',
+          };
+          Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+          fetch(url)
+            .then(response => response.json())
+            .then((data) => {
+              if(data.response) {
+                if(data.response.docs[0]) {
+                  events[i].article = data.response.docs[0].web_url;
+                }
+              }
+            });
+          };
+        callback(err, events);
+      });
     },
     // Get house information
     house_info(callback) {
@@ -137,25 +163,25 @@ app.get('/house/:houseId', (req, res) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    // change to houseInfo
+
     const house = results.house_info;
     const houseName = house.name;
-    // Search Hollis for house
-    const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
-    fetch(url)
-      .then(response => response.json())
-      .then((data) => {
-        res.render('house', {
-          house: results.house_info,
-          title: houseName,
-          rooms: results.rooms_info,
-          events: results.events_info,
-          featuredRooms: results.featuredRooms_info,
-          resources: data.items.mods,
-          user: req.session.user,
-          month_name: month,
+      // Search Hollis for house
+      const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
+      fetch(url)
+        .then(response => response.json())
+        .then((data) => {
+          res.render('house', {
+            house: results.house_info,
+            title: houseName,
+            rooms: results.rooms_info,
+            events: results.events_info,
+            featuredRooms: results.featuredRooms_info,
+            resources: data.items.mods,
+            user: req.session.user,
+            month_name: month,
+          });
         });
-      });
   });
 });
 
@@ -165,7 +191,7 @@ app.get('/room/:roomId', (req, res) => {
   async.parallel({
     // Get room info
     room_info(callback) {
-      db.get('SELECT * FROM Rooms WHERE id = ?', room_id, callback);
+      db.get('SELECT * FROM Rooms LEFT JOIN Houses on Rooms.houseId =  Houses.id WHERE Rooms.id = ?', room_id, callback);
     },
     // Get comments
     comments(callback) {
