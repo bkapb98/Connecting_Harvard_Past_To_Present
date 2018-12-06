@@ -7,13 +7,17 @@ body {
    padding: 10px;
 }
 
-/* globbal css */
+/* Styling for index page (i.e. hover) and global font via 
+https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_templates_portfolio3&stacked=h
+and https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_link_image */ 
+
+/* global css */
 *
 {
    font-family: "Raleway", sans-serif !important;
 }
 
-/* index page hover over */
+/* Index page-hovering over */
 .container-fluid .col-md-4 img {
     margin-bottom: -6px;
     cursor: pointer
