@@ -204,7 +204,6 @@ app.get('/room/:roomId', (req, res) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    console.log(results.comments)
     res.render('room', {
       room: results.room_info,
       comments: results.comments,
@@ -266,6 +265,7 @@ app.post('/register', (req, res) => {
       return (error_handling(req, res, 404, 'Sorry, that username is taken.'));
     }
     // need user id so have to call db
+    // eslint-disable-next-line no-shadow
     db.get('SELECT * FROM Users WHERE userName = ?', userName, (err, result) => {
       if (err) {
         return (error_handling(req, res, 404, 'Sorry, something went wrong'));
