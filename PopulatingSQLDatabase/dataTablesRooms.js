@@ -305,6 +305,26 @@ for (const cla in clav)
       dict.push({ house: 'Adams', entryway: 'Claverly ' + clav[cla].entryway, number: i })
 }
 
+const dunster = [
+  {
+    entryway: 'West',
+    rooms: [22, 18, 20, 23, 14]
+  },
+  {
+    entryway: 'East',
+    rooms: [0, 12, 14, 17, 16]
+  }
+]
+for (const dun in dunster)
+{
+  for(let i = 1; i<=5; i++)
+  {
+    for(let j = 1; j<= dunster[dun].rooms[i-1]; j++)
+      dict.push({ house: 'Dunster', entryway: dunster[dun].entryway, number: j + i*100 })
+  }
+}
+
+
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
