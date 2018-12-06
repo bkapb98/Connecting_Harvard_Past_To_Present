@@ -24,7 +24,9 @@ if (process.argv.length !== 4) {
 // Based on https://nodejs.org/docs/latest/api/process.html#process_process_argv
 const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
 const port = process.env.PORT || 8080;
+
 //comment out the above two lines and uncomment the below two lines to run locally without heroku
+
 // const hostname = process.argv[2];
 // const port = process.argv[3];
 
@@ -191,7 +193,7 @@ app.get('/room/:roomId', (req, res) => {
   async.parallel({
     // Get room info
     room_info(callback) {
-      db.get('SELECT * FROM Rooms WHERE id = ?', room_id, callback);
+      db.get('SELECT * FROM Rooms LEFT JOIN Houses on Rooms.houseId =  Houses.id WHERE Rooms.id = ?', room_id, callback);
     },
     // Get comments
     comments(callback) {
