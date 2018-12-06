@@ -164,6 +164,7 @@ app.get('/house/:houseId', (req, res) => {
 
     const house = results.house_info;
     const houseName = house.name;
+<<<<<<< HEAD
       // Search Hollis for house
       const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
       fetch(url)
@@ -180,6 +181,47 @@ app.get('/house/:houseId', (req, res) => {
             month_name: month,
           });
         });
+=======
+    const eventResults = results.events_info;
+    for(const i in eventResults) {
+      // Default url would be 
+      eventResults[i].article = 'https://www.google.com/';
+      const url = new URL('https://api.nytimes.com/svc/search/v2/articlesearch.json');
+      const params = {
+        'api-key': 'e8ebee351d174f58bc3086a7917d1509',
+        q: `${eventResults[i].year}`,
+        begin_date: `${eventResults[i].year}` + '0101',
+        end_date: `${eventResults[i].year}` + '1231',
+      };
+      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+      fetch(url)
+        .then(response => response.json())
+        .then((data) => {
+          if(data.response) {
+            eventResults[i].article = data.response.docs[0].web_url;
+          }
+        });
+      };
+    function waiting() {
+      // Search Hollis for house
+      const url = `http://api.lib.harvard.edu/v2/items.json?title=${houseName}+house`;
+      fetch(url)
+        .then(response => response.json())
+        .then((data) => {
+          res.render('house', {
+            house: results.house_info,
+            title: houseName,
+            rooms: results.rooms_info,
+            events: eventResults,
+            featuredRooms: results.featuredRooms_info,
+            resources: data.items.mods,
+            user: req.session.user,
+            month_name: month,
+          });
+        });
+      }
+    setTimeout(waiting, 1500);
+>>>>>>> master
   });
 });
 
