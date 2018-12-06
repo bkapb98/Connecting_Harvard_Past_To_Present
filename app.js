@@ -24,12 +24,7 @@ if (process.argv.length !== 4) {
 // Based on https://nodejs.org/docs/latest/api/process.html#process_process_argv
 const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
 const port = process.env.PORT || 8080;
-<<<<<<< HEAD
 //comment out the above two lines and uncomment the below two lines to run locally without heroku
-=======
-
-// comment out the above two lines and uncomment the below two lines to run locally without heroku
->>>>>>> d2ff1137a86a2ea2f53a85ef67d21d89cf719687
 // const hostname = process.argv[2];
 // const port = process.argv[3];
 
