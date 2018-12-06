@@ -214,7 +214,6 @@ for (const pfo in pfoho)
   }
 }
 
-
 const pfoJordans = [
   {
     entryway: 'North',
@@ -235,8 +234,28 @@ for (let i = 0; i < pfoString.length; i++) {
 }
 }
 
-
-
+const throp = [
+  {
+    entryway: 'Gore',
+    rooms: [6, 48, 48, 48]
+  },
+  {
+    entryway: 'Beren',
+    rooms: [0, 3, 3, 3]
+  },
+  {
+    entryway: 'Standish',
+    rooms: [19, 49, 49, 49]
+  }
+]
+for (const thr in throp)
+{
+  for(let i = 1; i<=4; i++)
+  {
+    for(let j = 1; j<= throp[thr].rooms[i-1]; j++)
+      dict.push({ house: 'Winthrop', entryway: throp[thr].entryway, number: j + i*100 })
+  }
+}
 
 
   // eslint-disable-next-line no-restricted-syntax
