@@ -25,8 +25,10 @@ if (process.argv.length !== 4) {
 const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
 const port = process.env.PORT || 8080;
 //comment out the above two lines and uncomment the below two lines to run locally without heroku
+
 // const hostname = process.argv[2];
 // const port = process.argv[3];
+
 
 
 // Check valid inputs, using https://www.npmjs.com/package/validator
