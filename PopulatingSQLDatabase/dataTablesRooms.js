@@ -22,16 +22,6 @@ const db = new sqlite3.Database('ConnectingPG.db', sqlite3.OPEN_READWRITE, (dict
       number: '500',
     },
     {
-      house: 'Pforzheimer',
-      entryway: 'Moors D',
-      number: '1',
-    },
-    {
-      house: 'Cabot',
-      entryway: 'D',
-      number: '216',
-    },
-    {
       house: 'Currier',
       entryway: 'Daniels',
       number: '539',
@@ -196,6 +186,58 @@ for (let i = 0; i < cabString.length; i++) {
   }
 }
 }
+
+const pfoho = [
+  {
+    entryway: 'Comstock',
+    rooms: [18, 18, 12]
+  },
+  {
+    entryway: 'Holmes',
+    rooms: [15, 15, 12]
+  },
+  {
+    entryway: 'Moors',
+    rooms: [22, 22, 12]
+  },
+  {
+    entryway: 'Wolbach',
+    rooms: [7, 7, 7]
+  }
+]
+for (const pfo in pfoho)
+{
+  for(let i = 2; i<=4; i++)
+  {
+    for(let j = 1; j<= pfoho[pfo].rooms[i-2]; j++)
+      dict.push({ house: 'Pforzheimer', entryway: pfoho[pfo].entryway, number: j + i*100 })
+  }
+}
+
+
+const pfoJordans = [
+  {
+    entryway: 'North',
+    roomString: '152333'
+  },
+  {
+    entryway: 'South',
+    roomString: '152535'
+  }
+]
+for (const pfo in pfoJordans)
+{
+const pfoString = (pfoJordans[pfo].roomString.match(/.{1,2}/g));
+for (let i = 0; i < pfoString.length; i++) {
+  for (let j = 1; j <= pfoString[i].substring(1); j++) {
+    dict.push({ house: 'Pforzheimer', entryway: 'Jordans ' + pfoJordans[pfo].entryway, number: pfoString[i].charAt(0) + j });
+  }
+}
+}
+
+
+
+
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in dict) {
