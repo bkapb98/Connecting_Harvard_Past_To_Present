@@ -17,6 +17,7 @@
         <% comments.forEach(comment => { %>
         <li>
             <%= comment.created %>
+            <%= comment.userName %>
             <%= comment.text %>
         </li>
         <% }); %>
