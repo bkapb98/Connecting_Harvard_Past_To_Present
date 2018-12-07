@@ -190,7 +190,6 @@ app.get('/house/:houseId', (req, res) => {
 // Room Page
 app.get('/room/:roomId', (req, res) => {
   const room_id = req.params.roomId;
-  console.log(room_id)
   async.parallel({
     // Get room info
     room_info(callback) {
@@ -206,8 +205,7 @@ app.get('/room/:roomId', (req, res) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
-    // console.log(results.comments)
-    console.log("rooms", results.room_info)
+    
     res.render('room', {
       room: results.room_info,
       comments: results.comments,
@@ -337,15 +335,12 @@ app.post('/commenthandler/:roomId', authChecker, (req, res) => {
   const text = req.body.comment;
   const userId = req.session.user.id;
   const roomId = req.params.roomId;
-  console.log('user', userId); 
-  console.log('room', roomId)
   // Adds the comment and its object ID to the overall list of comments
   db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
     // Creates redirect URL to go back to object page, redirects to it
-    console.log(roomId, 'HHH')
     res.redirect(`/room/${roomId}`);
   });
 });
