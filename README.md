@@ -2,7 +2,13 @@
 
 Heroku: https://connecting-harvard.herokuapp.com/
 
-To run via command line, enter node app.js 127.0.0.1 3000
+To run by downloading code and from command line, replace 
+`const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
+const port = process.env.PORT || 8080;`
+with 
+`const hostname = process.argv[2]; 
+const port = process.argv[3]` 
+and enter on command line: `node app.js 127.0.0.1 3000` (or whatever hostname and port you wish to use). 
 
 Matthew Miller\
 Ben Kaplan\
