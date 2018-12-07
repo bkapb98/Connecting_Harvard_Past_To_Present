@@ -28,6 +28,7 @@ if (process.argv.length !== 4) {
 const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
 const port = process.env.PORT || 8080;
 
+
 // Check valid inputs, using https://www.npmjs.com/package/validator
 if (!validator.isIP(hostname)) {
   // eslint-disable-next-line no-console
@@ -189,10 +190,11 @@ app.get('/house/:houseId', (req, res) => {
 // Room Page
 app.get('/room/:roomId', (req, res) => {
   const room_id = req.params.roomId;
+  console.log(room_id)
   async.parallel({
     // Get room info
     room_info(callback) {
-      db.get('SELECT * FROM Rooms LEFT JOIN Houses on Rooms.houseId =  Houses.id WHERE Rooms.id = ?', room_id, callback);
+      db.get('SELECT Houses.id, Rooms.houseId, Houses.logourl, Rooms.entryway, Rooms.number, Rooms.id AS idRoom FROM Rooms LEFT JOIN Houses on Rooms.houseId =  Houses.id WHERE Rooms.id = ?', room_id, callback);
     },
     // Get comments
     comments(callback) {
@@ -204,6 +206,8 @@ app.get('/room/:roomId', (req, res) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
+    // console.log(results.comments)
+    console.log("rooms", results.room_info)
     res.render('room', {
       room: results.room_info,
       comments: results.comments,
@@ -333,12 +337,15 @@ app.post('/commenthandler/:roomId', authChecker, (req, res) => {
   const text = req.body.comment;
   const userId = req.session.user.id;
   const roomId = req.params.roomId;
+  console.log('user', userId); 
+  console.log('room', roomId)
   // Adds the comment and its object ID to the overall list of comments
   db.run('INSERT INTO Comments(text, userId, roomId) VALUES(?, ?, ?)', [text, userId, roomId], (err) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
     // Creates redirect URL to go back to object page, redirects to it
+    console.log(roomId, 'HHH')
     res.redirect(`/room/${roomId}`);
   });
 });

@@ -7,17 +7,15 @@
 
 <br>
 <br>
-<div>
-    <%-room.description %>
-</div>
+
 <hr>
 <div>
     <h2> Comments </h2>
     <ul>
         <% comments.forEach(comment => { %>
         <li>
-            <%= comment.created %>
-            <%= comment.userName %>
+            Posted on <%= comment.created %>
+            by <%= comment.userName %>: 
             <%= comment.text %>
         </li>
         <% }); %>
@@ -25,7 +23,7 @@
 </div>
 <div>
         Did you live in room <%=room.entryway %>  <%=room.number %>? Leave a comment with your experience.
-    <form action = "/commenthandler/<%= room.id %>", method = "post">
+    <form action = "/commenthandler/<%= room.idRoom %>", method = "post">
     <input name = "comment", type="text" size="50"/>
     <input type = "submit"/>
     </form>
