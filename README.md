@@ -1,5 +1,8 @@
 # Connecting Harvard's Past to its Present
 
+Heroku: https://connecting-harvard.herokuapp.com/
+
+To run via command line, enter node app.js 127.0.0.1 3000
 
 Matthew Miller\
 Ben Kaplan\
@@ -10,6 +13,7 @@ Kyle Massimilian
 <bkaplan@college.harvard.edu>\
 <eliza_scharfstein@college.harvard.edu>\
 <kmassimilian@college.harvard.edu>
+
 
 We want to show current students and alumni alike what it has been like to live at Harvard since the early 1900s. In order to do so, we want to create a website that chronicles the history of each house and how it has changed over the years. Our site is extremely dynamic, in that very little is hardcoded and instead mostly everything relies on the database and API's. Furthermore, the site is a living piece of history-- users can comment and share their stories about their living experiences, and thus, we all create the history of the Harvard Houses, together. 
 

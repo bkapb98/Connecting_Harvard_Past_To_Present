@@ -28,6 +28,7 @@ if (process.argv.length !== 4) {
 const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
 const port = process.env.PORT || 8080;
 
+
 // Check valid inputs, using https://www.npmjs.com/package/validator
 if (!validator.isIP(hostname)) {
   // eslint-disable-next-line no-console
@@ -192,7 +193,7 @@ app.get('/room/:roomId', (req, res) => {
   async.parallel({
     // Get room info
     room_info(callback) {
-      db.get('SELECT * FROM Rooms LEFT JOIN Houses on Rooms.houseId =  Houses.id WHERE Rooms.id = ?', room_id, callback);
+      db.get('SELECT Houses.id, Rooms.houseId, Houses.logourl, Rooms.entryway, Rooms.number, Rooms.id AS idRoom FROM Rooms LEFT JOIN Houses on Rooms.houseId =  Houses.id WHERE Rooms.id = ?', room_id, callback);
     },
     // Get comments
     comments(callback) {
@@ -204,6 +205,7 @@ app.get('/room/:roomId', (req, res) => {
     if (err) {
       return (error_handling(req, res, 500, 'Sorry, you have reached an error.'));
     }
+    
     res.render('room', {
       room: results.room_info,
       comments: results.comments,
